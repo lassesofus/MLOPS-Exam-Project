@@ -1,12 +1,15 @@
-from transformers import BertTokenizer
+""" from transformers import BertTokenizer
 from torch import cuda
 from torch.utils.data import Dataset, DataLoader
 import torch 
 
 from exam_project.models.models import BERTClass
-from exam_project.src.models.train_utils import loss_fn
+from exam_project.src.models.train_utils import loss_fn """
+from omegaconf import OmegaConf
+# loading
+config = OmegaConf.load('config.yaml')
 
-
+print(config.hyperparameters.max_len)
 def train():
     # # Setting up the device for GPU usage
     device = 'cuda' if cuda.is_available() else 'cpu'
@@ -14,11 +17,11 @@ def train():
     # Sections of config
 
     # Defining some key variables that will be used later on in the training
-    MAX_LEN = 200
-    TRAIN_BATCH_SIZE = 8
-    VALID_BATCH_SIZE = 4
-    EPOCHS = 1
-    LEARNING_RATE = 1e-05
+    MAX_LEN = config.hyperparameters.batch_size.max_len
+    TRAIN_BATCH_SIZE = config.hyperparameters.batch_size.train_batch_size
+    VALID_BATCH_SIZE = config.hyperparameters.batch_size.valid_batch_size
+    EPOCHS = config.hyperparameters.batch_size.epochs
+    LEARNING_RATE = config.hyperparameters.batch_size.learning_rate
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
     train_params = {'batch_size': TRAIN_BATCH_SIZE,
@@ -57,5 +60,5 @@ def train():
     torch.save(model.state_dict(), 'trained_model.pt')
 
 
-if __name__ == "__main__":
-    train()
+#if __name__ == "__main__":
+   # train()
