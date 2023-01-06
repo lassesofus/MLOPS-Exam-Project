@@ -14,7 +14,7 @@ We plan on using the [Huggingface Transformer](https://github.com/huggingface/tr
 The [data](https://www.kaggle.com/competitions/fake-news/data) is made available through the competition. This dataset contains the following features for each news article: A unique ID, the title, the author, the textual content, and finally a binary label of 0 or 1 corresponding to “reliable” and unreliable respectively. The model will be trained using DTU HPC.
 
 ### Models
-We expect to use a transformer model made for Natural Language Processing - specifically a pre-trained BERT. 
+We expect to use a transformer model made for Natural Language Processing - specifically a pre-trained BERT. The model used is the base version with 12 layers and 12 self-attention heads. The hidden size is 784.
 
 Project Organization
 ------------
