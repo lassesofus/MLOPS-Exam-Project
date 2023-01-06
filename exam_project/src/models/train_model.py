@@ -5,23 +5,22 @@ import torch
 
 from exam_project.models.models import BERTClass
 from exam_project.src.models.train_utils import loss_fn """
-from omegaconf import OmegaConf
-# loading
-config = OmegaConf.load('config.yaml')
+import hydra
 
-print(config.hyperparameters.max_len)
-def train():
+@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+
+def train(cfg):
     # # Setting up the device for GPU usage
     device = 'cuda' if cuda.is_available() else 'cpu'
 
     # Sections of config
 
     # Defining some key variables that will be used later on in the training
-    MAX_LEN = config.hyperparameters.batch_size.max_len
-    TRAIN_BATCH_SIZE = config.hyperparameters.batch_size.train_batch_size
-    VALID_BATCH_SIZE = config.hyperparameters.batch_size.valid_batch_size
-    EPOCHS = config.hyperparameters.batch_size.epochs
-    LEARNING_RATE = config.hyperparameters.batch_size.learning_rate
+    MAX_LEN = cfg.hyperparameters.batch_size.max_len
+    TRAIN_BATCH_SIZE = cfg.hyperparameters.batch_size.train_batch_size
+    VALID_BATCH_SIZE = cfg.hyperparameters.batch_size.valid_batch_size
+    EPOCHS = cfg.hyperparameters.batch_size.epochs
+    LEARNING_RATE = cfg.hyperparameters.batch_size.learning_rate
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
     train_params = {'batch_size': TRAIN_BATCH_SIZE,
