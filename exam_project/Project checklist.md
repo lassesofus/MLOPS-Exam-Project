@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Projects
+title: Project checklist
 nav_order: 12
 permalink: projects
 ---
