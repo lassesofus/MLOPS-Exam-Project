@@ -22,5 +22,5 @@ The data is made available through the competition. This dataset contains the fo
 
 5. __What deep learning models do you expect to use__
 
-We expect to use a transformer model made for Natural Language Processing - specifically a pre-trained BERT. 
+We expect to use a transformer model made for Natural Language Processing - specifically a pre-trained BERT. We use the base "uncased" version, which consists of 12 layers with 12 self-attention layer each. The hidden size is 784. 
 
