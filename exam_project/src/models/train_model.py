@@ -11,7 +11,6 @@ config = OmegaConf.load('config.yaml')
 
 print(config.hyperparameters.max_len)
 def train():
-
     # # Setting up the device for GPU usage
     device = 'cuda' if cuda.is_available() else 'cpu'
 
