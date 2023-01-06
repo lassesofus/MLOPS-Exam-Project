@@ -1,10 +1,10 @@
-""" from transformers import BertTokenizer
+from transformers import BertTokenizer
 from torch import cuda
 from torch.utils.data import Dataset, DataLoader
 import torch 
 
 from exam_project.models.models import BERTClass
-from exam_project.src.models.train_utils import loss_fn """
+from exam_project.src.models.train_utils import loss_fn 
 import hydra
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path=".")
@@ -59,5 +59,5 @@ def train(cfg):
     torch.save(model.state_dict(), 'trained_model.pt')
 
 
-#if __name__ == "__main__":
-   # train()
+if __name__ == "__main__":
+   train()
