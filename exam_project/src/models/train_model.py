@@ -7,10 +7,7 @@ from exam_project.models.models import BERTClass
 from exam_project.src.models.train_utils import loss_fn
 
 
-
-
 def train():
-
     # # Setting up the device for GPU usage
     device = 'cuda' if cuda.is_available() else 'cpu'
 
