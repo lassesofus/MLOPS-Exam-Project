@@ -5,9 +5,9 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 import pandas as pd
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
+#@click.command()
+#@click.argument('input_filepath', type=click.Path(exists=True))
+#@click.argument('output_filepath', type=click.Path())
 def main(input_filepath=None, output_filepath=None):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
@@ -41,21 +41,12 @@ def main(input_filepath=None, output_filepath=None):
     one_hot_test = pd.get_dummies(df_test_labels['label'])
     one_hot_train = pd.get_dummies(df_train_labels['label'])
 
-    df_test_labels = df_test_labels.drop('label',axis = 1)
-    df_train_labels = df_train_labels.drop('label',axis = 1)
-    
-    df_test_labels = df_test_labels.join(one_hot_test)
-    df_train_labels = df_train_labels.join(one_hot_train)
-
     # Make one hot encoding into list (single column)
-    df_test_labels['list'] = df_test_labels.values.tolist() 
-    df_train_labels['list'] = df_train_labels.values.tolist() 
+    test_labels = pd.DataFrame()
+    train_labels = pd.DataFrame()
 
-    df_test_labels = df_test_labels.drop(1,axis = 1)
-    df_test_labels = df_test_labels.drop(0,axis = 1)
-
-    df_train_labels = df_train_labels.drop(1,axis = 1)
-    df_train_labels = df_train_labels.drop(0,axis = 1)
+    test_labels['list'] = one_hot_test.values.tolist() 
+    train_labels['list'] = one_hot_train.values.tolist() 
 
     # Merge title and text
     df_train['comment_text'] = df_train['title'] + " " + df_train['text']
@@ -68,10 +59,10 @@ def main(input_filepath=None, output_filepath=None):
     df_test = df_test.drop('text', axis=1)
 
     # Collect text and labels 
-    df_train['list'] = df_train_labels['list']
-    df_test['list'] = df_test_labels['list']
+    df_train['list'] = train_labels['list']
+    df_test['list'] = test_labels['list']
 
-    # Save as CSV (TODO: Make processed tensor dataset)
+    # Pickle the dataframe (to not loose list type)
     df_train.to_csv("./exam_project/data/processed/train.csv",index=False)
     df_test.to_csv("./exam_project/data/processed/test.csv",index=False)
 
