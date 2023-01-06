@@ -1,6 +1,8 @@
 import torch 
 import transformers
 
+# Added comment
+
 class BERTClass(torch.nn.Module):
     def __init__(self):
         super(BERTClass, self).__init__()
