@@ -14,11 +14,12 @@ from dotenv import find_dotenv, load_dotenv
 def main(input_filepath=None, output_filepath=None):
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
+
+     First Stage: Turn CSV into dataframe (comment_text, list)
+
     """
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
-
-    """ Part 1: Turn CSV into dataframe (comment_text, list)"""
 
     # Load as dataframe
     df_sub = pd.read_csv(input_filepath + "/submit.csv")
