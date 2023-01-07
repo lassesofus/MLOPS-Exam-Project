@@ -1,11 +1,11 @@
-from torch.utils.data import Dataset, DataLoader
-from transformers import BertTokenizer
-import torch
 import hydra
+import torch
+from torch.utils.data import DataLoader, Dataset
+from transformers import BertTokenizer
 
+from src.data.dataset_class import get_dataset
 from src.models.models import BERTClass
 from src.models.train_utils import loss_fn
-from src.data.dataset_class import get_dataset
 
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path=".")

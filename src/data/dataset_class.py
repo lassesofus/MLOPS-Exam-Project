@@ -1,9 +1,10 @@
+import ast
+
 import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
-import ast
 
 
 class CustomDataset(Dataset):

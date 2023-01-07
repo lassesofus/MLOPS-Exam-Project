@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python
-import click
 import logging
 from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+
+import click
 import pandas as pd
+from dotenv import find_dotenv, load_dotenv
 
 
 @click.command()
