@@ -1,63 +1,83 @@
-from transformers import BertTokenizer
-from torch import cuda
-from torch.utils.data import Dataset, DataLoader
-import torch 
-
-from exam_project.models.models import BERTClass
-from exam_project.src.models.train_utils import loss_fn 
 import hydra
+import torch
+from torch.utils.data import DataLoader
+from transformers import BertTokenizer
 
+from src.data.dataset_class import get_dataset
+from src.models.models import BERTClass
+from src.models.train_utils import loss_fn
+
+# The train function uses the Hydra library to handle command line arguments and configuration files.
+# The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration 
+# for the training process.
 @hydra.main(version_base=None, config_name="config.yaml", config_path=".")
-
 def train(cfg):
-    # # Setting up the device for GPU usage
-    device = 'cuda' if cuda.is_available() else 'cpu'
 
-    # Sections of config
+    """
+    Train a BERT model on the specified dataset.
 
-    # Defining some key variables that will be used later on in the training
-    MAX_LEN = cfg.hyperparameters.batch_size.max_len
-    TRAIN_BATCH_SIZE = cfg.hyperparameters.batch_size.train_batch_size
-    VALID_BATCH_SIZE = cfg.hyperparameters.batch_size.valid_batch_size
-    EPOCHS = cfg.hyperparameters.batch_size.epochs
-    LEARNING_RATE = cfg.hyperparameters.batch_size.learning_rate
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    Args:
+        cfg (hydra.core.config.CompositeConf): Configuration object containing the hyperparameters
+            for training and the paths to the dataset.
+    """
 
-    train_params = {'batch_size': TRAIN_BATCH_SIZE,
-                'shuffle': True,
-                'num_workers': 0
-                }
+    # Setting up the device for GPU usage if available, otherwise using CPU
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
+    # Extracting key variables from the config for use in training
+    TRAIN_BATCH_SIZE = cfg.hyperparameters.train_batch_size
+    EPOCHS = cfg.hyperparameters.epochs
+    LEARNING_RATE = cfg.hyperparameters.learning_rate
+
+
+    # Defining the parameters for the training DataLoader
+    train_params = {"batch_size": TRAIN_BATCH_SIZE, 
+                    "shuffle": True, 
+                    "num_workers": 0}
+
+    # Loading the training set
+    path = "data/processed/train.csv"
+    train_set = get_dataset(path)
+    training_loader = DataLoader(train_set, **train_params)
+
+    # Initializing the model and moving it to the designated device
     model = BERTClass()
     model.to(device)
 
-    optimizer = torch.optim.Adam(params =  model.parameters(), lr=LEARNING_RATE)
+    # Initializing the optimizer
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
 
-    train_set = torch.load("data/processed/train_set.pt")
-    training_loader = DataLoader(train_set, **train_params)
 
+    # Training loop
     for epoch in range(EPOCHS):
 
+        # Set model to training mode
         model.train()
-        for _,data in enumerate(training_loader, 0):
-            ids = data['ids'].to(device, dtype = torch.long)
-            mask = data['mask'].to(device, dtype = torch.long)
-            token_type_ids = data['token_type_ids'].to(device, dtype = torch.long)
-            targets = data['targets'].to(device, dtype = torch.float)
 
+        # Iterate over training data
+        for _, data in enumerate(training_loader, 0):
+            # Move data to device
+            ids = data["ids"].to(device, dtype=torch.long)
+            mask = data["mask"].to(device, dtype=torch.long)
+            token_type_ids = data["token_type_ids"].to(device, dtype=torch.long)
+            targets = data["targets"].to(device, dtype=torch.float)
+
+            # Get model outputs
             outputs = model(ids, mask, token_type_ids)
 
-            optimizer.zero_grad()
+            # Calculate loss and print every 5000 iterations
             loss = loss_fn(outputs, targets)
-            if _%5000==0:
-                print(f'Epoch: {epoch}, Loss:  {loss.item()}')
-            
+            if _ % 5000 == 0:
+                print(f"Epoch: {epoch}, Loss:  {loss.item()}")
+
+            # Backpropagate and update weights
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-    torch.save(model.state_dict(), 'trained_model.pt')
+    # save the model
+    torch.save(model.state_dict(), "trained_model.pt")
 
 
 if __name__ == "__main__":
-   train()
+    train()
