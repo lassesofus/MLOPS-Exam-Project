@@ -16,10 +16,10 @@ The [data](https://www.kaggle.com/competitions/fake-news/data) is made available
 ### Models
 We expect to use a transformer model made for Natural Language Processing - specifically a pre-trained BERT. The model used is the base version with 12 layers and 12 self-attention heads. The hidden size is 784.
 
-## Usage
+### Usage
 To use this project, you will need to install the required packages listed in requirements.txt. You can then run the scripts in the src directory to process the data, build features, train models, and make predictions. The Makefile includes commands for running these scripts, such as make data, make train, and make predict.
 
-## License
+### License
 This project is licensed under the terms of the MIT License.
 
 
