@@ -7,6 +7,7 @@ from src.data.dataset_class import get_dataset
 from src.models.models import BERTClass
 from src.models.train_utils import loss_fn
 
+
 # The train function uses the Hydra library to handle command line arguments and configuration files.
 # The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration 
 # for the training process.

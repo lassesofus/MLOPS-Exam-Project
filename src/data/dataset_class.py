@@ -1,5 +1,6 @@
-import hydra
 import ast
+
+import hydra
 import numpy as np
 import pandas as pd
 import torch
@@ -91,6 +92,9 @@ def get_dataset(path_file):
 
     max_len = 200
     dataset = CustomDataset(df, tokenizer, max_len)
-
+    print(list(dataset.__dict__.keys())[0])
     return dataset
 
+
+
+get_dataset("data/processed/train.csv")

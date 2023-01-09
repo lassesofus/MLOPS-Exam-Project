@@ -1,19 +1,20 @@
-import hydra
-import torch 
-from transformers import BertTokenizer
-from torch.utils.data import DataLoader
 import click
-from sklearn import metrics
+import hydra
 import numpy as np
+import torch
+from sklearn import metrics
+from torch.utils.data import DataLoader
+from transformers import BertTokenizer
 
 from src.data.dataset_class import get_dataset
 from src.models.models import BERTClass
 from src.models.train_utils import loss_fn
 
+
 # The train function uses the Hydra library to handle command line arguments and configuration files.
 # The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration 
 # for the training process.
-@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+@hydra.main(version_base=None, config_name="conf/config.yaml", config_path=".")
 @click.command()
 @click.argument("model_path")
 def test(model_path,cfg):

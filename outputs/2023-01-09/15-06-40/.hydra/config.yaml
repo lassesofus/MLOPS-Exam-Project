@@ -1,0 +1,8 @@
+hyperparameters:
+  train_batch_size: 8
+  valid_batch_size: 4
+  epochs: 1
+  learning_rate: 1.0e-05
+dataset:
+  N_train: 20800
+  N_test: 5200
