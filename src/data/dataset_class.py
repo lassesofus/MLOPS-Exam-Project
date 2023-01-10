@@ -10,11 +10,12 @@ from transformers import BertTokenizer
 
 class CustomDataset(Dataset):
     """Custom dataset for loading Kaggle Toxic Comment Classification data
-    
+
     Classes:
         Dataset from torch.utils.data
-        
+
     """
+
     def __init__(self, dataframe, tokenizer, max_len):
         """
         Args:
@@ -35,10 +36,10 @@ class CustomDataset(Dataset):
     def __getitem__(self, index):
         """
         Returns the encoded comments and target labels for a given index
-        
+
         Args:
             index: Index of the data to return
-        
+
         Returns:
             A dictionary containing the following elements:
                 ids: Encoded comment tensor
@@ -69,18 +70,16 @@ class CustomDataset(Dataset):
         }
 
 
-
 def get_dataset(path_file):
     """
     Loads and returns the Kaggle Toxic Comment Classification dataset
-    
+
     Args:
         path_file: Path to the CSV file containing the dataset
-        
+
     Returns:
         A CustomDataset object
     """
-
 
     df = pd.read_csv(path_file)
     df["list"] = df["list"].apply(lambda x: list(map(int, x.strip("][").split(", "))))
@@ -94,7 +93,6 @@ def get_dataset(path_file):
     dataset = CustomDataset(df, tokenizer, max_len)
     print(list(dataset.__dict__.keys())[0])
     return dataset
-
 
 
 get_dataset("data/processed/train.csv")
