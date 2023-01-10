@@ -5,7 +5,9 @@ import transformers
 
 
 class BERTClass(torch.nn.Module):
-    def __init__(self, drop_p: float = 0.5, hidden_layers: int = 768, output_size: int = 2):
+    def __init__(
+        self, drop_p: float = 0.5, hidden_layers: int = 768, output_size: int = 2
+    ):
         """
         Initialize a BERT model for classification.
 
@@ -14,10 +16,10 @@ class BERTClass(torch.nn.Module):
         input_size: integer, size of the input layer
         output_size: integer, size of the output layer
 
-        Classes: 
+        Classes:
             torch.nn.Module
 
-        Functions: 
+        Functions:
             forward(ids,mask,token_type_ids) -> torch.tensor
         """
         super(BERTClass, self).__init__()
@@ -40,10 +42,12 @@ class BERTClass(torch.nn.Module):
         Returns:
             torch.Tensor: Model output of shape (batch_size, num_classes).
         """
-        
+
         # Getting the BERT model output and ignoring the pooled output
-        _, output_1 = self.l1(ids, attention_mask=mask, token_type_ids=token_type_ids,return_dict=False)
+        _, output_1 = self.l1(
+            ids, attention_mask=mask, token_type_ids=token_type_ids, return_dict=False
+        )
         output_2 = self.l2(output_1)
         output = self.l3(output_2)
-        
+
         return output

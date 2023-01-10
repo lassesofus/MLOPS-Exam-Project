@@ -9,7 +9,7 @@ from src.models.train_utils import loss_fn
 
 
 # The train function uses the Hydra library to handle command line arguments and configuration files.
-# The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration 
+# The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration
 # for the training process.
 @hydra.main(version_base=None, config_name="config.yaml", config_path=".")
 def train(cfg):
@@ -30,11 +30,8 @@ def train(cfg):
     EPOCHS = cfg.hyperparameters.epochs
     LEARNING_RATE = cfg.hyperparameters.learning_rate
 
-
     # Defining the parameters for the training DataLoader
-    train_params = {"batch_size": TRAIN_BATCH_SIZE, 
-                    "shuffle": True, 
-                    "num_workers": 0}
+    train_params = {"batch_size": TRAIN_BATCH_SIZE, "shuffle": True, "num_workers": 0}
 
     # Loading the training set
     path = "data/processed/train.csv"
@@ -47,7 +44,6 @@ def train(cfg):
 
     # Initializing the optimizer
     optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
-
 
     # Training loop
     for epoch in range(EPOCHS):
