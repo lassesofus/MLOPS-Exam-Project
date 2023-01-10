@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.7-slim
+FROM python:3.10-slim
 
 # install python
 RUN apt update && \
@@ -15,3 +15,4 @@ WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
+
