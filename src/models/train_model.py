@@ -55,6 +55,7 @@ def train_epoch(model:nn.Module, criterion:BCEWithLogitsLoss,
 
     return np.mean(batch_losses)
 
+#@hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def train(cfg, model:nn.Module, criterion:BCEWithLogitsLoss, # TODO: Add typing for hydra cfg
           optimizer:Adam, train_loader:DataLoader, 
           device:torch.cuda.device) -> None:
@@ -73,7 +74,7 @@ def train(cfg, model:nn.Module, criterion:BCEWithLogitsLoss, # TODO: Add typing 
     best_loss = float("inf")
     start_time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.hps.epochs):
+    for epoch in range(cfg.training.hyperparameters.epochs):
         # Train 1 epoch 
         epoch_loss = train_epoch(model, criterion, optimizer, train_loader, epoch, device)
         epoch_losses.append(epoch_loss)
@@ -89,7 +90,7 @@ def train(cfg, model:nn.Module, criterion:BCEWithLogitsLoss, # TODO: Add typing 
     plt.legend()
     plt.savefig("./reports/figures/loss.png")
 
-@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+@hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg) -> None: # TODO: Add typing for hydra cfg 
     # Set up hyper-parameters # TODO: What to do with these?
     #device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -99,13 +100,13 @@ def main(cfg) -> None: # TODO: Add typing for hydra cfg
     # Load training data 
     train_set = load_dataset(path)
     
-    train_params = {"batch_size": cfg.hps.train_batch_size, "shuffle": True, "num_workers": 0}
+    train_params = {"batch_size": cfg.training.hyperparameters.train_batch_size, "shuffle": True, "num_workers": 0}
     train_loader = DataLoader(train_set, **train_params)
 
     # Initialize model, objective and optimizer 
-    model = BERT(drop_p=cfg.hps.drop_p).to(device)
+    model = BERT(drop_p = cfg.model.hyperparameters.drop_p, embed_dim = cfg.model.hyperparameters.embed_dim, out_dim = cfg.model.hyperparameters.out_dim).to(device)
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(), lr=cfg.hps.learning_rate)
+    optimizer = Adam(params=model.parameters(), lr=cfg.training.hyperparameters.learning_rate)
 
     # Train model 
     train(cfg, model, criterion, optimizer, train_loader, device)
