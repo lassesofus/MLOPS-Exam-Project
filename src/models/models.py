@@ -1,10 +1,12 @@
+import hydra
 import torch
 import transformers
 
+@hydra.main(version_base=None, config_name="model_basic.yaml", config_path="conf")
 
-class BERTClass(torch.nn.Module):
+class BERTClass(torch.nn.Module, cfg):
     def __init__(
-        self, drop_p: float = 0.5, hidden_layers: int = 768, output_size: int = 2
+        self, drop_p: float = cfg.hyperparameters.drop_p, hidden_layers: int = cfg.hyperparameters.hidden_layers, output_size: int = cfg.hyperparameters.output_size
     ):
         """
         Initialize a BERT model for classification.

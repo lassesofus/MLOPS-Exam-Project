@@ -11,7 +11,7 @@ from src.models.train_utils import loss_fn
 # The train function uses the Hydra library to handle command line arguments and configuration files.
 # The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration
 # for the training process.
-@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+@hydra.main(version_base=None, config_name="training_basic.yaml", config_path="conf/training")
 def train(cfg):
 
     """
@@ -34,7 +34,7 @@ def train(cfg):
     train_params = {"batch_size": TRAIN_BATCH_SIZE, "shuffle": True, "num_workers": 0}
 
     # Loading the training set
-    path = "data/processed/train.csv"
+    path = cfg.hyperparameters.data_path
     train_set = get_dataset(path)
     training_loader = DataLoader(train_set, **train_params)
 
