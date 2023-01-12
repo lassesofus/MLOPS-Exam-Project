@@ -4,39 +4,41 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
+from typing import List, Dict 
 
 
 class fake_news_dataset(Dataset):
-    def __init__(self, dataframe, tokenizer, max_len):
+    def __init__(self, dataframe:pd.DataFrame, tokenizer:BertTokenizer, 
+                max_len:int) -> None:
+        """ 
+        Initialize fake news dataset class 
+
+        :param dataframe: Pandas dataframe containing processed data
+        :param tokenizer: Tokenizer to encode text to BERT input 
+        :param max_len: Maximum length of encoded text (crop if above)
         """
-        Args:
-            dataframe: Pandas dataframe containing the data
-            tokenizer: Tokenizer to use for encoding comments
-            max_len: Maximum length of encoded comments
-        """
+
         self.tokenizer = tokenizer
         self.data = dataframe
         self.comment_text = dataframe.comment_text
         self.targets = self.data.list
         self.max_len = max_len
 
-    def __len__(self):
-        """Returns the length of the data"""
+    def __len__(self) -> int:
+        """ 
+        :returns: Amount of observations in dataset 
+        """
         return len(self.comment_text)
 
-    def __getitem__(self, index):
-        """
-        Returns the encoded comments and target labels for a given index
+    def __getitem__(self, index:List[int]) -> Dict[torch.Tensor]: # TODO: Don't know if this is correct typing 
+        """ Returns the encoded comments and target labels for a given index
 
-        Args:
-            index: Index of the data to return
-
-        Returns:
-            A dictionary containing the following elements:
-                ids: Encoded comment tensor
-                mask: Attention mask tensor
-                token_type_ids: Token type ids tensor
-                targets: Target label tensor
+        :param index: Dataframe index of the data to return
+        :returns: A dictionary containing the following elements:
+                    ids: Encoded comment tensor
+                    mask: Attention mask tensor
+                    token_type_ids: Token type ids tensor
+                    targets: Target label tensor
         """
         comment_text = str(self.comment_text[index])
         comment_text = " ".join(comment_text.split())
@@ -60,10 +62,12 @@ class fake_news_dataset(Dataset):
             "targets": torch.tensor(self.targets[index], dtype=torch.float),
         }
 
-def load_dataset(path_file):
+def load_dataset(path_file:str) -> Dataset: # TODO: Typing correct - or use fake_news_dataset?
     """
-    Args: path_file: Path to the CSV file containing the dataset
-    Returns: A CustomDataset object
+    Load dataset from CSV file with one-hot-encoded labels in correct format (list of ints)
+
+    :param path_file: Path to the CSV file containing the processed dataset
+    :returns: A fake_news_dataset object
     """
 
     # Load dataframe with correct format lists
