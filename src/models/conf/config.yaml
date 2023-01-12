@@ -1,0 +1,3 @@
+defaults:
+  - training: training_basic
+  - model: model_basic
