@@ -1,5 +1,0 @@
-hps:
-    train_batch_size: 8
-    valid_batch_size: 4
-    epochs: 1
-    learning_rate: 1e-05
