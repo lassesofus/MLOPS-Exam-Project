@@ -1,80 +1,89 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/python
 import hydra
 import torch
+from tqdm import tqdm
+import numpy as np 
+from torch.optim import Adam
+from torch.nn import BCEWithLogitsLoss
+from datetime import datetime
+import matplotlib.pyplot as plt 
+
 from torch.utils.data import DataLoader
-from transformers import BertTokenizer
-
-from src.data.dataset_class import get_dataset
-from src.models.models import BERTClass
+from src.models.model import BERT
 from src.models.train_utils import loss_fn
+from src.data.data_utils import load_dataset
 
+def train_epoch(model, criterion, optimizer, train_loader, epoch, device):
+    model.train()
+    batch_losses = []
 
-# The train function uses the Hydra library to handle command line arguments and configuration files.
-# The function takes in a single argument, `cfg`, which is a Hydra Conf object that contains the configuration
-# for the training process.
-@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
-def train(cfg):
-
-    """
-    Train a BERT model on the specified dataset.
-
-    Args:
-        cfg (hydra.core.config.CompositeConf): Configuration object containing the hyperparameters
-            for training and the paths to the dataset.
-    """
-
-    # Setting up the device for GPU usage if available, otherwise using CPU
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # Extracting key variables from the config for use in training
-    TRAIN_BATCH_SIZE = cfg.hyperparameters.train_batch_size
-    EPOCHS = cfg.hyperparameters.epochs
-    LEARNING_RATE = cfg.hyperparameters.learning_rate
-
-    # Defining the parameters for the training DataLoader
-    train_params = {"batch_size": TRAIN_BATCH_SIZE, "shuffle": True, "num_workers": 0}
-
-    # Loading the training set
-    path = "data/processed/train.csv"
-    train_set = get_dataset(path)
-    training_loader = DataLoader(train_set, **train_params)
-
-    # Initializing the model and moving it to the designated device
-    model = BERTClass()
-    model.to(device)
-
-    # Initializing the optimizer
-    optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
-
-    # Training loop
-    for epoch in range(EPOCHS):
-
-        # Set model to training mode
-        model.train()
-
-        # Iterate over training data
-        for _, data in enumerate(training_loader, 0):
-            # Move data to device
+    # Iterate over training data
+    with tqdm(train_loader, desc=f"Epoch {epoch}") as batch:
+        for _, data in enumerate(batch):
+             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
             token_type_ids = data["token_type_ids"].to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
-            # Get model outputs
+            # Forward pass and loss calculation
             outputs = model(ids, mask, token_type_ids)
-
-            # Calculate loss and print every 5000 iterations
-            loss = loss_fn(outputs, targets)
-            if _ % 5000 == 0:
-                print(f"Epoch: {epoch}, Loss:  {loss.item()}")
+            loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+        
+            # Save loss
+            batch_losses.append(loss.item())
 
-    # save the model
-    torch.save(model.state_dict(), "trained_model.pt")
+    return np.mean(batch_losses)
 
+def train(cfg, model, criterion, optimizer, train_loader, device):
+    """Description: Trains the model """
+
+    epoch_losses = []
+    best_loss = float("inf")
+    start_time = datetime.now().strftime("%H-%M-%S")
+
+    for epoch in range(cfg.hps.epochs):
+        # Train 1 epoch 
+        epoch_loss = train_epoch(model, criterion, optimizer, train_loader, epoch, device)
+        epoch_losses.append(epoch_loss)
+
+        # Save if model is better
+        if epoch_loss < best_loss:
+            best_loss = epoch_loss
+            torch.save(model.state_dict(), f"./models/{start_time}.pt")
+
+    # Plot grap of training  loss
+    plt.figure()
+    plt.plot(epoch_losses, label="Training loss")
+    plt.legend()
+    plt.savefig("./reports/figures/loss.png")
+
+@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+def main(cfg):
+    # Set up hyper-parameters # TODO: What to do with these?
+    #device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = 'cpu'
+    path = "data/processed/train.csv"
+
+    # Load training data 
+    train_set = load_dataset(path)
+    
+    train_params = {"batch_size": cfg.hps.train_batch_size, "shuffle": True, "num_workers": 0}
+    train_loader = DataLoader(train_set, **train_params)
+
+    # Initialize model, objective and optimizer 
+    model = BERT().to(device)
+    criterion = BCEWithLogitsLoss()
+    optimizer = Adam(params=model.parameters(), lr=cfg.hps.learning_rate)
+
+    # Train model 
+    train(cfg, model, criterion, optimizer, train_loader, device)
 
 if __name__ == "__main__":
-    train()
+    main()

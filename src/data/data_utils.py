@@ -1,21 +1,12 @@
-import ast
-
-import hydra
-import numpy as np
+# -*- coding: utf-8 -*-
+#!/usr/bin/python
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
 
 
-class CustomDataset(Dataset):
-    """Custom dataset for loading Kaggle Toxic Comment Classification data
-
-    Classes:
-        Dataset from torch.utils.data
-
-    """
-
+class fake_news_dataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_len):
         """
         Args:
@@ -69,30 +60,30 @@ class CustomDataset(Dataset):
             "targets": torch.tensor(self.targets[index], dtype=torch.float),
         }
 
-
-def get_dataset(path_file):
+def load_dataset(path_file):
     """
-    Loads and returns the Kaggle Toxic Comment Classification dataset
-
-    Args:
-        path_file: Path to the CSV file containing the dataset
-
-    Returns:
-        A CustomDataset object
+    Args: path_file: Path to the CSV file containing the dataset
+    Returns: A CustomDataset object
     """
 
+    # Load dataframe with correct format lists
     df = pd.read_csv(path_file)
     df["list"] = df["list"].apply(lambda x: list(map(int, x.strip("][").split(", "))))
     df = df.reset_index(drop=True)
 
-    print(f"Dataset: {df.shape}")
-
+    # Load tokenizer
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
-    max_len = 200
-    dataset = CustomDataset(df, tokenizer, max_len)
-    print(list(dataset.__dict__.keys())[0])
+    # Define max len # TODO: Make into hyperparameter using Hydra 
+    max_len = 20
+
+    # Initialize dataset object
+    dataset = fake_news_dataset(df, tokenizer, max_len)
+
     return dataset
 
 
-get_dataset("data/processed/train.csv")
+if __name__=="__main__":
+    load_dataset("data/processed/train.csv")
+
+

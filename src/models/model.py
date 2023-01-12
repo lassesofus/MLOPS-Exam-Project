@@ -1,8 +1,7 @@
 import torch
 import transformers
 
-
-class BERTClass(torch.nn.Module):
+class BERT(torch.nn.Module):
     def __init__(
         self, drop_p: float = 0.5, hidden_layers: int = 768, output_size: int = 2
     ):
@@ -20,7 +19,7 @@ class BERTClass(torch.nn.Module):
         Functions:
             forward(ids,mask,token_type_ids) -> torch.tensor
         """
-        super(BERTClass, self).__init__()
+        super(BERT, self).__init__()
         # Initializing the BERT model from the "bert-base-uncased" pre-trained model
         self.l1 = transformers.BertModel.from_pretrained("bert-base-uncased")
         # Initializing a dropout layer with a dropout rate of 0.3
