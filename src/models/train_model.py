@@ -8,19 +8,33 @@ from torch.optim import Adam
 from torch.nn import BCEWithLogitsLoss
 from datetime import datetime
 import matplotlib.pyplot as plt 
+from torch import nn
 
 from torch.utils.data import DataLoader
 from src.models.model import BERT
-from src.models.train_utils import loss_fn
 from src.data.data_utils import load_dataset
 
-def train_epoch(model, criterion, optimizer, train_loader, epoch, device):
+def train_epoch(model:nn.Module, criterion:BCEWithLogitsLoss, 
+                optimizer:Adam, train_loader:DataLoader, epoch:int, 
+                device:torch.cuda.device) -> float:  # TODO: float or some numpy object?
+    """
+    Train model for a single epoch
+
+    :param model: Model to train
+    :param criterion: Loss function
+    :param optimizer: Optimizer
+    :param train_loader: Training data loader
+    :param epoch: Current epoch
+    :param device: Device to train on
+    :return: Mean loss for epoch 
+    """
+   
     model.train()
     batch_losses = []
 
     # Iterate over training data
-    with tqdm(train_loader, desc=f"Epoch {epoch}") as batch:
-        for _, data in enumerate(batch):
+    with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
+        for _, data in enumerate(tepoch):
              # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
@@ -41,8 +55,19 @@ def train_epoch(model, criterion, optimizer, train_loader, epoch, device):
 
     return np.mean(batch_losses)
 
-def train(cfg, model, criterion, optimizer, train_loader, device):
-    """Description: Trains the model """
+def train(cfg, model:nn.Module, criterion:BCEWithLogitsLoss, # TODO: Add typing for hydra cfg
+          optimizer:Adam, train_loader:DataLoader, 
+          device:torch.cuda.device) -> None:
+    """ 
+    Trains the model for a given amount of epochs
+
+    :param cfg: Hydra config
+    :param model: Model to train
+    :param criterion: Loss function
+    :param optimizer: Optimizer
+    :param train_loader: Training data loader
+    :param device: Device to train on
+    """
 
     epoch_losses = []
     best_loss = float("inf")
@@ -65,7 +90,7 @@ def train(cfg, model, criterion, optimizer, train_loader, device):
     plt.savefig("./reports/figures/loss.png")
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path=".")
-def main(cfg):
+def main(cfg) -> None: # TODO: Add typing for hydra cfg 
     # Set up hyper-parameters # TODO: What to do with these?
     #device = "cuda" if torch.cuda.is_available() else "cpu"
     device = 'cpu'
@@ -78,7 +103,7 @@ def main(cfg):
     train_loader = DataLoader(train_set, **train_params)
 
     # Initialize model, objective and optimizer 
-    model = BERT().to(device)
+    model = BERT(drop_p=cfg.hps.drop_p).to(device)
     criterion = BCEWithLogitsLoss()
     optimizer = Adam(params=model.parameters(), lr=cfg.hps.learning_rate)
 

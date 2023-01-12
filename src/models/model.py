@@ -1,50 +1,47 @@
 import torch
 import transformers
 
-class BERT(torch.nn.Module):
-    def __init__(
-        self, drop_p: float = 0.5, hidden_layers: int = 768, output_size: int = 2
-    ):
-        """
-        Initialize a BERT model for classification.
+class BERT(torch.nn.Module): # TODO: Read more about BERT input/output 
+    def __init__(self, drop_p: float) -> None:
+        """ 
+        Initialize a BERT model from pre-trained weights with an additional 
+        linear layer for fine-tuning. 
 
-        Arguments
-        ---------
-        input_size: integer, size of the input layer
-        output_size: integer, size of the output layer
-
-        Classes:
-            torch.nn.Module
-
-        Functions:
-            forward(ids,mask,token_type_ids) -> torch.tensor
+        :param drop_p: The dropout probability 
+        :param embed_dim: The output dimension of the BERT model 
+        :param out_dim: The output dimension of the linear layer (2 classes) 
         """
         super(BERT, self).__init__()
+        
+        # Constant parameters 
+        embed_dim = 768 # base-bert 
+        out_dim: 2 # binary classification 
+
         # Initializing the BERT model from the "bert-base-uncased" pre-trained model
-        self.l1 = transformers.BertModel.from_pretrained("bert-base-uncased")
-        # Initializing a dropout layer with a dropout rate of 0.3
-        self.l2 = torch.nn.Dropout(drop_p)
-        # Initializing a linear layer with output dimension 2
-        self.l3 = torch.nn.Linear(hidden_layers, output_size)
+        self.bert = transformers.BertModel.from_pretrained("bert-base-uncased")
+        
+        # Initializing dropout layer
+        self.dropout = torch.nn.Dropout(drop_p)
 
-    def forward(self, ids, mask, token_type_ids):
+        # Initializing linear layer 
+        self.linear = torch.nn.Linear(embed_dim, out_dim)
+
+    def forward(self, ids:torch.Tensor, mask:torch.Tensor, 
+                token_type_ids:torch.Tensor) -> torch.Tensor:
         """
-        Forward pass of the model.
+        Forward pass of the model (without loss calculation)
 
-        Args:
-            ids (torch.Tensor): Input ids of shape (batch_size, sequence_length).
-            mask (torch.Tensor): Attention mask of shape (batch_size, sequence_length).
-            token_type_ids (torch.Tensor): Token type ids of shape (batch_size, sequence_length).
-
-        Returns:
-            torch.Tensor: Model output of shape (batch_size, num_classes).
+        :param ids: Input ids of shape (batch_size, sequence_length)
+        :param mask: Attention mask of shape (batch_size, sequence_length)
+        :param token_type_ids: Token type ids of shape (batch_size, sequence_length)
+        :returns: Model output of shape (batch_size, num_classes)
         """
 
-        # Getting the BERT model output and ignoring the pooled output
-        _, output_1 = self.l1(
-            ids, attention_mask=mask, token_type_ids=token_type_ids, return_dict=False
-        )
-        output_2 = self.l2(output_1)
-        output = self.l3(output_2)
+        # Getting the BERT model output and ignoring the pooled output # TODO: Check what is pooled output
+        _, x = self.bert(ids, attention_mask=mask, token_type_ids=token_type_ids, return_dict=False)
 
-        return output
+        # Applying dropout and linear layer
+        x = self.dropout(x)
+        x = self.linear(x)
+
+        return x
