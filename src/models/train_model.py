@@ -10,6 +10,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from torch import nn
 from sklearn import metrics
+from omegaconf import DictConfig, OmegaConf
 
 from torch.utils.data import DataLoader
 from src.models.model import BERT
@@ -64,9 +65,9 @@ def train_epoch(
 
 
 def train(
-    cfg,
+    cfg: DictConfig,
     model: nn.Module,
-    criterion: BCEWithLogitsLoss,  # TODO: Add typing for hydra cfg
+    criterion: BCEWithLogitsLoss, 
     optimizer: Adam,
     train_loader: DataLoader,
     device: torch.cuda.device,
@@ -87,7 +88,7 @@ def train(
     best_loss = float("inf")
     start_time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.hps.epochs):
+    for epoch in range(cfg.training.hyperparameters.epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
             model, criterion, optimizer, train_loader, epoch, device
@@ -110,12 +111,12 @@ def train(
 
 
 def test(
-    cfg,
+    cfg: DictConfig,
     model: nn.Module,
     weights: str,
     test_loader: DataLoader,
     device: torch.cuda.device,
-) -> None:  # TODO: Add typing for hydra cfg
+) -> None: 
     """
     Run model on the test set
 
@@ -160,13 +161,16 @@ def test(
     print(f"F1 Score (Micro) = {f1_score_micro}")
     print(f"F1 Score (Macro) = {f1_score_macro}")
 
+    return accuracy
+
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
-def main(cfg) -> None:  # TODO: Add typing for hydra cfg
+def main(cfg: DictConfig) -> None:
     # Set up hyper-parameters # TODO: What to do with these?
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    path_train = "data/processed/train.csv"
-    path_test = "data/processed/test.csv"  # TODO: Add to config
+    #device = "cuda" if torch.cuda.is_available() else "cpu"
+    device=cfg.training.hyperparameters.device
+    path_train = cfg.training.hyperparameters.path_train
+    path_test = cfg.training.hyperparameters.path_test 
 
     # Load training data
     train_set = load_dataset(path_train)

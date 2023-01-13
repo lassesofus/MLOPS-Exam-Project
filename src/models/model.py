@@ -45,4 +45,6 @@ class BERT(torch.nn.Module): # TODO: Read more about BERT input/output
         x = self.dropout(x)
         x = self.linear(x)
 
+        print("works")
+
         return x
