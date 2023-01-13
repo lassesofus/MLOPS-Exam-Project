@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/python
 import logging
 from pathlib import Path
 
@@ -12,14 +10,15 @@ from dotenv import find_dotenv, load_dotenv
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
 def main(input_filepath: str, output_filepath: str) -> None:
-    """ 
-    Turns csv-files [../raw/*.csv] of raw data into 2 correctly formated dataframes 
-    of processed train and test data saved as a csv.file [../processed]
+    """
+    Turns csv-files [../raw/*.csv] of raw data into 2 correctly formated
+    dataframes of processed train and test data saved as a csv.file
+    [../processed]
 
     :param input_filepath: Path to directory (e.g. './src/data/raw')
     :param output_filepath: Path to directory (e.g. './src/data/processed')
     """
-    
+
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 

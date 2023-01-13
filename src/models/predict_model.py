@@ -16,7 +16,8 @@ def main(model_path: str, data_path: str) -> None:
     max_len = 20  # TODO: Turn into hyperparameter
 
     # Load data and tokenize it
-    ids, mask, token_type_ids = load_txt_example(data_path, bert_version, max_len)
+    ids, mask, token_type_ids = load_txt_example(data_path, bert_version,
+                                                 max_len)
 
     # Initialize model from weights
     model = BERT()

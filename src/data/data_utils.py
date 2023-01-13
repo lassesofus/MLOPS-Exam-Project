@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/python
+from typing import List
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from transformers import BertTokenizer
-from typing import List, Dict
 from transformers import BertTokenizer
 
 
@@ -32,10 +29,7 @@ class fake_news_dataset(Dataset):
         """
         return len(self.comment_text)
 
-
-    def __getitem__(self, index:List[int]): # TODO: Don't know if this is correct typing 
-
-        #Dict[torch.Tensor]
+    def __getitem__(self, index: List[int]):
         """ Returns the encoded comments and target labels for a given index
 
         :param index: Dataframe index of the data to return
@@ -68,11 +62,10 @@ class fake_news_dataset(Dataset):
         }
 
 
-def load_dataset(
-    path_file: str,
-) -> Dataset:  # TODO: Typing correct - or use fake_news_dataset?
+def load_dataset(path_file: str) -> Dataset:  # TODO: Typing
     """
-    Load dataset from CSV file with one-hot-encoded labels in correct format (list of ints)
+    Load dataset from CSV file with one-hot-encoded labels in correct
+    format (list of ints)
 
     :param path_file: Path to the CSV file containing the processed dataset
     :returns: A fake_news_dataset object
@@ -80,7 +73,8 @@ def load_dataset(
 
     # Load dataframe with correct format lists
     df = pd.read_csv(path_file)
-    df["list"] = df["list"].apply(lambda x: list(map(int, x.strip("][").split(", "))))
+    df["list"] = df["list"].apply(lambda x: list(map(int,
+                                  x.strip("][").split(", "))))
     df = df.reset_index(drop=True)
 
     # Load tokenizer
@@ -94,53 +88,17 @@ def load_dataset(
 
     return dataset
 
-def load_txt_example(
-    path_file: str, max_len: int, bert_version: str
-) -> List[torch.Tensor]:  # TODO: Fix typing
+
+def load_txt_example(path_file: str, max_len: int, bert_version: str) \
+                    -> List[torch.Tensor]:  # TODO: Fix typing
     """
-    Takes a txt-file containing a single article and returns the encoded text tensors
+    Takes a txt-file containing a single article and returns the encoded
+    text tensors
 
     :param path_file: Path to the txt-file containing the article
     :param max_len: Maximum length of encoded text (crop if above)
-    :param bert_version: Pre-trained BERT version to define corpus vocabulary in tokenizer
-    """
-
-    # Load 1 article from txt-file
-    with open(path_file, "r") as f:
-        comment_text = f.readlines()
-
-    comment_text = str(comment_text)
-    comment_text = " ".join(comment_text.split())
-
-    # Initialize tokenizer
-    tokenizer = BertTokenizer.from_pretrained(bert_version)
-
-    # Encode text
-    inputs = tokenizer.encode_plus(
-        comment_text,
-        None,
-        add_special_tokens=True,
-        max_length=max_len,
-        pad_to_max_length=True,
-        return_token_type_ids=True,
-    )
-
-    # Return as tensors
-    ids = torch.tensor(inputs["input_ids"], dtype=torch.long)
-    mask = torch.tensor(inputs["attention_mask"], dtype=torch.long)
-    token_type_ids = torch.tensor(inputs["token_type_ids"], dtype=torch.long)
-
-    return ids, mask, token_type_ids
-
-def load_txt_example(
-    path_file: str, max_len: int, bert_version: str
-) -> List[torch.Tensor]:  # TODO: Fix typing
-    """
-    Takes a txt-file containing a single article and returns the encoded text tensors
-
-    :param path_file: Path to the txt-file containing the article
-    :param max_len: Maximum length of encoded text (crop if above)
-    :param bert_version: Pre-trained BERT version to define corpus vocabulary in tokenizer
+    :param bert_version: Pre-trained BERT version to define corpus
+                         vocabulary in tokenizer
     """
 
     # Load 1 article from txt-file

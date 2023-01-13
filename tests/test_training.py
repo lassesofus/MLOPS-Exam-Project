@@ -1,8 +1,4 @@
-import pytest
-import torch
-
-
-class TestTraining:  # TODO: Add more tests and docstrings (follow test_data.py template)
+class TestTraining:  # TODO
     def test_one(self):
         assert 2 == 2
 

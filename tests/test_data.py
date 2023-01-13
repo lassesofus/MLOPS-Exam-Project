@@ -1,9 +1,12 @@
 import os
+
 import pytest
+
 from src.data.make_dataset import load_dataset
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 class TestData:  # TODO: Add more tests and docstrings
     def __init__(self) -> None:
         super().__init__()  # TODO: Does it inherent correctly now
