@@ -34,7 +34,9 @@ class fake_news_dataset(Dataset):
 
     def __getitem__(
         self, index: List[int]
-    ) -> Dict[torch.Tensor]:  # TODO: Don't know if this is correct typing
+    ):  # TODO: Don't know if this is correct typing
+
+        #Dict[torch.Tensor]
         """Returns the encoded comments and target labels for a given index
 
         :param index: Dataframe index of the data to return

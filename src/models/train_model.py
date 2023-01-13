@@ -87,7 +87,7 @@ def train(
     best_loss = float("inf")
     start_time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.hps.epochs):
+    for epoch in range(cfg.training.hyperparameters.epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
             model, criterion, optimizer, train_loader, epoch, device
@@ -159,7 +159,7 @@ def test(
     print(f"F1 Score (Macro) = {f1_score_macro}")
 
 
-@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
+@hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg) -> None:  # TODO: Add typing for hydra cfg
     # Set up hyper-parameters # TODO: What to do with these?
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -171,23 +171,23 @@ def main(cfg) -> None:  # TODO: Add typing for hydra cfg
     test_set = load_dataset(path_test)
 
     train_loader = DataLoader(
-        train_set, batch_size=cfg.hps.train_batch_size, shuffle=True
+        train_set, batch_size=cfg.training.hyperparameters.train_batch_size, shuffle=True
     )
     test_loader = DataLoader(
-        test_set, batch_size=cfg.hps.valid_batch_size, shuffle=False
+        test_set, batch_size=cfg.training.hyperparameters.valid_batch_size, shuffle=False
     )
 
     # Initialize model, objective and optimizer
-    model = BERT(drop_p=cfg.hps.drop_p).to(device)
+    model = BERT(drop_p=cfg.model.hyperparameters.drop_p, embed_dim=cfg.model.hyperparameters.embed_dim, out_dim=cfg.model.hyperparameters.out_dim).to(device)
+
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(), lr=cfg.hps.learning_rate)
+    optimizer = Adam(params=model.parameters(), lr=cfg.training.hyperparameters.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader, device)
 
     # Test model
     test(model, weights, test_loader, device)
-
 
 if __name__ == "__main__":
     main()
