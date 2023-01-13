@@ -87,7 +87,7 @@ def train(
     best_loss = float("inf")
     start_time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.hps.epochs):
+    for epoch in range(cfg.training.hyperparameters.epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
             model, criterion, optimizer, train_loader, epoch, device
