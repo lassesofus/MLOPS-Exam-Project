@@ -176,20 +176,20 @@ def main(cfg) -> None:  # TODO: Add typing for hydra cfg
     test_set = load_dataset(path_test)
 
     train_loader = DataLoader(
-        train_set, batch_size=cfg.training.hps.train_batch_size, shuffle=True
+        train_set, batch_size=cfg.training.hyperparameters.train_batch_size, shuffle=True
     )
     test_loader = DataLoader(
-        test_set, batch_size=cfg.training.hps.valid_batch_size, shuffle=False
+        test_set, batch_size=cfg.training.hyperparameters.valid_batch_size, shuffle=False
     )
 
     # Initialize model, objective and optimizer
     model = BERT(drop_p=cfg.model.hyperparameters.drop_p,
-                 embed_dim=cfg.model.hps.embed_dim,
-                 out_dim=cfg.model.hps.out_dim).to(device)
+                 embed_dim=cfg.model.hyperparameters.embed_dim,
+                 out_dim=cfg.model.hyperparameters.out_dim).to(device)
 
     criterion = BCEWithLogitsLoss()
     optimizer = Adam(params=model.parameters(),
-                     lr=cfg.training.hps.learning_rate)
+                     lr=cfg.training.hyperparameters.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader, device)
