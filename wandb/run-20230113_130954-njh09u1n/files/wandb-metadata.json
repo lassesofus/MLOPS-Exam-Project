@@ -1,0 +1,76 @@
+{
+    "os": "Linux-5.15.79.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.10.8",
+    "heartbeatAt": "2023-01-13T12:09:55.345315",
+    "startedAt": "2023-01-13T12:09:54.164327",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "-m src.models.train_model",
+    "git": {
+        "remote": "https://github.com/lassesofus/MLOPS-Exam-Project",
+        "commit": "8e0b1217a4d8c66e1441a3d6a56964075005a6bc"
+    },
+    "email": "evangelos.dio@gmail.com",
+    "root": "/mnt/c/Users/Dell/git_projects/MLOPS-Exam-Project",
+    "host": "DESKTOP-DF93VKM",
+    "username": "root",
+    "executable": "/root/miniconda3/envs/mlops_project/bin/python3",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 1996.1820000000002,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1996.182,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 1006.853931427002,
+        "used": 25.317062377929688
+    },
+    "memory": {
+        "total": 2.7909927368164062
+    }
+}
