@@ -1,56 +1,59 @@
-import os.path
-#import hydra
+import os
 import pytest
-import torch
-from tests import _PATH_DATA
-from src.data.dataset_class import get_dataset
+from src.data.make_dataset import load_dataset
 
 
+@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+class TestData:  # TODO: Add more tests and docstrings
+    def __init__(self) -> None:
+        super().__init__()  # TODO: Does it inherent correctly now
 
+        # Paths for data
+        path_train = "data/processed/train.csv"
+        path_test = "data/processed/test.csv"
 
-#@hydra.main(version_base=None, config_name="config.yaml", config_path=".")
-@pytest.mark.skipif(not os.path.exists('data/processed/train.csv'), reason="Data files not found")
-def test_data():
-    """
-    Test function to ensure that the train and test datasets have the correct shape and keys.
+        # Load train and test datasets
+        self.train_set = load_dataset(path_train)
+        self.test_set = load_dataset(path_test)
 
-    The shape of the training set should have a shape of (20800, 5) and the test set should have a shape of (5200, 5).
-    Each dataset should have the following dictionary elements:
-        - ids: Encoded comment tensor
-        - mask: Attention mask tensor
-        - token_type_ids: Token type ids tensor
-        - targets: Target label tensor
-    """
-    # N_train = cfg.dataset.N_train
-    # N_test = cfg.dataset.N_test
-    # columns = cfg.dataset.columns
-    
-    #Define the expected values 
-    #Should be implemented with hydra!!!
-    N_train = 20800
-    N_test = 5200
-    columns = 5
+    def test_numb_obs(self) -> None:
+        # Check that the lengths of the datasets are as expected
+        assert (
+            len(self.train_set) == 20800 and len(self.test_set) == 5200
+        ), "Dataset splits did not have expected lengths"
 
-    #Define paths for data
-    path_train = 'data/processed/train.csv'
-    path_test = 'data/processed/test.csv'
+    def test_numb_keys(self):
+        # Check that the datasets have the expected number of dictionary keys
+        assert (
+            len(self.train_set.__dict__.keys()) == 5
+        ), "Max length is not expected value"
 
-    # Load train and test datasets
-    train_set = get_dataset(path_train)
-    test_set = get_dataset(path_test)
-        
-    # Check that the lengths of the datasets are as expected
-    assert len(train_set) == N_train and len(test_set) == N_test , "Dataset splits did not have expected lengths"
-    
-    # Check that the datasets have the expected number of dictionary keys
-    assert len(train_set.__dict__.keys()) == columns, "Max length is not expected value"
-    
-    # Check that the datasets have the expected keys
-    assert list(train_set.__dict__.keys())[0] == "tokenizer", "The first key is not 'tokenizer'"
-    assert list(train_set.__dict__.keys())[1] == "data", "The second key is not 'data'"
-    assert list(train_set.__dict__.keys())[2] == "comment_text", "The third key is not 'comment_text'"
-    assert list(train_set.__dict__.keys())[3] == "targets", "The fourth key is not 'targets'"
-    assert list(train_set.__dict__.keys())[4] == "max_len", "The fifth key is not 'max_len'"
+    def test_dict_key1(self) -> None:
+        # Check that the datasets have the expected key
+        assert (
+            list(self.train_set.__dict__.keys())[0] == "tokenizer"
+        ), "The first key is not 'tokenizer'"
 
-if __name__ == "__main__":
-    test_data()     
+    def test_dict_key2(self) -> None:
+        # Check that the datasets have the expected key
+        assert (
+            list(self.train_set.__dict__.keys())[1] == "data"
+        ), "The second key is not 'data'"
+
+    def test_dict_key3(self) -> None:
+        # Check that the datasets have the expected key
+        assert (
+            list(self.train_set.__dict__.keys())[2] == "comment_text"
+        ), "The third key is not 'comment_text'"
+
+    def test_dict_key4(self) -> None:
+        # Check that the datasets have the expected key
+        assert (
+            list(self.train_set.__dict__.keys())[3] == "targets"
+        ), "The fourth key is not 'targets'"
+
+    def test_dict_key5(self) -> None:
+        # Check that the datasets have the expected key
+        assert (
+            list(self.train_set.__dict__.keys())[4] == "max_len"
+        ), "The fifth key is not 'max_len'"

@@ -1,4 +1,0 @@
-dataset: 
-    N_train: 20800
-    N_test: 5200
-    columns: 5
