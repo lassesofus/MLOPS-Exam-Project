@@ -153,11 +153,11 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate accuracy and f1 score
-    accuracy = metrics.balanced_accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
+    # Calculate accuracy and f1 score # TODO: Add confusion matrix visualization here or in the cookie-cutter directory
+    accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, 
                                       average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, 
                                       average="macro")
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
