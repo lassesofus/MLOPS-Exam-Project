@@ -110,17 +110,15 @@ def train(
 
 
 def test(
-    cfg,
-    model: nn.Module,
-    weights: str,
-    test_loader: DataLoader,
-    device: torch.cuda.device,
+    model: nn.Module, weights: str, test_loader: DataLoader, device: torch.cuda.device
 ) -> None:  # TODO: Add typing for hydra cfg
     """
     Run model on the test set
 
-    :param cfg: Config object with hyperparameters
-    :param model_path: File path to the saved model weights
+    :param model: Initialized model
+    :param weights: File path to the saved model weights
+    :param test_loader: Test data loader
+    :param device: Device to train on
     """
     model.eval()
 
@@ -189,7 +187,7 @@ def main(cfg) -> None:  # TODO: Add typing for hydra cfg
     weights = train(cfg, model, criterion, optimizer, train_loader, device)
 
     # Test model
-    test(cfg, model, weights, test_loader, device)
+    test(model, weights, test_loader, device)
 
 if __name__ == "__main__":
     main()
