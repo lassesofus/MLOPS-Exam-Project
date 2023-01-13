@@ -88,6 +88,43 @@ def load_dataset(path_file:str) -> Dataset: # TODO: Typing correct - or use fake
 
     return dataset
 
+def load_txt_example(
+    path_file: str, max_len: int, bert_version: str
+) -> List[torch.Tensor]:  # TODO: Fix typing
+    """
+    Takes a txt-file containing a single article and returns the encoded text tensors
+
+    :param path_file: Path to the txt-file containing the article
+    :param max_len: Maximum length of encoded text (crop if above)
+    :param bert_version: Pre-trained BERT version to define corpus vocabulary in tokenizer
+    """
+
+    # Load 1 article from txt-file
+    with open(path_file, "r") as f:
+        comment_text = f.readlines()
+
+    comment_text = str(comment_text)
+    comment_text = " ".join(comment_text.split())
+
+    # Initialize tokenizer
+    tokenizer = BertTokenizer.from_pretrained(bert_version)
+
+    # Encode text
+    inputs = tokenizer.encode_plus(
+        comment_text,
+        None,
+        add_special_tokens=True,
+        max_length=max_len,
+        pad_to_max_length=True,
+        return_token_type_ids=True,
+    )
+
+    # Return as tensors
+    ids = torch.tensor(inputs["input_ids"], dtype=torch.long)
+    mask = torch.tensor(inputs["attention_mask"], dtype=torch.long)
+    token_type_ids = torch.tensor(inputs["token_type_ids"], dtype=torch.long)
+
+    return ids, mask, token_type_ids
 
 if __name__=="__main__":
     load_dataset("data/processed/train.csv")
