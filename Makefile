@@ -30,8 +30,8 @@ data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
 ## Evaluate Model
-evaluate: evaluate_model
-	$(PYTHON_INTERPRETER) src/data/predict_model.py data/processed
+evaluate: predict_model
+	$(PYTHON_INTERPRETER) src/data/predict_model.py models data/processed
 
 ## Delete all compiled Python files
 clean:
