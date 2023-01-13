@@ -1,8 +1,18 @@
+import sys
+#sys.path.append("/mnt/c/Users/Lasse/Desktop/DTU/7. semester/MLOps/MLOPS-Exam-Project/")
+#sys.path.append("/src")
+print(sys.path)
+import os
+print(os.getcwd())
+
 import hydra
 import torch
 from torch.utils.data import DataLoader
 from transformers import BertTokenizer
+from tqdm import tqdm
 
+print(sys.path)
+print(os.getcwd())
 from src.data.dataset_class import get_dataset
 from src.models.models import BERTClass
 from src.models.train_utils import loss_fn
@@ -24,6 +34,7 @@ def train(cfg):
 
     # Setting up the device for GPU usage if available, otherwise using CPU
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
 
     # Extracting key variables from the config for use in training
     TRAIN_BATCH_SIZE = cfg.hyperparameters.train_batch_size
@@ -52,7 +63,7 @@ def train(cfg):
         model.train()
 
         # Iterate over training data
-        for _, data in enumerate(training_loader, 0):
+        for _, data in tqdm(enumerate(training_loader, 0)):
             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
@@ -73,7 +84,7 @@ def train(cfg):
             optimizer.step()
 
     # save the model
-    torch.save(model.state_dict(), "trained_model.pt")
+    torch.save(model.state_dict(), "models/trained_model.pt")
 
 
 if __name__ == "__main__":

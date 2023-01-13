@@ -72,7 +72,7 @@ class CustomDataset(Dataset):
 
 def get_dataset(path_file):
     """
-    Loads and returns the Kaggle Toxic Comment Classification dataset
+    Loads and returns the Fake News Classification dataset
 
     Args:
         path_file: Path to the CSV file containing the dataset
