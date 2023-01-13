@@ -179,15 +179,15 @@ def main(cfg) -> None:  # TODO: Add typing for hydra cfg
 
     # Initialize model, objective and optimizer
     model = BERT(drop_p=cfg.hps.drop_p).to(device)
+
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(), lr=cfg.hps.learning_rate)
+    optimizer = Adam(params=model.parameters(), lr=cfg.training.hyperparameters.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader, device)
 
     # Test model
     test(model, weights, test_loader, device)
-
 
 if __name__ == "__main__":
     main()
