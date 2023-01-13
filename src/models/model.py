@@ -2,7 +2,7 @@ import torch
 import transformers
 
 class BERT(torch.nn.Module): # TODO: Read more about BERT input/output 
-    def __init__(self, drop_p: float) -> None:
+    def __init__(self, drop_p: float, embed_dim: int, out_dim: int) -> None:
         """ 
         Initialize a BERT model from pre-trained weights with an additional 
         linear layer for fine-tuning. 
@@ -14,17 +14,18 @@ class BERT(torch.nn.Module): # TODO: Read more about BERT input/output
         super(BERT, self).__init__()
         
         # Constant parameters 
-        embed_dim = 768 # base-bert 
-        out_dim: 2 # binary classification 
 
+        self.drop_p = drop_p
+        self.embed_dim = embed_dim #base-bert
+        self.out_dim = out_dim # binary classification
         # Initializing the BERT model from the "bert-base-uncased" pre-trained model
         self.bert = transformers.BertModel.from_pretrained("bert-base-uncased")
         
         # Initializing dropout layer
-        self.dropout = torch.nn.Dropout(drop_p)
+        self.dropout = torch.nn.Dropout(self.drop_p)
 
         # Initializing linear layer 
-        self.linear = torch.nn.Linear(embed_dim, out_dim)
+        self.linear = torch.nn.Linear(self.embed_dim, self.out_dim)
 
     def forward(self, ids:torch.Tensor, mask:torch.Tensor, 
                 token_type_ids:torch.Tensor) -> torch.Tensor:
