@@ -4,17 +4,19 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
-from typing import List, Dict 
+from typing import List, Dict
+from transformers import BertTokenizer
 
 
 class fake_news_dataset(Dataset):
-    def __init__(self, dataframe:pd.DataFrame, tokenizer:BertTokenizer, 
-                max_len:int) -> None:
-        """ 
-        Initialize fake news dataset class 
+    def __init__(
+        self, dataframe: pd.DataFrame, tokenizer: BertTokenizer, max_len: int
+    ) -> None:
+        """
+        Initialize fake news dataset class
 
         :param dataframe: Pandas dataframe containing processed data
-        :param tokenizer: Tokenizer to encode text to BERT input 
+        :param tokenizer: Tokenizer to encode text to BERT input
         :param max_len: Maximum length of encoded text (crop if above)
         """
 
@@ -25,10 +27,11 @@ class fake_news_dataset(Dataset):
         self.max_len = max_len
 
     def __len__(self) -> int:
-        """ 
-        :returns: Amount of observations in dataset 
+        """
+        :returns: Amount of observations in dataset
         """
         return len(self.comment_text)
+
 
     def __getitem__(self, index:List[int]): # TODO: Don't know if this is correct typing 
 
@@ -64,7 +67,10 @@ class fake_news_dataset(Dataset):
             "targets": torch.tensor(self.targets[index], dtype=torch.float),
         }
 
-def load_dataset(path_file:str) -> Dataset: # TODO: Typing correct - or use fake_news_dataset?
+
+def load_dataset(
+    path_file: str,
+) -> Dataset:  # TODO: Typing correct - or use fake_news_dataset?
     """
     Load dataset from CSV file with one-hot-encoded labels in correct format (list of ints)
 
@@ -80,7 +86,7 @@ def load_dataset(path_file:str) -> Dataset: # TODO: Typing correct - or use fake
     # Load tokenizer
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
-    # Define max len # TODO: Make into hyperparameter using Hydra 
+    # Define max len # TODO: Make into hyperparameter using Hydra
     max_len = 20
 
     # Initialize dataset object
@@ -88,8 +94,82 @@ def load_dataset(path_file:str) -> Dataset: # TODO: Typing correct - or use fake
 
     return dataset
 
+def load_txt_example(
+    path_file: str, max_len: int, bert_version: str
+) -> List[torch.Tensor]:  # TODO: Fix typing
+    """
+    Takes a txt-file containing a single article and returns the encoded text tensors
 
-if __name__=="__main__":
+    :param path_file: Path to the txt-file containing the article
+    :param max_len: Maximum length of encoded text (crop if above)
+    :param bert_version: Pre-trained BERT version to define corpus vocabulary in tokenizer
+    """
+
+    # Load 1 article from txt-file
+    with open(path_file, "r") as f:
+        comment_text = f.readlines()
+
+    comment_text = str(comment_text)
+    comment_text = " ".join(comment_text.split())
+
+    # Initialize tokenizer
+    tokenizer = BertTokenizer.from_pretrained(bert_version)
+
+    # Encode text
+    inputs = tokenizer.encode_plus(
+        comment_text,
+        None,
+        add_special_tokens=True,
+        max_length=max_len,
+        pad_to_max_length=True,
+        return_token_type_ids=True,
+    )
+
+    # Return as tensors
+    ids = torch.tensor(inputs["input_ids"], dtype=torch.long)
+    mask = torch.tensor(inputs["attention_mask"], dtype=torch.long)
+    token_type_ids = torch.tensor(inputs["token_type_ids"], dtype=torch.long)
+
+    return ids, mask, token_type_ids
+
+def load_txt_example(
+    path_file: str, max_len: int, bert_version: str
+) -> List[torch.Tensor]:  # TODO: Fix typing
+    """
+    Takes a txt-file containing a single article and returns the encoded text tensors
+
+    :param path_file: Path to the txt-file containing the article
+    :param max_len: Maximum length of encoded text (crop if above)
+    :param bert_version: Pre-trained BERT version to define corpus vocabulary in tokenizer
+    """
+
+    # Load 1 article from txt-file
+    with open(path_file, "r") as f:
+        comment_text = f.readlines()
+
+    comment_text = str(comment_text)
+    comment_text = " ".join(comment_text.split())
+
+    # Initialize tokenizer
+    tokenizer = BertTokenizer.from_pretrained(bert_version)
+
+    # Encode text
+    inputs = tokenizer.encode_plus(
+        comment_text,
+        None,
+        add_special_tokens=True,
+        max_length=max_len,
+        pad_to_max_length=True,
+        return_token_type_ids=True,
+    )
+
+    # Return as tensors
+    ids = torch.tensor(inputs["input_ids"], dtype=torch.long)
+    mask = torch.tensor(inputs["attention_mask"], dtype=torch.long)
+    token_type_ids = torch.tensor(inputs["token_type_ids"], dtype=torch.long)
+
+    return ids, mask, token_type_ids
+
+
+if __name__ == "__main__":
     load_dataset("data/processed/train.csv")
-
-
