@@ -11,13 +11,15 @@ from dotenv import find_dotenv, load_dotenv
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
-def main(input_filepath=None, output_filepath=None):
-    """Runs data processing scripts to turn raw data from (../raw) into
-    cleaned data ready to be analyzed (saved in ../processed).
+def main(input_filepath: str, output_filepath: str) -> None:
+    """ 
+    Turns csv-files [../raw/*.csv] of raw data into 2 correctly formated dataframes 
+    of processed train and test data saved as a csv.file [../processed]
 
-     First Stage: Turn CSV into dataframe (comment_text, list)
-
+    :param input_filepath: Path to directory (e.g. './src/data/raw')
+    :param output_filepath: Path to directory (e.g. './src/data/processed')
     """
+    
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 

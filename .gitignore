@@ -84,6 +84,6 @@ target/
 
 # Mypy cache
 .mypy_cache/
-/data
-/models
+data/
+models/
 
