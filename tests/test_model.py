@@ -1,10 +1,4 @@
-import pytest
-import torch
-
-from src.models.model import BERT
-
-
-class TestModel:  # TODO: Add more tests and docstrings (follow test_data.py template)
+class TestModel:  # TODO
     def test_one(self):
         assert 2 == 2
 
