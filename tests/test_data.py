@@ -5,15 +5,17 @@ from src.data.data_utils import load_dataset
 from tests import _PATH_DATA
 
 
-@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
-        
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA),
+                    reason="Data files not found")
 def test_numb_obs() -> None:
     # Check that the lengths of the datasets are as expected
     # Paths for data
     path_train = "data/processed/train.csv"
+    path_test = "data/processed/test.csv"
 
     # Load train and test datasets
     train_set = load_dataset(path_train)
+    test_set = load_dataset(path_test)
     assert (
         len(train_set) == 20800 and len(test_set) == 5200
     ), "Dataset splits did not have expected lengths"

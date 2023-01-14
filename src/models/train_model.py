@@ -5,13 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from sklearn import metrics
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig
 
-import hydra
-import matplotlib.pyplot as plt
-import numpy as np
-import torch
-from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
@@ -73,7 +68,7 @@ def train_epoch(
 def train(
     cfg: DictConfig,
     model: nn.Module,
-    criterion: BCEWithLogitsLoss, 
+    criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
     device: torch.cuda.device,
@@ -160,11 +155,13 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate accuracy and f1 score # TODO: Add confusion matrix visualization here or in the cookie-cutter directory
+    # Calculate accuracy and f1 score
+    # TODO: Add confusion matrix visualization here or
+    # in the cookie-cutter directory
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, 
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, 
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="macro")
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
@@ -176,20 +173,22 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg: DictConfig) -> None:
     # Set up hyper-parameters # TODO: What to do with these?
-    #device = "cuda" if torch.cuda.is_available() else "cpu"
-    device=cfg.training.hyperparameters.device
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = cfg.training.hyperparameters.device
     path_train = cfg.training.hyperparameters.path_train
-    path_test = cfg.training.hyperparameters.path_test 
+    path_test = cfg.training.hyperparameters.path_test
 
     # Load training data
     train_set = load_dataset(path_train)
     test_set = load_dataset(path_test)
 
     train_loader = DataLoader(
-        train_set, batch_size=cfg.training.hyperparameters.train_batch_size, shuffle=True
+        train_set, batch_size=cfg.training.hyperparameters.train_batch_size,
+        shuffle=True
     )
     test_loader = DataLoader(
-        test_set, batch_size=cfg.training.hyperparameters.valid_batch_size, shuffle=False
+        test_set, batch_size=cfg.training.hyperparameters.valid_batch_size,
+        shuffle=False
     )
 
     # Initialize model, objective and optimizer
