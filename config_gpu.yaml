@@ -6,4 +6,4 @@ workerPoolSpecs:
       acceleratorCount: 1
    replicaCount: 1
    containerSpec:
-      imageUri: gcr.io/dtu-mlops-374314/trainer
+      imageUri: gcr.io/dtu-mlops-374314/trainer:latest
