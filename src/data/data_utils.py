@@ -43,7 +43,7 @@ class fake_news_dataset(Dataset):
         comment_text = str(self.comment_text[index])
         comment_text = " ".join(comment_text.split())
 
-        inputs = self.tokenizer.encode_plus(
+        inputs = self.tokenizer(
             comment_text,
             None,
             add_special_tokens=True,
@@ -113,14 +113,13 @@ def load_txt_example(path_file: str, max_len: int, bert_version: str) \
     tokenizer = BertTokenizer.from_pretrained(bert_version)
 
     # Encode text
-    inputs = tokenizer.encode_plus(
-        comment_text,
-        None,
-        add_special_tokens=True,
-        max_length=max_len,
-        pad_to_max_length=True,
-        return_token_type_ids=True,
-    )
+    inputs = tokenizer(comment_text,
+                       None,
+                       add_special_tokens=True,
+                       max_length=max_len,
+                       pad_to_max_length=True,
+                       return_token_type_ids=True,
+                       return_tensors="pt")
 
     # Return as tensors
     ids = torch.tensor(inputs["input_ids"], dtype=torch.long)
