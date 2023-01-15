@@ -1,12 +1,12 @@
 import os
 
 import pytest
+
 from src.data.data_utils import load_dataset
 from tests import _PATH_DATA
 
 
-@pytest.mark.skipif(not os.path.exists(_PATH_DATA),
-                    reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_numb_obs() -> None:
     # Check that the lengths of the datasets are as expected
     # Paths for data
@@ -21,6 +21,7 @@ def test_numb_obs() -> None:
     ), "Dataset splits did not have expected lengths"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_numb_keys():
     # Check that the datasets have the expected number of dictionary keys
     # Paths for data
@@ -28,11 +29,10 @@ def test_numb_keys():
 
     # Load train and test datasets
     train_set = load_dataset(path_train)
-    assert (
-        len(train_set.__dict__.keys()) == 5
-    ), "Max length is not expected value"
+    assert len(train_set.__dict__.keys()) == 5, "Max length is not expected value"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_dict_key1() -> None:
     # Check that the datasets have the expected key
     # Paths for data
@@ -45,6 +45,7 @@ def test_dict_key1() -> None:
     ), "The first key is not 'tokenizer'"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_dict_key2() -> None:
     # Check that the datasets have the expected key
     # Paths for data
@@ -52,11 +53,10 @@ def test_dict_key2() -> None:
 
     # Load train and test datasets
     train_set = load_dataset(path_train)
-    assert (
-        list(train_set.__dict__.keys())[1] == "data"
-    ), "The second key is not 'data'"
+    assert list(train_set.__dict__.keys())[1] == "data", "The second key is not 'data'"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_dict_key3() -> None:
     # Check that the datasets have the expected key
     # Paths for data
@@ -69,6 +69,7 @@ def test_dict_key3() -> None:
     ), "The third key is not 'comment_text'"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_dict_key4() -> None:
     # Check that the datasets have the expected key
     # Paths for data
@@ -81,6 +82,7 @@ def test_dict_key4() -> None:
     ), "The fourth key is not 'targets'"
 
 
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 def test_dict_key5() -> None:
     # Paths for data
     path_train = "data/processed/train.csv"
