@@ -103,7 +103,9 @@ def train(
     for epoch in range(epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
-            model, criterion, optimizer, train_loader, epoch, device, batch_size
+            model, criterion, optimizer,
+            train_loader, epoch,
+            device, batch_size
         )
         epoch_losses.append(epoch_loss)
 
@@ -194,7 +196,7 @@ def ttest(
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg: DictConfig) -> None:
     # Set up hyper-parameters # TODO: What to do with these?
-    #device = "cuda" if torch.cuda.is_available() else "cpu"
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
     device = cfg.training.hyperparameters.device
     path_train = cfg.training.hyperparameters.path_train
     path_test = cfg.training.hyperparameters.path_test
@@ -224,7 +226,8 @@ def main(cfg: DictConfig) -> None:
 
     criterion = BCEWithLogitsLoss()
     optimizer = Adam(
-        params=model.parameters(), lr=cfg.training.hyperparameters.learning_rate
+        params=model.parameters(),
+        lr=cfg.training.hyperparameters.learning_rate
     )
 
     # Train model
