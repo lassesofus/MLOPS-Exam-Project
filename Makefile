@@ -23,11 +23,16 @@ endif
 ## Install Python Dependencies
 requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
+	$(PYTHON_INTERPRETER) -m pip install -e .
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+
+## Train using the hyper parameters
+train: data
+	$(PYTHON_INTERPRETER) src/models/train_model.py
 
 ## Evaluate Model
 evaluate: predict_model
