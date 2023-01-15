@@ -194,7 +194,7 @@ def ttest(
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg: DictConfig) -> None:
     # Set up hyper-parameters # TODO: What to do with these?
-    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    #device = "cuda" if torch.cuda.is_available() else "cpu"
     device = cfg.training.hyperparameters.device
     path_train = cfg.training.hyperparameters.path_train
     path_test = cfg.training.hyperparameters.path_test
