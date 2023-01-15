@@ -4,4 +4,4 @@ workerPoolSpecs:
       machineType: n1-highmem-2
    replicaCount: 1
    containerSpec:
-      imageUri: gcr.io/dtu-mlops-374314/gcp_vm_tester
+      imageUri: gcr.io/dtu-mlops-374314/trainer
