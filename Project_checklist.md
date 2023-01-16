@@ -37,10 +37,10 @@ permalink: projects
 * [X] (optional) Create a new project on `gcp` and invite all group members to it
 * [X] Create a data storage on `gcp` for you data
 * [ ] Create a trigger workflow for automatically building your docker images
-* [ ] Get your model training on `gcp`
-* [ ] Play around with distributed data loading
-* [ ] (optional) Play around with distributed model training
-* [ ] Play around with quantization and compilation for you trained models
+* [ ] Get your model training in GCP using either the Engine or Vertex AI
+* [ ] Create a FastAPI application that can do inference using your model
+* [ ] If applicable, consider deploying the model locally using torchserve
+* [ ] Deploy your model in GCP using either Functions or Run as the backend
 
 ### Week 3
 
