@@ -88,4 +88,9 @@ data/
 models/
 outputs/
 
+<<<<<<< HEAD
+# Secrets
+.env
+=======
 /models
+>>>>>>> main
