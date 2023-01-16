@@ -31,7 +31,7 @@ def main(cfg: DictConfig) -> None:
 
     with torch.no_grad():
         outputs = model(ids, mask)
-        print(outputs)
+
     # Print results
     prediction = torch.max(outputs, 1)
     prediction = "unreliable" if prediction.indices[0] == 1 else "reliable"

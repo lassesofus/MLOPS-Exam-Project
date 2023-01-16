@@ -39,15 +39,18 @@ class BERT(torch.nn.Module):  # TODO: Read more about BERT input/output
         #     raise ValueError("Expected input to be a 2D tensor")
         # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
         #     raise ValueError("Wrong shape of the input")
-        # # Applying dropout
-        # x = self.dropout(x)
+
+        # Applying dropout
+        x = self.dropout(x)
+
         # if x.ndim != 2:
         #     raise ValueError("Expected input to be a 2D tensor")
         # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
         #     raise ValueError("Wrong shape")
 
-        # # Applying linear layer
-        # x = self.linear(x)
+        # Applying linear layer
+        x = self.linear(x)
+
         # if x.ndim != 2:
         #     raise ValueError("Expected input to be a 2D tensor")
         # if x.shape[0] != batch_size or x.shape[1] != self.out_dim:

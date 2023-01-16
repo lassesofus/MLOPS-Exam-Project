@@ -184,8 +184,10 @@ def ttest(
     # TODO: Add confusion matrix visualization here or
     # in the cookie-cutter directory
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, average="macro")
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
+                                      average="micro")
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
+                                      average="macro")
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
     print(f"F1 Score (Macro) = {f1_score_macro}")
