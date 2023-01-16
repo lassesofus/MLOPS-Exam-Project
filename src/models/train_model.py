@@ -10,6 +10,9 @@ from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import wandb
+import os 
+from dotenv import load_dotenv, find_dotenv
 
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
@@ -94,6 +97,12 @@ def train(
         )
         epoch_losses.append(epoch_loss)
 
+        # Save wandb log
+        wandb.log({
+            "training_loss": epoch_loss,
+            "epoch": epoch
+        })
+
         # Save if model is better
         if epoch_loss < best_loss:
             best_loss = epoch_loss
@@ -109,8 +118,8 @@ def train(
     return save_path
 
 
-def test(model: nn.Module, weights: str, test_loader: DataLoader,
-         device: torch.cuda.device) -> None:  # TODO: Typing?
+def test(model: nn.Module, weights: str, criterion: BCEWithLogitsLoss,
+         test_loader: DataLoader, device: torch.cuda.device) -> None:  
     """
     Run model on the test set
 
@@ -127,6 +136,7 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
     # Test model
     fin_targets = []
     fin_outputs = []
+    batch_losses = []
 
     with torch.no_grad():
         with tqdm(test_loader, desc="Test epoch") as tepoch:
@@ -138,11 +148,14 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
                 token_type_ids = temp.to(device, dtype=torch.long)
                 targets = data["targets"].to(device, dtype=torch.float)
 
-                # Running the model on the data to get the outputs
+                # Forward pass and loss calculation
                 outputs = model(ids, mask, token_type_ids)
+                loss = criterion(outputs, targets)
 
                 # Appending the targets and outputs to lists
                 # (apply sigmoid to logits)
+                batch_losses.append(loss.item())
+
                 fin_targets.extend(
                     targets.cpu().detach().numpy().tolist()
                 )
@@ -153,12 +166,23 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate accuracy and f1 score
+    # Calculate test loss (mean batch), accuracy and f1 score
+    epoch_loss = np.mean(batch_losses)
     accuracy = metrics.balanced_accuracy_score(fin_targets, fin_outputs)
     f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="micro")
     f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="macro")
+
+    # wandb log and print metrics
+    wandb.log({
+        "test_loss": epoch_loss,
+        "accuracy": accuracy,
+        "f1_score_micro": f1_score_micro,
+        "f1_score_macro": f1_score_macro
+    })
+
+    print(f"Test Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
     print(f"F1 Score (Macro) = {f1_score_macro}")
@@ -166,6 +190,13 @@ def test(model: nn.Module, weights: str, test_loader: DataLoader,
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
 def main(cfg) -> None:  # TODO: Add typing for hydra cfg
+    # Fetch secret environment variables 
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path)
+
+    # Initialize wandb
+    wandb.init(config=cfg, project="test-project", entity="louisdt")
+    
     # Set up hyper-parameters # TODO: What to do with these?
     device = "cuda" if torch.cuda.is_available() else "cpu"
     path_train = "data/processed/train.csv"

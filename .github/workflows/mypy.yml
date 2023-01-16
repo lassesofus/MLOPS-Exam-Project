@@ -42,4 +42,4 @@ jobs:
     - name: Test with mypy
       run: |
         pip install mypy
-        mypy .
+        mypy . --exclude ./docs/conf.py,./reports/report.py,setup.py

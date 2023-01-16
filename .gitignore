@@ -87,3 +87,5 @@ target/
 data/
 models/
 
+# Secrets
+.env
