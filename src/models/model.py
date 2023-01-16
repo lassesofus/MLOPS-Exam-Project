@@ -35,22 +35,22 @@ class BERT(torch.nn.Module):  # TODO: Read more about BERT input/output
         :returns: Model output of shape (batch_size, num_classes)
         """
 
-        if x.ndim != 2:
-            raise ValueError("Expected input to be a 2D tensor")
-        if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
-            raise ValueError("Wrong shape of the input")
-        # Applying dropout
-        x = self.dropout(x)
-        if x.ndim != 2:
-            raise ValueError("Expected input to be a 2D tensor")
-        if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
-            raise ValueError("Wrong shape")
+        # if x.ndim != 2:
+        #     raise ValueError("Expected input to be a 2D tensor")
+        # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
+        #     raise ValueError("Wrong shape of the input")
+        # # Applying dropout
+        # x = self.dropout(x)
+        # if x.ndim != 2:
+        #     raise ValueError("Expected input to be a 2D tensor")
+        # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
+        #     raise ValueError("Wrong shape")
 
-        # Applying linear layer
-        x = self.linear(x)
-        if x.ndim != 2:
-            raise ValueError("Expected input to be a 2D tensor")
-        if x.shape[0] != batch_size or x.shape[1] != self.out_dim:
-            raise ValueError("Wrong shape")
+        # # Applying linear layer
+        # x = self.linear(x)
+        # if x.ndim != 2:
+        #     raise ValueError("Expected input to be a 2D tensor")
+        # if x.shape[0] != batch_size or x.shape[1] != self.out_dim:
+        #     raise ValueError("Wrong shape")
 
         return x

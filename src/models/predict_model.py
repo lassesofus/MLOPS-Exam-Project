@@ -13,7 +13,7 @@ def main(cfg: DictConfig) -> None:
     data_path = cfg.predicting.paths.data_path
     bert_version = cfg.model.hyperparameters.bert_version
     max_len = cfg.model.hyperparameters.max_len
-    
+
     # Load data and tokenize it
     ids, mask, token_type_ids = load_txt_example(data_path, max_len,
                                                  bert_version)
@@ -22,14 +22,16 @@ def main(cfg: DictConfig) -> None:
     model = BERT(drop_p=cfg.model.hyperparameters.drop_p,
                  embed_dim=cfg.model.hyperparameters.embed_dim,
                  out_dim=cfg.model.hyperparameters.out_dim)
+    # Run model forward pass
+    model.eval()
+
+    # Load weights
     model.load_state_dict(torch.load(model_path,
                           map_location=torch.device('cpu')))
 
-    # Run model forward pass
-    model.eval()
     with torch.no_grad():
-        outputs = model(ids, mask, token_type_ids)
-
+        outputs = model(ids, mask)
+        print(outputs)
     # Print results
     prediction = torch.max(outputs, 1)
     prediction = "unreliable" if prediction.indices[0] == 1 else "reliable"
