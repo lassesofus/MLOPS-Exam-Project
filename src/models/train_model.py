@@ -4,6 +4,8 @@ import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import transformers
+from omegaconf import DictConfig
 from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
@@ -25,6 +27,7 @@ def train_epoch(
     train_loader: DataLoader,
     epoch: int,
     device: torch.cuda.device,
+    batch_size: int,
 ) -> float:  # TODO: float or some numpy object?
     """
     Train model for a single epoch
@@ -51,8 +54,17 @@ def train_epoch(
             token_type_ids = temp.to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
+            # Getting the BERT model output and ignoring the pooled output
+            # TODO: Check what is pooled output
+            bert = transformers.BertModel.from_pretrained("bert-base-uncased")
+            _, x = bert(
+                ids,
+                attention_mask=mask,
+                token_type_ids=token_type_ids,
+                return_dict=False,
+            )
             # Forward pass and loss calculation
-            outputs = model(ids, mask, token_type_ids)
+            outputs = model(x, batch_size)
             loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
@@ -67,17 +79,18 @@ def train_epoch(
 
 
 def train(
-    cfg,
+    epochs: int,
     model: nn.Module,
-    criterion: BCEWithLogitsLoss,  # TODO: Add typing for hydra cfg
+    criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
     device: torch.cuda.device,
+    batch_size: int,
 ) -> str:
     """
     Trains the model for a given amount of epochs
 
-    :param cfg: Hydra config
+    :param model: Number of epochs
     :param model: Model to train
     :param criterion: Loss function
     :param optimizer: Optimizer
@@ -90,10 +103,12 @@ def train(
     best_loss = float("inf")
     start_time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.training.hyperparameters.epochs):
+    for epoch in range(epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
-            model, criterion, optimizer, train_loader, epoch, device
+            model, criterion, optimizer,
+            train_loader, epoch,
+            device, batch_size
         )
         epoch_losses.append(epoch_loss)
 
@@ -118,8 +133,12 @@ def train(
     return save_path
 
 
-def test(model: nn.Module, weights: str, criterion: BCEWithLogitsLoss,
-         test_loader: DataLoader, device: torch.cuda.device) -> None:  
+def ttest(
+    model: nn.Module,
+    weights: str,
+    test_loader: DataLoader,
+    device: torch.cuda.device,
+    batch_size: int) -> None: 
     """
     Run model on the test set
 
@@ -149,7 +168,15 @@ def test(model: nn.Module, weights: str, criterion: BCEWithLogitsLoss,
                 targets = data["targets"].to(device, dtype=torch.float)
 
                 # Forward pass and loss calculation
-                outputs = model(ids, mask, token_type_ids)
+                bert = transformers.BertModel.from_pretrained("bert-base-uncased")
+                _, x = bert(
+                    ids,
+                    attention_mask=mask,
+                    token_type_ids=token_type_ids,
+                    return_dict=False,
+                )
+
+                outputs = model(x, batch_size)
                 loss = criterion(outputs, targets)
 
                 # Appending the targets and outputs to lists
@@ -187,46 +214,72 @@ def test(model: nn.Module, weights: str, criterion: BCEWithLogitsLoss,
     print(f"F1 Score (Micro) = {f1_score_micro}")
     print(f"F1 Score (Macro) = {f1_score_macro}")
 
+    return accuracy
+
 
 @hydra.main(version_base=None, config_name="config.yaml", config_path="conf")
-def main(cfg) -> None:  # TODO: Add typing for hydra cfg
+def main(cfg: DictConfig) -> None:
     # Fetch secret environment variables 
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
 
     # Initialize wandb
     wandb.init(config=cfg, project="test-project", entity="louisdt")
-    
+
     # Set up hyper-parameters # TODO: What to do with these?
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    path_train = "data/processed/train.csv"
-    path_test = "data/processed/test.csv"  # TODO: Add to config
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = cfg.training.hyperparameters.device
+    path_train = cfg.training.hyperparameters.path_train
+    path_test = cfg.training.hyperparameters.path_test
+    epochs = cfg.training.hyperparameters.epochs
 
     # Load training data
     train_set = load_dataset(path_train)
     test_set = load_dataset(path_test)
 
     train_loader = DataLoader(
-        train_set, batch_size=cfg.training.hps.train_batch_size, shuffle=True
+        train_set,
+        batch_size=cfg.training.hyperparameters.train_batch_size,
+        shuffle=True,
     )
     test_loader = DataLoader(
-        test_set, batch_size=cfg.training.hps.valid_batch_size, shuffle=False
+        test_set,
+        batch_size=cfg.training.hyperparameters.valid_batch_size,
+        shuffle=False,
     )
 
     # Initialize model, objective and optimizer
-    model = BERT(drop_p=cfg.model.hyperparameters.drop_p,
-                 embed_dim=cfg.model.hps.embed_dim,
-                 out_dim=cfg.model.hps.out_dim).to(device)
+    model = BERT(
+        drop_p=cfg.model.hyperparameters.drop_p,
+        embed_dim=cfg.model.hyperparameters.embed_dim,
+        out_dim=cfg.model.hyperparameters.out_dim,
+    ).to(device)
 
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(),
-                     lr=cfg.training.hps.learning_rate)
+    optimizer = Adam(
+        params=model.parameters(),
+        lr=cfg.training.hyperparameters.learning_rate
+    )
 
     # Train model
-    weights = train(cfg, model, criterion, optimizer, train_loader, device)
+    weights = train(
+        epochs,
+        model,
+        criterion,
+        optimizer,
+        train_loader,
+        device,
+        cfg.training.hyperparameters.train_batch_size,
+    )
 
     # Test model
-    test(model, weights, test_loader, device)
+    ttest(
+        model,
+        weights,
+        test_loader,
+        device,
+        cfg.training.hyperparameters.valid_batch_size,
+    )
 
 
 if __name__ == "__main__":

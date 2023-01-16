@@ -86,6 +86,11 @@ target/
 .mypy_cache/
 data/
 models/
+outputs/
 
+<<<<<<< HEAD
 # Secrets
 .env
+=======
+/models
+>>>>>>> main
