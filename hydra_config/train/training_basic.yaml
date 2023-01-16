@@ -5,3 +5,4 @@ learning_rate: 1e-05
 path_train_set: "data/processed/train.csv"
 path_test_set: "data/processed/test.csv"
 device: "cpu"
+seed: 42

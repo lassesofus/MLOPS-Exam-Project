@@ -45,11 +45,7 @@ jobs:
       env:
         GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
-    - name: Generate coverage report
+    - name: Test with pytest
       run: |
-        pip install pytest
-        pip install coverage
-        coverage run -m pytest tests/
+        pytest -v
 
-    - name: Upload coverage to codecov
-      uses: codecov/codecov-action@v2

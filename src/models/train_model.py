@@ -13,6 +13,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import wandb 
+import random
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -211,6 +212,12 @@ def main(cfg: DictConfig) -> None:
     :param cfg: Hydra config
     """
     
+    # Set random seed
+    seed = cfg.train.seed
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+
     # Fetch secret environment variables 
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
@@ -219,8 +226,8 @@ def main(cfg: DictConfig) -> None:
     wandb.init(config=cfg, project="test-project", entity="louisdt")
 
     # Load training data
-    train_set = load_dataset(cfg.train.path_train_set)
-    test_set = load_dataset(cfg.train.path_test_set)
+    train_set = load_dataset(cfg, cfg.train.path_train_set)
+    test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.train.batch_size,
