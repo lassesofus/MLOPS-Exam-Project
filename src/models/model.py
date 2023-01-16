@@ -1,8 +1,8 @@
 import torch
-import transformers
+from transformers import BertModel
 
 
-class BERT(torch.nn.Module):  # TODO: Read more about BERT input/output
+class BERT(torch.nn.Module):
     def __init__(self, drop_p: float, embed_dim: int, out_dim: int) -> None:
         """
         Initialize a BERT model from pre-trained weights with an additional
@@ -13,47 +13,41 @@ class BERT(torch.nn.Module):  # TODO: Read more about BERT input/output
         :param out_dim: The output dimension of the linear layer (2 classes)
         """
         super(BERT, self).__init__()
+
         # Constant parameters
         self.drop_p = drop_p
-        self.embed_dim = embed_dim  # base-bert
-        self.out_dim = out_dim  # binary classification
+        self.embed_dim = embed_dim
+        self.out_dim = out_dim
+
         # Initializing the BERT model from the "bert-base-uncased"
         # pre-trained model
-        self.bert = transformers.BertModel.from_pretrained("bert-base-uncased")
+        self.bert = BertModel.from_pretrained("bert-base-uncased")
 
         # Initializing dropout layer
         self.dropout = torch.nn.Dropout(self.drop_p)
+
         # Initializing linear layer
         self.linear = torch.nn.Linear(self.embed_dim, self.out_dim)
 
-    def forward(self, x: torch.Tensor, batch_size: int) -> torch.Tensor:
+    def forward(self, ids: torch.Tensor, mask: torch.Tensor,
+                token_type_ids: torch.Tensor) -> torch.Tensor:
+
         """
         Forward pass of the model (without loss calculation)
 
-        :param x: bert model output
-        :param batch_size: number of elements in one batch
+        :param ids: Input ids of shape (batch_size, sequence_length)
+        :param mask: Attention mask of shape (batch_size, sequence_length)
+        :param token_type_ids: Token type ids of shape (batch_size,
+                               sequence_length)
         :returns: Model output of shape (batch_size, num_classes)
         """
+        # Getting the BERT model output and ignoring the pooled output
+        _, x = self.bert(ids, attention_mask=mask,
+                         token_type_ids=token_type_ids,
+                         return_dict=False)
 
-        # if x.ndim != 2:
-        #     raise ValueError("Expected input to be a 2D tensor")
-        # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
-        #     raise ValueError("Wrong shape of the input")
-
-        # Applying dropout
+        # Applying dropout and linear layer
         x = self.dropout(x)
-
-        # if x.ndim != 2:
-        #     raise ValueError("Expected input to be a 2D tensor")
-        # if x.shape[0] != batch_size or x.shape[1] != self.embed_dim:
-        #     raise ValueError("Wrong shape")
-
-        # Applying linear layer
         x = self.linear(x)
-
-        # if x.ndim != 2:
-        #     raise ValueError("Expected input to be a 2D tensor")
-        # if x.shape[0] != batch_size or x.shape[1] != self.out_dim:
-        #     raise ValueError("Wrong shape")
 
         return x
