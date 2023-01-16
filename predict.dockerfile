@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.7-slim
+FROM python:3.9-slim
 
 # Install python
 RUN apt update && \
@@ -12,7 +12,11 @@ COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 
+# Not sure if needed
+COPY cloudbuild.yaml cloudbuild.yaml
+
 WORKDIR /
+RUN pip install -e .
 RUN pip install -r requirements.txt --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
