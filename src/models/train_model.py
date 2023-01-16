@@ -196,10 +196,10 @@ def ttest(
     # Calculate test loss (mean batch), accuracy and f1 score
     epoch_loss = np.mean(batch_losses)
     accuracy = metrics.balanced_accuracy_score(fin_targets, fin_outputs)
+
     f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="micro")
     f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
-                                      average="macro")
 
     # wandb log and print metrics
     wandb.log({
@@ -210,6 +210,7 @@ def ttest(
     })
 
     print(f"Test Loss = {epoch_loss}")
+
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
     print(f"F1 Score (Macro) = {f1_score_macro}")
