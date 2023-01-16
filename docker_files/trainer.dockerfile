@@ -11,6 +11,8 @@ COPY setup.py setup.py
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
+COPY reports/ reports/
+COPY hydra_config/ hydra_config/
 
 # Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
