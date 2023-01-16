@@ -124,6 +124,7 @@ def train(
 
 
 def eval(
+    cfg: DictConfig,
     model: nn.Module,
     weights: str,
     criterion: BCEWithLogitsLoss,
@@ -205,6 +206,11 @@ def eval(
             config_name="config.yaml", 
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
+    """ Run training and test, save best model and log metrics
+    
+    :param cfg: Hydra config
+    """
+    
     # Fetch secret environment variables 
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
@@ -238,7 +244,7 @@ def main(cfg: DictConfig) -> None:
     weights = train(cfg, model, criterion, optimizer, train_loader)
 
     # Test model
-    _ = eval(model, weights, criterion, test_loader)
+    _ = eval(cfg, model, weights, criterion, test_loader)
 
 
 if __name__ == "__main__":

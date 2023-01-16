@@ -14,20 +14,15 @@ class BERT(torch.nn.Module):
         """
         super(BERT, self).__init__()
 
-        # Constant parameters
-        self.drop_p = drop_p
-        self.embed_dim = embed_dim
-        self.out_dim = out_dim
-
         # Initializing the BERT model from the "bert-base-uncased"
         # pre-trained model
         self.bert = BertModel.from_pretrained("bert-base-uncased")
 
         # Initializing dropout layer
-        self.dropout = torch.nn.Dropout(self.drop_p)
+        self.dropout = torch.nn.Dropout(drop_p)
 
         # Initializing linear layer
-        self.linear = torch.nn.Linear(self.embed_dim, self.out_dim)
+        self.linear = torch.nn.Linear(embed_dim, out_dim)
 
     def forward(self, ids: torch.Tensor, mask: torch.Tensor,
                 token_type_ids: torch.Tensor) -> torch.Tensor:
