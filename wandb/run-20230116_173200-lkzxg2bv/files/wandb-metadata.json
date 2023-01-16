@@ -1,0 +1,105 @@
+{
+    "os": "Linux-5.15.79.1-microsoft-standard-WSL2-x86_64-with-glibc2.27",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-01-16T16:32:01.739430",
+    "startedAt": "2023-01-16T16:32:00.615212",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/mnt/c/Users/Louis Thygesen/Documents/DTU/Masters - Human-centered AI/02476 MLOps/Project/MLOPS-Exam-Project/src/models/train_model.py",
+    "codePath": "src/models/train_model.py",
+    "git": {
+        "remote": "git@github.com:lassesofus/MLOPS-Exam-Project.git",
+        "commit": "1b2c67285afff1a9f7c84bc29fcaf4a49a3426dc"
+    },
+    "email": "lt@lanab.dk",
+    "root": "/mnt/c/Users/Louis Thygesen/Documents/DTU/Masters - Human-centered AI/02476 MLOps/Project/MLOPS-Exam-Project",
+    "host": "DESKTOP-2TQBCD6",
+    "username": "louisdt",
+    "executable": "/home/louisdt/anaconda3/envs/day1/bin/python3",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2208.0,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 250.92389297485352,
+        "used": 42.55443572998047
+    },
+    "gpu": "NVIDIA GeForce GTX 1050 Ti with Max-Q Design",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1050 Ti with Max-Q Design",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.397594451904297
+    }
+}
