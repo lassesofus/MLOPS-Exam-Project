@@ -11,6 +11,7 @@ COPY setup.py setup.py
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
+COPY reports/ reports/
 
 # Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
@@ -19,4 +20,4 @@ WORKDIR /
 RUN pip install -e .
 RUN pip install -r requirements.txt --no-cache-dir
 
-ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]
+ENTRYPOINT ["python", "-u", "src/models/train_model.py"]

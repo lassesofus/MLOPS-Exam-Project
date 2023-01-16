@@ -12,7 +12,6 @@ repos:
     rev: 5.11.2
     hooks:
       - id: isort
-    name: isort (python)
 -   repo: https://github.com/psf/black
     rev: stable
     hooks:

@@ -10,8 +10,6 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
 COPY src/ src/
-COPY data/ data/
-COPY models/ models/
 COPY reports/ reports/
 COPY cloudbuild.yaml cloudbuild.yaml
 
