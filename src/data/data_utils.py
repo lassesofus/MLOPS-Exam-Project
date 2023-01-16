@@ -4,7 +4,6 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
-import hydra
 from omegaconf import DictConfig
 
 
@@ -66,7 +65,7 @@ class fake_news_dataset(Dataset):
             "targets": torch.tensor(self.targets[index], dtype=torch.float),
         }
 
-def load_dataset(cfg: DictConfig, path_file:str) -> Dataset:
+def load_dataset(cfg: DictConfig, path_file) -> Dataset:
     """
     Load dataset from CSV file with one-hot-encoded labels in correct
     format (list of ints)
