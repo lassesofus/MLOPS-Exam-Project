@@ -4,17 +4,17 @@ import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from sklearn import metrics
+from dotenv import find_dotenv, load_dotenv
 from omegaconf import DictConfig
+from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-import wandb
-import os 
-from dotenv import load_dotenv, find_dotenv
+import wandb 
 
+import wandb
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
 
@@ -26,7 +26,7 @@ def train_epoch(
     train_loader: DataLoader,
     epoch: int,
     device: torch.cuda.device,
-) -> float:  # TODO: float or some numpy object?
+) -> float: 
     """
     Train model for a single epoch
 
@@ -89,9 +89,9 @@ def train(
 
     epoch_losses = []
     best_loss = float("inf")
-    start_time = datetime.now().strftime("%H-%M-%S")
+    time = datetime.now().strftime("%H-%M-%S")
 
-    for epoch in range(cfg.training.hyperparameters.epochs):
+    for epoch in range(cfg.train.hps.epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
             model, criterion, optimizer, train_loader, epoch, device
@@ -107,20 +107,28 @@ def train(
         # Save if model is better
         if epoch_loss < best_loss:
             best_loss = epoch_loss
-            save_path = f"./models/{start_time}.pt"
+            save_path = f"./models/T{time}_E{epoch+1}.pt"
             torch.save(model.state_dict(), save_path)
 
-    # Plot grap of training  loss
+    # Plot graph of training  loss
     plt.figure()
     plt.plot(epoch_losses, label="Training loss")
     plt.legend()
     plt.savefig("./reports/figures/loss.png")
 
+    # Print best best loss
+    print(f"Best loss: {best_loss}")
+
     return save_path
 
 
-def test(model: nn.Module, weights: str, test_loader: DataLoader,
-         device: torch.cuda.device) -> None:  # TODO: Typing?
+def test(
+    model: nn.Module,
+    weights: str,
+    criterion: BCEWithLogitsLoss,
+    test_loader: DataLoader,
+    device: torch.cuda.device
+) -> None: 
     """
     Run model on the test set
 
