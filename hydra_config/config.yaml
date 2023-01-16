@@ -1,0 +1,4 @@
+defaults:
+  - train: training_basic
+  - model: model_basic
+  - pred: predicting_basic

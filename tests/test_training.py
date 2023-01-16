@@ -13,7 +13,8 @@ from src.models.model import BERT
 from src.models.train_model import train, train_epoch, ttest
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_train_epoch() -> None:
     path_train = "data/processed/train.csv"
     train_set = load_dataset(path_train)
