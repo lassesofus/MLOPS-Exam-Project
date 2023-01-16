@@ -10,7 +10,8 @@ from src.data.data_utils import load_dataset
 from src.models.model import BERT
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_model_output_dimension():
     # Paths for data
     path_train = "data/processed/train.csv"
@@ -47,7 +48,8 @@ def test_model_output_dimension():
     assert outputs.size() == targets.size()
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_error_on_wrong_input_dimensions():
     drop_p = 0.5
     embed_dim = 768
@@ -59,7 +61,8 @@ def test_error_on_wrong_input_dimensions():
         model(torch.randn(4), batch_size=8)
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_error_on_wrong_first_dimension():
     drop_p = 0.5
     embed_dim = 768
@@ -72,7 +75,8 @@ def test_error_on_wrong_first_dimension():
         model(torch.randn(batch_size + 1, embed_dim), batch_size)
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_error_on_wrong_second_dimension():
     drop_p = 0.5
     embed_dim = 768
