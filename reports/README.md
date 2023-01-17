@@ -139,7 +139,7 @@ Yes, we did implement rules for code quality and format using PEP8 and Flake8. T
 >
 > Answer:
 
---- question 7 fill here ---
+We ended up having 11 unit tests.
 
 ### Question 8
 
@@ -188,7 +188,7 @@ Using branches and pull requests also helped us to keep track of the different v
 >
 > Answer:
 
---- question 10 fill here ---
+We did use DVC for managing data in our project. It helped us to have version control of our data, which was extremely beneficial for our project. DVC allowed us to track the different versions of our data and the changes that were made to it. This helped us to understand how our model was performing over time and made it easy to revert to an earlier version of the data if needed. Additionally, it helped us to manage the large data files and remote storage that we were using. This made it easy to share the data with other members of our team and keep it organized while also complying with the data storage limitations of Github. Having version control of our data also made it easy for us to reproduce our results. We were able to share the exact version of the data that we used to train our model, potentionally making it easy for others to replicate our results.
 
 ### Question 11
 
