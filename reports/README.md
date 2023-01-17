@@ -208,6 +208,7 @@ We did use DVC for managing data in our project. It helped us to have version co
 >
 > Answer:
 
+MISSING ANSWER
 --- question 11 fill here ---
 
 ## Running code and tracking experiments
@@ -266,7 +267,7 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
 ![my_image](figures/train_loss.png)
  
-IMAGE OF ACCURACY
+MISSING IMAGE OF ACCURACY
 
 
 ### Question 15
@@ -347,6 +348,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 >
 > Answer:
 
+MISSING ANSWER
 --- question 18 fill here ---
 
 ### Question 19
@@ -389,7 +391,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 > *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 22 fill here ---
 
 ### Question 23
@@ -418,7 +420,7 @@ We did not manage to implement monitoring of our deployed model. However, we und
 > *costing the most was ... due to ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 24 fill here ---
 
 ## Overall discussion of project
@@ -439,7 +441,7 @@ We did not manage to implement monitoring of our deployed model. However, we und
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 25 fill here ---
 
 ### Question 26
