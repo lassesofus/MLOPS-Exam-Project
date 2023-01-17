@@ -4,6 +4,8 @@ from datetime import datetime
 import numpy as np
 import pytest
 import torch
+import random
+from torch.utils.data import random_split
 from hydra import compose, initialize
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
@@ -18,8 +20,11 @@ from src.models.train_model import eval, train, train_epoch
 def test_train_epoch() -> None:
     with initialize(version_base=None, config_path="conf_test"):
         cfg = compose(config_name="config.yaml")
+    # Paths for data
     path_train = "data/processed/train.csv"
+    # Load train datasets
     train_set = load_dataset(cfg, path_train)
+
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
 
@@ -40,15 +45,20 @@ def test_train_epoch() -> None:
 def test_train() -> None:
     with initialize(version_base=None, config_path="conf_test"):
         cfg = compose(config_name="config.yaml")
-    # Paths for data
     path_train = "data/processed/train.csv"
-    # Load train datasets
-    train_set = load_dataset(cfg, path_train)
-
+    #train_set = load_dataset(cfg, path_train)
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
+    valset_subset = torch.utils.data.Subset(val_set, subset)
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(valset_subset, batch_size=cfg.train.batch_size,
+        shuffle=False
+    )
+
+
     debug_mode = True
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
@@ -56,7 +66,7 @@ def test_train() -> None:
     criterion = BCEWithLogitsLoss()
 
     time = datetime.now().strftime("%H-%M-%S")
-    result = train(cfg, model, criterion, optimizer, train_loader, debug_mode)
+    result = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
 
     assert (
         result == f"./models/T{time}_E{1}.pt"
@@ -69,21 +79,27 @@ def test_eval() -> None:
         cfg = compose(config_name="config.yaml")
     path_train = "data/processed/train.csv"
     path_test = "data/processed/test.csv"
-    train_set = load_dataset(cfg, path_train)
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
+
     test_set = load_dataset(cfg, path_test)
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
     testset_subset = torch.utils.data.Subset(test_set, subset)
+    valset_subset = torch.utils.data.Subset(val_set, subset)
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
     test_loader = DataLoader(testset_subset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(valset_subset, batch_size=cfg.train.batch_size,
+        shuffle=False
+    )
     debug_mode = True
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
 
-    weights = train(cfg, model, criterion, optimizer, train_loader, debug_mode)
+    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
     result = eval(cfg, model, weights, criterion, test_loader, debug_mode)
     assert (
         np.size(result) == 1

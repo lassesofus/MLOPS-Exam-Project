@@ -13,7 +13,6 @@ COPY data/ data/
 COPY models/ models/
 COPY reports/ reports/
 COPY hydra_config/ hydra_config/
-COPY .env .env
 
 # Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
