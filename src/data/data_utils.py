@@ -7,6 +7,7 @@ from transformers import BertTokenizer
 from omegaconf import DictConfig
 
 
+
 class fake_news_dataset(Dataset):
     def __init__(
         self, dataframe: pd.DataFrame, 

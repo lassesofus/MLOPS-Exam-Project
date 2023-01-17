@@ -1,0 +1,14 @@
+fastapi
+pydantic
+uvicorn
+google-cloud-storage
+http-status
+torch 
+numpy==1.24.1
+pandas==1.5.2
+scikit_learn==1.2.0
+setuptools==65.5.0
+transformers==4.25.1
+hydra-core
+omegaconf
+python-multipart
