@@ -92,15 +92,15 @@ We used the Huggingface Transformer framework to load a pretrained BERT model ar
 >
 > Answer:
 
-We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using pip freeze. To get a complete copy of our development environment, one would have to run the following commands:
+We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze`. To get a complete copy of our development environment, one would have to run the following commands:
 
-1. Install pip if it's not already installed
+1. Install `pip` if it's not already installed
 2. Clone the repository containing the code
 3. Navigate to the root directory of the repository
-4. Run pip install -r requirements.txt to install all the dependencies listed in the requirements.txt file
+4. Run `pip install -r requirements.txt` to install all the dependencies listed in the `requirements.txt` file
 5. Run the application using the appropriate command
 
-By using a requirements.txt file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use pip freeze > requirements.txt to regenerate the file if you need to add or update the dependencies in your project.
+By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use `pip freeze > requirements.txt` to regenerate the file if you need to add or update the dependencies in your project.
 
 ### Question 5
 
