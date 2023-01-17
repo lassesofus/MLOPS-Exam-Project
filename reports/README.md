@@ -397,7 +397,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 >
 > Answer:
 
---- question 23 fill here ---
+We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. 
 
 ### Question 24
 
