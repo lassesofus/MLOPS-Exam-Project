@@ -290,6 +290,8 @@ For example, to run the training image, we would input the below command in the 
 `docker run --name training_exp trainer:latest`
 Additional parameters for such an experiment would be included in the config files. 
 
+[Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
+
 ### Question 16
 
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
