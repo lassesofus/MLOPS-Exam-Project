@@ -282,7 +282,13 @@ IMAGE OF ACCURACY
 >
 > Answer:
 
---- question 15 fill here ---
+We used Docker in our experiments primarily to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed.
+
+We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image.
+
+For example, to run the training image, we would input the below command in the terminal:
+`docker run --name training_exp trainer:latest`
+Additional parameters for such an experiment would be included in the config files. 
 
 ### Question 16
 
