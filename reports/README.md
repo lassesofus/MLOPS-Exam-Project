@@ -260,7 +260,7 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 >
 > Answer:
 
---- question 14 fill here ---
+![my_image](figures/train_loss.png)
 
 ### Question 15
 
