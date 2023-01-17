@@ -169,7 +169,11 @@ Yes, we did implement rules for code quality and format using PEP8 and Flake8. T
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control.
+
+We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch.
+
+Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
 
 ### Question 10
 
