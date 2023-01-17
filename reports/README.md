@@ -482,7 +482,11 @@ Every group member participated in all aspects of the project. Below, the main f
 (WRITE YOUR OWN FOCUS)
   
 Evan, s212592, 
+  
 Julia, s221932,
+  
 Louis, s194278,
+  
 Alexander, s194252,
+  
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
