@@ -3,4 +3,4 @@
 ['remote "storage"']
     url = gdrive://1ElEhCXyCqaw8FQMbdg7CRNvt0T2SVYqc
 ['remote "remote_storage"']
-    url = gs://bucket-train-bert/
+    url = gs://news_articles_data/

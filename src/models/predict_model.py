@@ -9,17 +9,18 @@ from src.models.model import BERT
 @hydra.main(version_base=None, 
             config_name="config.yaml", 
             config_path="../../hydra_config")
-def main(cfg: DictConfig, model_path:str) -> None:
+def main(cfg: DictConfig) -> None:
     """ Run prediction on a single txt-example """
 
+    print(f"Cuda available: {torch.cuda.is_available()}")
+
     # Load data and tokenize it
-    ids, mask, token_type_ids = load_txt_example(cfg.pred.data_path, 
-                                                 cfg.train.max_len,
-                                                 cfg.train.bert_version)
+    ids, mask, token_type_ids = load_txt_example(cfg, cfg.pred.path_data)
 
     device = cfg.pred.device
     ids = ids.to(device, dtype=torch.long)
     mask = mask.to(device, dtype=torch.long)
+    model_path = cfg.pred.model_path
     token_type_ids = token_type_ids.to(device, dtype=torch.long)
 
     # Initialize model from weights
@@ -28,7 +29,8 @@ def main(cfg: DictConfig, model_path:str) -> None:
                  out_dim=cfg.model.out_dim)
 
     # Load weights
-    model.load_state_dict(torch.load(model_path).to(cfg.pred.device))
+    model.load_state_dict(torch.load(model_path))
+    model.to(cfg.pred.device)
 
     # Run forward pass 
     model.eval()

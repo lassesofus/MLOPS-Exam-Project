@@ -6,13 +6,15 @@ RUN apt update && \
 	apt install --no-install-recommends -y build-essential gcc && \
 	apt clean && rm -rf /var/lib/apt/lists/*
 
-# Copy over our application (the essential parts) from our computer to the container
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 COPY reports/ reports/
+COPY hydra_config/ hydra_config/
+
+# Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
 
 WORKDIR /
