@@ -259,8 +259,11 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-
+In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
 ![my_image](figures/train_loss.png)
+ 
+IMAGE OF ACCURACY
+
 
 ### Question 15
 
@@ -307,7 +310,13 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 >
 > Answer:
 
---- question 17 fill here ---
+We made use of several Google Cloud Platform (GCP) services in our project, including Cloud Storage, Cloud Build, Vertex AI, and Compute Engine.
+
+Cloud Storage is a service that allows us to store and access data in the cloud. We used Cloud Storage to store all our files, datasets and model weights, which were used as input data for our models.
+
+Cloud Build is a service that allows us to build and test our code in the cloud. We used Cloud Build to automatically build and deploy our code, which helped us to automate the development pipeline and improve the collaboration within our team.
+
+Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
 
 ### Question 18
 
