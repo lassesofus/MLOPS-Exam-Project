@@ -223,7 +223,12 @@ We did use DVC for managing data in our project. It helped us to have version co
 >
 > Answer:
 
---- question 12 fill here ---
+We used the Hydra library to configure our experiments. This allowed us to easily manage and switch between different sets of hyperparameters without having to hardcode them in the training script. We created a config file, which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
+  ```
+  @hydra.main(version_base=None, 
+            config_name="config.yaml", 
+            config_path="../../hydra_config")
+  ```
 
 ### Question 13
 
