@@ -115,7 +115,7 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
 
 ### Question 6
 
