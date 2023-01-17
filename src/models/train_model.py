@@ -75,6 +75,7 @@ def train(
     criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
+    debug_mode: bool = False
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -84,7 +85,7 @@ def train(
     :param criterion: Loss function
     :param optimizer: Optimizer
     :param train_loader: Training data loader
-    :param device: Device to train on
+    :param debug_mode: Specify whether it should be logged or not
     :returns: File path to the saved model weights
     """
 
@@ -101,10 +102,11 @@ def train(
         # Save epoch loss and wandb log
         epoch_losses.append(epoch_loss)
 
-        wandb.log({
-            "train_loss": epoch_loss,
-            "epoch": epoch
-        })
+        if debug_mode==False:
+            wandb.log({
+                "train_loss": epoch_loss,
+                "epoch": epoch
+            })
 
         # Save if model is better
         if epoch_loss < best_loss:
@@ -130,14 +132,16 @@ def eval(
     weights: str,
     criterion: BCEWithLogitsLoss,
     test_loader: DataLoader,
+    debug_mode: bool = False
 ) -> None: 
     """
     Run model on the test set
-
+    :param cfg: hydra configuration
     :param model: Initialized model
     :param weights: File path to the saved model weights
+    :param criterion: Loss function
     :param test_loader: Test data loader
-    :param device: Device to train on
+    :param debug_mode: Specify whether it should be logged or not
     """
     model.eval()
 
@@ -186,14 +190,14 @@ def eval(
                                       average="micro")
     f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="macro")
-
-    # Print and wandb log metrics
-    wandb.log({
-        "test_loss": epoch_loss,
-        "accuracy": accuracy,
-        "f1_score_micro": f1_score_micro,
-        "f1_score_macro": f1_score_macro
-    })
+    if (debug_mode==False):
+        # Print and wandb log metrics
+        wandb.log({
+            "test_loss": epoch_loss,
+            "accuracy": accuracy,
+            "f1_score_micro": f1_score_micro,
+            "f1_score_macro": f1_score_macro
+        })
 
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
