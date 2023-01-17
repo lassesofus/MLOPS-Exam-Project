@@ -1,3 +1,4 @@
+import os
 import random
 from datetime import datetime
 
@@ -11,12 +12,8 @@ from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
-from torch.utils.data import DataLoader
-from torch.utils.data import random_split
+from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-import wandb 
-import random
-import os
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -78,7 +75,7 @@ def val_epoch(
     criterion: BCEWithLogitsLoss,
     val_loader: DataLoader,
     epoch: int,
-) -> float: 
+) -> float:
     """
     Validate model for a single epoch
 
@@ -90,8 +87,11 @@ def val_epoch(
     :return: Mean loss for epoch
     """
 
+<<<<<<< HEAD
     print(type(val_loader))
 
+=======
+>>>>>>> main
     model.eval()
     with torch.no_grad():
         batch_losses = []
@@ -127,7 +127,10 @@ def train(
     optimizer: Adam,
     train_loader: DataLoader,
     val_loader: DataLoader,
+<<<<<<< HEAD
     debug_mode: bool = False,
+=======
+>>>>>>> main
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -138,7 +141,10 @@ def train(
     :param optimizer: Optimizer
     :param train_loader: Training data loader
     :param val_loader: Validation data loader
+<<<<<<< HEAD
     :param debug_mode: Specify whether it should be logged or not
+=======
+>>>>>>> main
     :returns: File path to the saved model weights
     """
     train_losses = []
@@ -152,15 +158,23 @@ def train(
             cfg, model, criterion, optimizer, train_loader, epoch,
         )
         val_loss = val_epoch(
+<<<<<<< HEAD
             cfg, model, criterion, val_loader, epoch,
+=======
+            cfg, model, criterion, optimizer, val_loader, epoch,
+>>>>>>> main
         )
 
         # Save epoch loss and wandb log
         train_losses.append(train_loss)
         val_losses.append(val_loss)
 
+<<<<<<< HEAD
         if debug_mode == False:
             wandb.log({
+=======
+        wandb.log({
+>>>>>>> main
             "train_loss": train_loss,
             "val_loss": val_loss,
             "epoch": epoch
@@ -281,7 +295,7 @@ def main(cfg: DictConfig) -> None:
 
     # Fetch wand authorization (working with cloned/forked repo
     # requires wandb key to be defined in .env file and running
-    # training docker image requires wandb key to be definned as 
+    # training docker image requires wandb key to be definned as
     # environment variable with flag -e WANDB_API_KEY=... when
     # calling docker run)
     if "WANDB_API_KEY" not in os.environ:
@@ -293,7 +307,7 @@ def main(cfg: DictConfig) -> None:
 
     # Load data
     data_part = load_dataset(cfg, cfg.train.path_train_set)
-    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1])
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(

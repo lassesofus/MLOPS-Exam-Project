@@ -49,7 +49,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 1 fill here ---
+35
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -60,7 +60,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 2 fill here ---
+s185927, s194278, s194252, s221932, s212592
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -73,7 +73,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 3 fill here ---
+We used the Huggingface Transformer framework to load a pretrained BERT model architecture to solve the news article reliability prediction problem at hand. This allowed for a quick start with inferring the realiability of news articles with only minimal training. Besides from the model architecture, we also used the ready-made tokenization functionality to processes the used text datasets, which made loading and necessary pre-processing very easy to perform. Overall the framework has proven to be very helpful in pursuing the goal of the project, however the final model performance indicate that further model optimization/training should be conducted to really make things functional. 
 
 ## Coding environment
 
@@ -92,7 +92,15 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 4 fill here ---
+We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze`. To get a complete copy of our development environment, one would have to run the following commands:
+
+1. Install `pip` if it's not already installed
+2. Clone the repository containing the code
+3. Navigate to the root directory of the repository
+4. Run `pip install -r requirements.txt` to install all the dependencies listed in the `requirements.txt` file
+5. Run the application using the appropriate command
+
+By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use `pip freeze > requirements.txt` to regenerate the file if you need to add or update the dependencies in your project.
 
 ### Question 5
 
@@ -107,7 +115,7 @@ be installed with `pip install click markdown`.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
 
 ### Question 6
 
@@ -118,7 +126,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 6 fill here ---
+Yes, we did implement rules for code quality and format using PEP8 and Flake8. These tools helped us to ensure that our code was consistent and easy to read, which is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code, and it also makes it easier for us to maintain and update our code in the future. Additionally, using tools like PEP8 and Flake8 can help to catch potential errors or bugs before they become a problem.
 
 ## Version control
 
@@ -131,7 +139,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 7 fill here ---
+We ended up having 11 unit tests.
 
 ### Question 8
 
@@ -161,7 +169,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control.
+
+We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch.
+
+Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
 
 ### Question 10
 
@@ -176,7 +188,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 10 fill here ---
+We did use DVC for managing data in our project. It helped us to have version control of our data, which was extremely beneficial for our project. DVC allowed us to track the different versions of our data and the changes that were made to it. This helped us to understand how our model was performing over time and made it easy to revert to an earlier version of the data if needed. Additionally, it helped us to manage the large data files and remote storage that we were using. This made it easy to share the data with other members of our team and keep it organized while also complying with the data storage limitations of Github. Having version control of our data also made it easy for us to reproduce our results. We were able to share the exact version of the data that we used to train our model, potentionally making it easy for others to replicate our results.
 
 ### Question 11
 

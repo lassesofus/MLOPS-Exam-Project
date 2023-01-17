@@ -30,7 +30,7 @@ def test_train_epoch() -> None:
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
     epochs = 1
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
@@ -60,7 +60,7 @@ def test_train() -> None:
 
 
     debug_mode = True
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
@@ -94,7 +94,7 @@ def test_eval() -> None:
         shuffle=False
     )
     debug_mode = True
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
