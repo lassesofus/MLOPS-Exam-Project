@@ -353,7 +353,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 >
 > Answer:
 
---- question 20 fill here ---
+![my_image](figures/Cloud_registry.png)
 
 ### Question 21
 
