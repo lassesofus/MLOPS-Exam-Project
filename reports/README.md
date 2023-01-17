@@ -126,7 +126,7 @@ We used the vast majority of the original cookiecutter folder structure includin
 >
 > Answer:
 
---- question 6 fill here ---
+Yes, we did implement rules for code quality and format using PEP8 and Flake8. These tools helped us to ensure that our code was consistent and easy to read, which is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code, and it also makes it easier for us to maintain and update our code in the future. Additionally, using tools like PEP8 and Flake8 can help to catch potential errors or bugs before they become a problem.
 
 ## Version control
 
