@@ -1,0 +1,11 @@
+# Hyperparameters for training the model
+batch_size: 64
+epochs: 1
+learning_rate: 1e-05
+path_train_set: "data/processed/train.csv"
+path_test_set: "data/processed/test.csv"
+path_train_set_cloud: "gs://bucket-train-bert/data/processed/train.csv"
+path_test_set_cloud: "gs://bucket-train-bert/data/processed/test.csv"
+device: "cpu"
+device_cloud: "cuda"
+seed: 42
