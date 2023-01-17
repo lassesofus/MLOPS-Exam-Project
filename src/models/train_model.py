@@ -11,9 +11,11 @@ from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
+from torch.utils.data import random_split
 from tqdm import tqdm
 import wandb 
 import random
+import os
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -44,7 +46,7 @@ def train_epoch(
     batch_losses = []
 
     # Iterate over training data
-    with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
+    with tqdm(train_loader, desc=f"Training epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
             # Move data to device
             device = cfg.train.device
@@ -69,12 +71,59 @@ def train_epoch(
     return np.mean(batch_losses)
 
 
+def val_epoch(
+    cfg: DictConfig,
+    model: nn.Module,
+    criterion: BCEWithLogitsLoss,
+    val_loader: DataLoader,
+    epoch: int,
+) -> float: 
+    """
+    Validate model for a single epoch
+
+    :param model: Model to train
+    :param criterion: Loss function
+    :param optimizer: Optimizer
+    :param train_loader: Training data loader
+    :param epoch: Current epoch
+    :return: Mean loss for epoch
+    """
+
+    model.eval()
+    with torch.no_grad():
+        batch_losses = []
+
+        # Iterate over training data
+        with tqdm(val_loader, desc=f"Validation epoch {epoch}") as tepoch:
+            for _, data in enumerate(tepoch):
+                # Move data to device
+                device = cfg.train.device
+                ids = data["ids"].to(device, dtype=torch.long)
+                mask = data["mask"].to(device, dtype=torch.long)
+                temp = data["token_type_ids"]
+                token_type_ids = temp.to(device, dtype=torch.long)
+                targets = data["targets"].to(device, dtype=torch.float)
+
+                # Forward pass and loss calculation
+                outputs = model(ids, mask, token_type_ids)
+                loss = criterion(outputs, targets)
+
+                # Save loss
+                batch_losses.append(loss.item())
+
+        # Epoch loss
+        epoch_loss = np.mean(batch_losses)
+
+    return epoch_loss
+
+
 def train(
     cfg: DictConfig,
     model: nn.Module,
     criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
+    val_loader: DataLoader,
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -84,42 +133,48 @@ def train(
     :param criterion: Loss function
     :param optimizer: Optimizer
     :param train_loader: Training data loader
-    :param device: Device to train on
+    :param val_loader: Validation data loader
     :returns: File path to the saved model weights
     """
-
-    epoch_losses = []
+    train_losses = []
+    val_losses = []
     best_loss = float("inf")
     time = datetime.now().strftime("%H-%M-%S")
 
     for epoch in range(cfg.train.epochs):
-        # Train 1 epoch
-        epoch_loss = train_epoch(
+        # Train and validate 1 epoch
+        train_loss = train_epoch(
             cfg, model, criterion, optimizer, train_loader, epoch,
+        )
+        val_loss = val_epoch(
+            cfg, model, criterion, optimizer, val_loader, epoch,
         )
 
         # Save epoch loss and wandb log
-        epoch_losses.append(epoch_loss)
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
 
         wandb.log({
-            "train_loss": epoch_loss,
+            "train_loss": train_loss,
+            "val_loss": val_loss,
             "epoch": epoch
         })
 
         # Save if model is better
-        if epoch_loss < best_loss:
-            best_loss = epoch_loss
+        if val_loss < best_loss:
+            best_loss = val_loss
             save_path = f"./models/T{time}_E{epoch+1}.pt"
             torch.save(model.state_dict(), save_path)
 
     # Plot graph of training  loss
     plt.figure()
-    plt.plot(epoch_losses, label="Training loss")
+    plt.plot(train_losses, label="Training loss")
+    plt.plot(val_losses, label="Validation loss")
     plt.legend()
     plt.savefig("./reports/figures/loss.png")
 
     # Print best best loss
-    print(f"Best loss: {best_loss}")
+    print(f"Best validation loss: {best_loss}")
 
     return save_path
 
@@ -218,20 +273,30 @@ def main(cfg: DictConfig) -> None:
     np.random.seed(seed)
     random.seed(seed)
 
-    # Fetch secret environment variables 
-    dotenv_path = find_dotenv()
-    load_dotenv(dotenv_path)
+    # Fetch wand authorization (working with cloned/forked repo
+    # requires wandb key to be defined in .env file and running
+    # training docker image requires wandb key to be definned as 
+    # environment variable with flag -e WANDB_API_KEY=... when
+    # calling docker run)
+    if "WANDB_API_KEY" not in os.environ:
+        dotenv_path = find_dotenv()
+        load_dotenv(dotenv_path)
 
     # Initialize wandb
     wandb.init(config=cfg, project="test-project", entity="louisdt")
 
-    # Load training data
-    train_set = load_dataset(cfg, cfg.train.path_train_set)
+    # Load data
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.train.batch_size,
         shuffle=True
+    )
+    val_loader = DataLoader(
+        val_set, batch_size=cfg.train.batch_size,
+        shuffle=False
     )
     test_loader = DataLoader(
         test_set, batch_size=cfg.train.batch_size,
@@ -248,7 +313,7 @@ def main(cfg: DictConfig) -> None:
                      lr=cfg.train.learning_rate)
 
     # Train model
-    weights = train(cfg, model, criterion, optimizer, train_loader)
+    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader)
 
     # Test model
     _ = eval(cfg, model, weights, criterion, test_loader)
