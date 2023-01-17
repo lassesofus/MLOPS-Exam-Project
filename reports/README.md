@@ -154,7 +154,11 @@ We ended up having 11 unit tests.
 >
 > Answer:
 
---- question 8 fill here ---
+We obtained a total code coverage of 91%, which includes the majority of our source code. 
+
+While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly.
+
+Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, race conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
 
 ### Question 9
 
