@@ -12,6 +12,8 @@ from src.models.model import BERT
 def main(cfg: DictConfig) -> None:
     """ Run prediction on a single txt-example """
 
+    print(f"Cuda available: {torch.cuda.is_available()}")
+
     # Load data and tokenize it
     ids, mask, token_type_ids = load_txt_example(cfg, cfg.pred.path_data)
 
