@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 
 import hydra
@@ -12,8 +13,6 @@ from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-import wandb 
-import random
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -27,7 +26,7 @@ def train_epoch(
     optimizer: Adam,
     train_loader: DataLoader,
     epoch: int,
-) -> float: 
+) -> float:
     """
     Train model for a single epoch
 
@@ -75,7 +74,7 @@ def train(
     criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
-    debug_mode: bool = False
+    debug_mode: bool = False,
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -96,17 +95,19 @@ def train(
     for epoch in range(cfg.train.epochs):
         # Train 1 epoch
         epoch_loss = train_epoch(
-            cfg, model, criterion, optimizer, train_loader, epoch,
+            cfg,
+            model,
+            criterion,
+            optimizer,
+            train_loader,
+            epoch,
         )
 
         # Save epoch loss and wandb log
         epoch_losses.append(epoch_loss)
 
-        if debug_mode==False:
-            wandb.log({
-                "train_loss": epoch_loss,
-                "epoch": epoch
-            })
+        if debug_mode == False:
+            wandb.log({"train_loss": epoch_loss, "epoch": epoch})
 
         # Save if model is better
         if epoch_loss < best_loss:
@@ -132,8 +133,8 @@ def eval(
     weights: str,
     criterion: BCEWithLogitsLoss,
     test_loader: DataLoader,
-    debug_mode: bool = False
-) -> None: 
+    debug_mode: bool = False,
+) -> None:
     """
     Run model on the test set
     :param cfg: hydra configuration
@@ -170,9 +171,7 @@ def eval(
 
                 # Appending the targets and outputs to lists
                 # (apply sigmoid to logits)
-                fin_targets.extend(
-                    targets.cpu().detach().numpy().tolist()
-                )
+                fin_targets.extend(targets.cpu().detach().numpy().tolist())
                 fin_outputs.extend(
                     torch.sigmoid(outputs).cpu().detach().numpy().tolist()
                 )
@@ -183,21 +182,21 @@ def eval(
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate mean loss and metrics 
+    # Calculate mean loss and metrics
     epoch_loss = np.mean(batch_losses)
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
-                                      average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
-                                      average="macro")
-    if (debug_mode==False):
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, average="micro")
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, average="macro")
+    if debug_mode == False:
         # Print and wandb log metrics
-        wandb.log({
-            "test_loss": epoch_loss,
-            "accuracy": accuracy,
-            "f1_score_micro": f1_score_micro,
-            "f1_score_macro": f1_score_macro
-        })
+        wandb.log(
+            {
+                "test_loss": epoch_loss,
+                "accuracy": accuracy,
+                "f1_score_micro": f1_score_micro,
+                "f1_score_macro": f1_score_macro,
+            }
+        )
 
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
@@ -207,22 +206,22 @@ def eval(
     return accuracy
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
-            config_path="../../hydra_config")
+@hydra.main(
+    version_base=None, config_name="config.yaml", config_path="../../hydra_config"
+)
 def main(cfg: DictConfig) -> None:
-    """ Run training and test, save best model and log metrics
-    
+    """Run training and test, save best model and log metrics
+
     :param cfg: Hydra config
     """
-    
+
     # Set random seed
     seed = cfg.train.seed
     torch.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
 
-    # Fetch secret environment variables 
+    # Fetch secret environment variables
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
 
@@ -233,23 +232,18 @@ def main(cfg: DictConfig) -> None:
     train_set = load_dataset(cfg, cfg.train.path_train_set)
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
-    train_loader = DataLoader(
-        train_set, batch_size=cfg.train.batch_size,
-        shuffle=True
-    )
-    test_loader = DataLoader(
-        test_set, batch_size=cfg.train.batch_size,
-        shuffle=False
-    )
+    train_loader = DataLoader(train_set, batch_size=cfg.train.batch_size, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=cfg.train.batch_size, shuffle=False)
 
     # Initialize model, objective and optimizer
-    model = BERT(drop_p=cfg.model.drop_p,
-                 embed_dim=cfg.model.embed_dim,
-                 out_dim=cfg.model.out_dim).to(cfg.train.device)
+    model = BERT(
+        drop_p=cfg.model.drop_p,
+        embed_dim=cfg.model.embed_dim,
+        out_dim=cfg.model.out_dim,
+    ).to(cfg.train.device)
 
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(),
-                     lr=cfg.train.learning_rate)
+    optimizer = Adam(params=model.parameters(), lr=cfg.train.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader)
