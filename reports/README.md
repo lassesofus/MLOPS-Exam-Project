@@ -295,9 +295,9 @@ The second image shows the mean of the validation loss. We can see here again th
 The third image displays the accuracy of the different trained models. We decided to use the accuracy as the test metric for the performance of our model. Hence, it was important to log that too. 
 For three models the accuracy was around 45%, for all others it was a bit more than 60%. This is not a great result, but at least for most of the models the performance is better than randomly guessing.
  
-![my_image](figures/accuracy_wandb.png)
 ![my_image](figures/loss_function_wandb.png)
 ![my_image](figures/validation_loss_wandb.png)
+![my_image](figures/accuracy_wandb.png)
 
 
 
