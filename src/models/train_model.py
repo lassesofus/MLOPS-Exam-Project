@@ -338,10 +338,10 @@ def main(cfg: DictConfig) -> None:
                      lr=cfg.train.learning_rate)
 
     # Train model
-    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device)
+    weights = train(model, criterion, optimizer, train_loader, val_loader, device)
 
     # Test model
-    _ = eval(cfg, model, weights, criterion, test_loader, device)
+    _ = eval(model, weights, criterion, test_loader, device)
 
 
 if __name__ == "__main__":
