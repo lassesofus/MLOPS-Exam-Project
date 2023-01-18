@@ -13,8 +13,9 @@ def test_numb_obs() -> None:
     # Paths for data
     path_train = "data/processed/train.csv"
     path_test = "data/processed/test.csv"
+    config_path = os.path.abspath("hydra_config/config.yaml")
     with initialize(version_base=None, config_path="../hydra_config"):
-        cfg = compose(config_name="config.yaml")
+        cfg = compose(config_name=config_path)
     # Load train and test datasets
     train_set = load_dataset(cfg, path_train)
     test_set = load_dataset(cfg, path_test)

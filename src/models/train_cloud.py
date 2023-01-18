@@ -304,9 +304,9 @@ def main(cfg: DictConfig) -> None:
     # training docker image requires wandb key to be definned as
     # environment variable with flag -e WANDB_API_KEY=... when
     # calling docker run)
-    check_env1 = ("WANDB_API_KEY" not in os.environ)
-    check_env2 = ("WANDB_ENTITY" not in os.environ)
-    check_env3 = ("WANDB_PROJECT" not in os.environ)
+    # check_env1 = ("WANDB_API_KEY" not in os.environ)
+    # check_env2 = ("WANDB_ENTITY" not in os.environ)
+    # check_env3 = ("WANDB_PROJECT" not in os.environ)
 
     if check_env1 or check_env2 or check_env3:
         dotenv_path = find_dotenv()
