@@ -114,39 +114,7 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
-The vast vast majority of the original cookiecutter folder structure is in use. The `data/interim` and `references` are removed for obvious reasons. The `src/features` folder is also removed as we did not do any feature engineering in this project. The `.dvc` folder is automatically added by the dvc package (along with root files `.dvcignore`, `data.dvc` and `models.dvc`) for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked. Similarly the The `wandb` folder is automatically added to contain the weights and biases logs. The `tests` folder is added to contain the unit tests run by Github actions. The `models/predict_model` folder is added to contain the model weights used for inference. 
-
-
- The `.pre-commit-config.yaml` file is added to configure the pre-commit hooks. The `couldbuild.yaml` file is added to configure the cloud build. The `config_cpu.yaml` file is added to configure the training on a CPU. The `data.dvc` file is added to version control the data. The `models.dvc` file is added to version control the models. The `setup.cfg` file is added to configure the testing. The `train.sg` file is added to configure the training. The `trainer_cloud.dockerfile` file is added to configure the training on the cloud. The `trainer_gpu.dockerfile` file is added to configure the training on a GPU.
-
-Added: 
-models/predict_model
-.github
-.pypy_cache
-api
-docker
-hydra_config
-outputs
-tests
-wandb
-.pre-commit-config.yaml
-couldbuild.yaml
-config_cpu.yaml
-
-
-setup.cfg
-train.sg
-trainer_cloud.dockerfile
-trainer_gpu.dockerfile
-
-Removed: 
-data/interim
-references
-
-
-
-
-We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
+We used the majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. The `data/interim` and `references` are removed for obvious reasons. The `src/features` folder is also removed as we did not do any feature engineering in this project. The `.dvc` folder is automatically added by the dvc package (along with root files `.dvcignore`, `data.dvc` and `models.dvc`) for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked. Similarly the The `wandb` folder is automatically added to contain the weights and biases logs. The `tests` folder is added to contain the unit tests run by Github actions. The `models/predict_model` folder is added to contain the model weights used for inference. 
 
 ### Question 6
 
