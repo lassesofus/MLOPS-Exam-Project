@@ -41,7 +41,7 @@ def predict(cfg: DictConfig) -> None:
     model = BERT(drop_p=cfg.model.drop_p)
 
     # Load weights
-    model.load_state_dict(torch.load(cfg.pred.path_weights))
+    model.load_state_dict(torch.load(cfg.pred.path_weights, map_location=torch.device('cpu')))
     model.to(device)
 
     # Run forward pass
