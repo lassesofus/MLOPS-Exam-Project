@@ -48,6 +48,9 @@ def train_epoch(
     # Iterate over training data
     with tqdm(train_loader, desc=f"Training epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
+            # Clean 
+            optimizer.zero_grad()
+            
             # Move data to device
             device = cfg.train.device
             ids = data["ids"].to(device, dtype=torch.long)
@@ -61,7 +64,6 @@ def train_epoch(
             loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
-            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
