@@ -1,3 +1,5 @@
+import os
+import random
 from datetime import datetime
 
 import hydra
@@ -10,12 +12,14 @@ from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
+
 from torch.utils.data import DataLoader
 from torch.utils.data import random_split
 from tqdm import tqdm
 import wandb 
 import random
 import os
+
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -29,7 +33,7 @@ def train_epoch(
     optimizer: Adam,
     train_loader: DataLoader,
     epoch: int,
-) -> float: 
+) -> float:
     """
     Train model for a single epoch
 
@@ -50,18 +54,20 @@ def train_epoch(
         for _, data in enumerate(tepoch):
             # Move data to device
             device = cfg.train.device
+
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
             temp = data["token_type_ids"]
             token_type_ids = temp.to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
+            optimizer.zero_grad()
             # Forward pass and loss calculation
             outputs = model(ids, mask, token_type_ids)
             loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
-            optimizer.zero_grad()
+
             loss.backward()
             optimizer.step()
 
@@ -77,7 +83,9 @@ def val_epoch(
     criterion: BCEWithLogitsLoss,
     val_loader: DataLoader,
     epoch: int,
-) -> float: 
+
+) -> float:
+
     """
     Validate model for a single epoch
 
@@ -88,6 +96,7 @@ def val_epoch(
     :param epoch: Current epoch
     :return: Mean loss for epoch
     """
+
 
     model.eval()
     with torch.no_grad():
@@ -124,6 +133,7 @@ def train(
     optimizer: Adam,
     train_loader: DataLoader,
     val_loader: DataLoader,
+    debug_mode: bool = False,
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -134,6 +144,7 @@ def train(
     :param optimizer: Optimizer
     :param train_loader: Training data loader
     :param val_loader: Validation data loader
+    :param debug_mode: Specify whether it should be logged or not
     :returns: File path to the saved model weights
     """
     train_losses = []
@@ -147,14 +158,16 @@ def train(
             cfg, model, criterion, optimizer, train_loader, epoch,
         )
         val_loss = val_epoch(
-            cfg, model, criterion, optimizer, val_loader, epoch,
+            cfg, model, criterion, val_loader, epoch,
         )
 
         # Save epoch loss and wandb log
         train_losses.append(train_loss)
         val_losses.append(val_loss)
 
-        wandb.log({
+        if debug_mode == False:
+            wandb.log({
+
             "train_loss": train_loss,
             "val_loss": val_loss,
             "epoch": epoch
@@ -185,14 +198,16 @@ def eval(
     weights: str,
     criterion: BCEWithLogitsLoss,
     test_loader: DataLoader,
-) -> None: 
+    debug_mode: bool = False,
+) -> None:
     """
     Run model on the test set
-
+    :param cfg: hydra configuration
     :param model: Initialized model
     :param weights: File path to the saved model weights
+    :param criterion: Loss function
     :param test_loader: Test data loader
-    :param device: Device to train on
+    :param debug_mode: Specify whether it should be logged or not
     """
     model.eval()
 
@@ -221,9 +236,7 @@ def eval(
 
                 # Appending the targets and outputs to lists
                 # (apply sigmoid to logits)
-                fin_targets.extend(
-                    targets.cpu().detach().numpy().tolist()
-                )
+                fin_targets.extend(targets.cpu().detach().numpy().tolist())
                 fin_outputs.extend(
                     torch.sigmoid(outputs).cpu().detach().numpy().tolist()
                 )
@@ -234,21 +247,21 @@ def eval(
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate mean loss and metrics 
+    # Calculate mean loss and metrics
     epoch_loss = np.mean(batch_losses)
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
-                                      average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
-                                      average="macro")
-
-    # Print and wandb log metrics
-    wandb.log({
-        "test_loss": epoch_loss,
-        "accuracy": accuracy,
-        "f1_score_micro": f1_score_micro,
-        "f1_score_macro": f1_score_macro
-    })
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, average="micro")
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, average="macro")
+    if debug_mode == False:
+        # Print and wandb log metrics
+        wandb.log(
+            {
+                "test_loss": epoch_loss,
+                "accuracy": accuracy,
+                "f1_score_micro": f1_score_micro,
+                "f1_score_macro": f1_score_macro,
+            }
+        )
 
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
@@ -258,15 +271,15 @@ def eval(
     return accuracy
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
-            config_path="../../hydra_config")
+@hydra.main(
+    version_base=None, config_name="config.yaml", config_path="../../hydra_config"
+)
 def main(cfg: DictConfig) -> None:
-    """ Run training and test, save best model and log metrics
-    
+    """Run training and test, save best model and log metrics
+
     :param cfg: Hydra config
     """
-    
+
     # Set random seed
     seed = cfg.train.seed
     torch.manual_seed(seed)
@@ -275,7 +288,7 @@ def main(cfg: DictConfig) -> None:
 
     # Fetch wand authorization (working with cloned/forked repo
     # requires wandb key to be defined in .env file and running
-    # training docker image requires wandb key to be definned as 
+    # training docker image requires wandb key to be definned as
     # environment variable with flag -e WANDB_API_KEY=... when
     # calling docker run)
     if "WANDB_API_KEY" not in os.environ:
@@ -283,11 +296,11 @@ def main(cfg: DictConfig) -> None:
         load_dotenv(dotenv_path)
 
     # Initialize wandb
-    wandb.init(config=cfg, project="test-project", entity="louisdt")
+    wandb.init(config=cfg, project="test-project", entity="mlogs23")
 
     # Load data
     data_part = load_dataset(cfg, cfg.train.path_train_set)
-    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1])
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(
@@ -304,13 +317,14 @@ def main(cfg: DictConfig) -> None:
     )
 
     # Initialize model, objective and optimizer
-    model = BERT(drop_p=cfg.model.drop_p,
-                 embed_dim=cfg.model.embed_dim,
-                 out_dim=cfg.model.out_dim).to(cfg.train.device)
+    model = BERT(
+        drop_p=cfg.model.drop_p,
+        embed_dim=cfg.model.embed_dim,
+        out_dim=cfg.model.out_dim,
+    ).to(cfg.train.device)
 
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(),
-                     lr=cfg.train.learning_rate)
+    optimizer = Adam(params=model.parameters(), lr=cfg.train.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader, val_loader)
