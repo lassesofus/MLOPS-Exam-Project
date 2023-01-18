@@ -488,7 +488,7 @@ Julia, s221932, set up hydra configuration, implemented unittests for data, mode
   
 Louis, s194278, writing python scripts (make_dataset, data_utils, model, predict_model, train_model), set up Github actions (auto lint and framework for unit tests), create cpu docker files for local training/prediction, pre-commit, wandb, trigger workflow, fastAPI and Cloud Run deployment. 
   
-Alexander, s194252, Did model training on the HPC. Built and tested local docker images for training and inference. Helped debugging the training script, inference script and unit tests. 
+Alexander, s194252, Did model training on the HPC. Built and tested local docker images for training and inference. Helped debugging and reviewing the training script, inference script and unit tests. 
   
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
   
