@@ -1,7 +1,9 @@
 steps:
     # Build the container image
    - name: 'gcr.io/cloud-builders/docker' # pre-defined builder
-     args: ['build', '-t', 'gcr.io/dtu-mlops-374314/train-img:latest', '.'] # arguments to the builder
+     args: ['build', '-t', 'gcr.io/dtu-mlops-374314/trainer_cloud:latest', '-f', 'trainer_cloud.dockerfile', '.'] # arguments to the builder
    # Push the container image to Container Registry
    - name: 'gcr.io/cloud-builders/docker' # pre-defined builder
-     args: ['push', 'gcr.io/dtu-mlops-374314/train-img:latest'] # arguments to the builder
+     args: ['push', 'gcr.io/dtu-mlops-374314/trainer_cloud:latest'] # arguments to the builder
+
+     

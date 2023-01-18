@@ -2,7 +2,6 @@ import os
 
 import pytest
 import torch
-import transformers
 from hydra import compose, initialize
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -25,7 +24,7 @@ def test_model_output_dimension():
     epochs = 1
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
+    model = BERT(drop_p=0.5).to(device)
 
     with tqdm(train_loader, desc=f"Epoch {epochs}") as tepoch:
         for _, data in enumerate(tepoch):

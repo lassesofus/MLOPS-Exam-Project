@@ -2,15 +2,15 @@ from typing import List
 
 import pandas as pd
 import torch
+from omegaconf import DictConfig
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
-from omegaconf import DictConfig
 
 
 class fake_news_dataset(Dataset):
     def __init__(
-        self, dataframe: pd.DataFrame, 
-        tokenizer: BertTokenizer, 
+        self, dataframe: pd.DataFrame,
+        tokenizer: BertTokenizer,
         max_len: int
     ) -> None:
         """
@@ -65,6 +65,7 @@ class fake_news_dataset(Dataset):
             "targets": torch.tensor(self.targets[index], dtype=torch.float),
         }
 
+
 def load_dataset(cfg: DictConfig, path_file) -> Dataset:
     """
     Load dataset from CSV file with one-hot-encoded labels in correct
@@ -85,11 +86,12 @@ def load_dataset(cfg: DictConfig, path_file) -> Dataset:
     tokenizer = BertTokenizer.from_pretrained(cfg.model.bert_version)
 
     # Initialize dataset object
-    dataset = fake_news_dataset(df, tokenizer,cfg.model.max_len)
+    dataset = fake_news_dataset(df, tokenizer, cfg.model.max_len)
 
     return dataset
 
-def load_txt_example(cfg: DictConfig, path_file:str) -> List[torch.Tensor]: 
+
+def load_txt_example(cfg: DictConfig, path_file: str) -> List[torch.Tensor]:
     """
     Takes a txt-file containing a single article and returns the encoded
     text tensors

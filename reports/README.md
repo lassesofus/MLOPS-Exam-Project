@@ -42,6 +42,62 @@ short, too long, have you included an image when asked to.
 For both functions to work it is important that you do not rename anything. The script have two dependencies that can
 be installed with `pip install click markdown`.
 
+## Overall project checklist
+
+The checklist is *exhaustic* which means that it includes everything that you could possible do on the project in
+relation the curricilum in this course. Therefore, we do not expect at all that you have checked of all boxes at the
+end of the project.
+
+### Week 1
+
+* [ ] Create a git repository
+* [ ] Make sure that all team members have write access to the github repository
+* [ ] Create a dedicated environment for you project to keep track of your packages
+* [ ] Create the initial file structure using cookiecutter
+* [ ] Fill out the `make_dataset.py` file such that it downloads whatever data you need and
+* [ ] Add a model file and a training script and get that running
+* [ ] Remember to fill out the `requirements.txt` file with whatever dependencies that you are using
+* [ ] Remember to comply with good coding practices (`pep8`) while doing the project
+* [ ] Do a bit of code typing and remember to document essential parts of your code
+* [ ] Setup version control for your data or part of your data
+* [ ] Construct one or multiple docker files for your code
+* [ ] Build the docker files locally and make sure they work as intended
+* [ ] Write one or multiple configurations files for your experiments
+* [ ] Used Hydra to load the configurations and manage your hyperparameters
+* [ ] When you have something that works somewhat, remember at some point to to some profiling and see if
+      you can optimize your code
+* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
+      consider running a hyperparameter optimization sweep.
+* [ ] Use Pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
+
+### Week 2
+
+* [ ] Write unit tests related to the data part of your code
+* [ ] Write unit tests related to model construction and or model training
+* [ ] Calculate the coverage.
+* [ ] Get some continuous integration running on the github repository
+* [ ] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
+* [ ] Create a trigger workflow for automatically building your docker images
+* [ ] Get your model training in GCP using either the Engine or Vertex AI
+* [ ] Create a FastAPI application that can do inference using your model
+* [ ] If applicable, consider deploying the model locally using torchserve
+* [ ] Deploy your model in GCP using either Functions or Run as the backend
+
+### Week 3
+
+* [ ] Check how robust your model is towards data drifting
+* [ ] Setup monitoring for the system telemetry of your deployed model
+* [ ] Setup monitoring for the performance of your deployed model
+* [ ] If applicable, play around with distributed data loading
+* [ ] If applicable, play around with distributed model training
+* [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed
+
+### Additional
+
+* [ ] Revisit your initial project description. Did the project turn out as you wanted?
+* [ ] Make sure all group members have a understanding about all parts of the project
+* [ ] Uploaded all your code to github
+
 ## Group information
 
 ### Question 1
@@ -92,15 +148,14 @@ We used the Huggingface Transformer framework to load a pretrained BERT model ar
 >
 > Answer:
 
-We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze`. To get a complete copy of our development environment, one would have to run the following commands:
+We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze` (or alternatively the 'pipreqs' package). To get a complete copy of our development environment, one would have to do the following:
 
-1. Install `pip` if it's not already installed
-2. Clone the repository containing the code
+1. Create and activate new virtual environment (using `conda create -n <env_name>` followed by `conda activate <env_name>`)
+2. Git clone repository: `git clone git@github.com:lassesofus/MLOPS-Exam-Project.git`
 3. Navigate to the root directory of the repository
-4. Run `pip install -r requirements.txt` to install all the dependencies listed in the `requirements.txt` file
-5. Run the application using the appropriate command
+4. Run `pip install -r requirements.txt` to install dependencies and the repository as a python module 
 
-By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use `pip freeze > requirements.txt` to regenerate the file if you need to add or update the dependencies in your project.
+By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different (virtual) machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. 
 
 ### Question 5
 
@@ -115,7 +170,7 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
-We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
+We used the majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. The `data/interim`, `references` and `src/features` (we don't do any feature engineering). The `.dvc` folder is automatically added by the dvc package for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked (these are gitignored). Similarly the `wandb` folder is automatically added to the local repository to contain the weights and biases logs (but this is also gitignored). The `tests` folder is added to contain the unit tests run by Github actions.
 
 ### Question 6
 
@@ -126,7 +181,7 @@ We used the vast majority of the original cookiecutter folder structure includin
 >
 > Answer:
 
-Yes, we did implement rules for code quality and format using PEP8 and Flake8. These tools helped us to ensure that our code was consistent and easy to read, which is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code, and it also makes it easier for us to maintain and update our code in the future. Additionally, using tools like PEP8 and Flake8 can help to catch potential errors or bugs before they become a problem.
+Yes, we used pre-commit hooks for checking file size, sorting import statements and checking if the code is pep8 compliant throughout points of the project. We also used Github actions (workflow files) to do the exact same at each push/pull request as well as run a bunch of unit tests. In the end of the project we also introduced branch protection rules to ensure that all tests had to pass before merging to the main branch. These tools first of all helped us to ensure that our code was consistent and easy to read. This is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code - thus making it easier for us to maintain and update our code in the future. The unit tests helped to ensure that the main branch was kept bug free (prototyping was kept in separate git branches).
 
 ## Version control
 
@@ -135,7 +190,13 @@ Yes, we did implement rules for code quality and format using PEP8 and Flake8. T
 
 ### Question 7
 
-> **How many tests did you implement?**
+> **How many tests did you implement and what are they testing in your code?**
+>
+> Answer length: 50-100 words.
+>
+> Example:
+> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
+> *application but also ... .*
 >
 > Answer:
 
@@ -146,7 +207,7 @@ We ended up having 11 unit tests.
 > **What is the total code coverage (in percentage) of your code? If you code had an code coverage of 100% (or close**
 > **to), would you still trust it to be error free? Explain you reasoning.**
 >
-> **Answer length: 100-200 words.**
+> Answer length: 100-200 words.
 >
 > Example:
 > *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
@@ -154,11 +215,7 @@ We ended up having 11 unit tests.
 >
 > Answer:
 
-We obtained a total code coverage of 91%, which includes the majority of our source code. 
-
-While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly.
-
-Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, race conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
+We obtained a total code coverage of 91%, which includes the majority of our source code. While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly. Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, rare conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
 
 ### Question 9
 
@@ -173,11 +230,7 @@ Furthermore, even if our code coverage was 100%, we would still not completely t
 >
 > Answer:
 
-Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control.
-
-We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch.
-
-Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
+Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control. We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch. Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
 
 ### Question 10
 
@@ -192,7 +245,7 @@ Using branches and pull requests also helped us to keep track of the different v
 >
 > Answer:
 
-We did use DVC for managing data in our project. It helped us to have version control of our data, which was extremely beneficial for our project. DVC allowed us to track the different versions of our data and the changes that were made to it. This helped us to understand how our model was performing over time and made it easy to revert to an earlier version of the data if needed. Additionally, it helped us to manage the large data files and remote storage that we were using. This made it easy to share the data with other members of our team and keep it organized while also complying with the data storage limitations of Github. Having version control of our data also made it easy for us to reproduce our results. We were able to share the exact version of the data that we used to train our model, potentionally making it easy for others to replicate our results.
+We did use DVC for managing data and model weights in our project. DVC allowed us to track the different versions of our data and the changes that were made to it. However, in general our dataset stayed much the same. The main benefit came from the simple fact that it allowed members of the team to easily download the dataset and (share) model weights while keeping it of Github (where even a single saved model file is beyond the Github file size limit).
 
 ### Question 11
 
@@ -208,8 +261,7 @@ We did use DVC for managing data in our project. It helped us to have version co
 >
 > Answer:
 
-MISSING ANSWER
---- question 11 fill here ---
+The CI integration is done partially by Github action workflow files in `.github`. One file runs isort (import order), one runs flake8 (pep8 compliancy) and one runs unit tests. All of the workflow VMs use caching so that requirements does not need to be downloaded every time the workflow is run. The workflow files are triggered on every push and pull request concering the main branch. All the mentioned tests are run on MacOS, Ubuntu and Windows. As mentioned in a previous answer, we used pre-commit as well (with file-size-check, isort and flake8). A Google Cloud trigger is also used to build a new docker training image that can be used for Vertex AI training each time we push/pull request the main branch. The unit test workflow can be seen here as an example of an workflow: <weblink>https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/.github/workflows/tests_with_cache.yml</weblink>
 
 ## Running code and tracking experiments
 
@@ -228,12 +280,13 @@ MISSING ANSWER
 >
 > Answer:
 
-We used the Hydra library to configure our experiments. This allowed us to easily manage and switch between different sets of hyperparameters without having to hardcode them in the training script. We created a config file, which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
+We used the Hydra library to configure our experiments. This allowed us to easily manage and structure our hyperparameters outside python scripts. We created a hierarchy of config files (training, prediction and model parameters), which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
   ```
   @hydra.main(version_base=None, 
             config_name="config.yaml", 
             config_path="../../hydra_config")
   ```
+The hydra package saves a log of the experiment configurations - but the hydra config file was also tracked using wandb. The click package is also used for the `make_dataset.py` file as in the original cookie-cutter template to ensure the makefile command for making the processed dataset is working.
 
 ### Question 13
 
@@ -248,7 +301,7 @@ We used the Hydra library to configure our experiments. This allowed us to easil
 >
 > Answer:
 
-Reproducibility is crucial in scientific research, and we made sure to take steps to ensure that our experiments were reproducible. One of the ways we did this was by using version control software such as Git to track changes to our codebase and config files. This allowed us to easily roll back to previous versions of our code if needed, and also enabled us to collaborate on the project with other team members. We also made sure to document our experimental setup, including the specific versions of any libraries or frameworks used. Additionally, we made use of data versioning techniques, such as saving the processed data, so that we can easily access the same data set if needed. We also made use of logging and monitoring tools to keep track of the experiment parameters, metrics (e.g. training loss and validation accuracy), and other information, which would be useful for reproducing the results. Eventually, to reproduce an experiment you would have access to the utilized data, model configurations, hyperparameters and ideally also system-level information. 
+Reproducibility is crucial in scientific research, and we made sure to take steps to ensure that our experiments were reproducible. One of the ways we did this was by using version control software such as Git to track changes to our codebase and config files. This allowed us to easily roll back to previous versions of our code if needed, and also enabled us to collaborate on the project with other team members. We also made sure to document our experimental setup, including the specific versions of any libraries or frameworks used. Additionally, we made use of data versioning techniques, such as saving the processed data, so that we can easily access the same data set if needed. We also made use of logging and monitoring tools to keep track of the experiment parameters, metrics (e.g. training loss, validation accuracy and config files), and other information, which would be useful for reproducing the results. Eventually, to reproduce an experiment you would have access to the utilized data, model configurations, hyperparameters and ideally also system-level information.
 
 ### Question 14
 
@@ -264,11 +317,11 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
-![my_image](figures/train_loss.png)
- 
-MISSING IMAGE OF ACCURACY
 
+In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for the 30 epochs. This run corresponds to the hyperparameters specified in the configuration files. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seems to increase again drastically and finally plateau during the later epochs on a high level. This means that our model doesn't seem to learn from our data. As this part was not the focus of the course, we decided to still continue with this weak model. The second image shows the validation loss. We can see here again that the loss is increasing over the epochs. This is the contrary of how it should look like and confirms again the assumption that our model doesn’t the features of our dataset. We decided to use the accuracy as the test metric for the performance of our model. Hence, it was important to log that too. As the plot of one number doesn’t provide any benefit, we just want to state here that the achieved accuracy was 63.85%. This is not a great result, but at least the performance is better than randomly guessing.
+ 
+![my_image](figures/train_loss_wb.png)
+![my_image](figures/val_loss_wb.png)
 
 ### Question 15
 
@@ -283,13 +336,12 @@ MISSING IMAGE OF ACCURACY
 >
 > Answer:
 
-We used Docker in our experiments primarily to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed.
+We used Docker in our experiments to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed. 
 
-We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image.
+We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image. Docker images was also used extensively in our cloud training (using training image for Vertex AI) and our cloud deployment (using FastAPI image with Cloud Run).
 
 For example, to run the training image, we would input the below command in the terminal:
-`docker run --name training_exp trainer:latest`
-Additional parameters for such an experiment would be included in the config files. 
+`docker run --name exp3 --env WANDB_API_KEY=<insert> --env WANDB_ENTITY=<insert> --env WANDB_PROJECT=<insert> trainer_cpu:latest`
 
 [Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
 
@@ -335,12 +387,21 @@ Cloud Build is a service that allows us to build and test our code in the cloud.
 
 Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
 
+That's the gcloud  command to create custom jobs through CI.
+
+	gcloud ai custom-jobs create \
+   	--region=europe-west1 \
+   	--display-name=test-run \
+   	--config=config_gpu.yaml
+
+We also tried using the Compute Engine directly for model training. 
+
 ### Question 18
 
 > **The backbone of GCP is the Compute engine. Explained how you made use of this service and what type of VMs**
 > **you used?**
 >
-> Answer length: 50-100 words.
+> Answer length: 100-200 words.
 >
 > Example:
 > *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
@@ -348,8 +409,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 >
 > Answer:
 
-MISSING ANSWER
---- question 18 fill here ---
+We made use of GCP's Compute Engine to experiment with some initial training of our model. However, DTU HPC was the main platform for prototyping on another machine with enough VRAM.
 
 ### Question 19
 
@@ -376,7 +436,7 @@ MISSING ANSWER
 >
 > Answer:
 
-![my_image](figures/Cloud_build.png)
+![my_image](figures/Cloud_Build.png)
 
 ### Question 22
 
@@ -391,8 +451,8 @@ MISSING ANSWER
 > *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
-MISSING ANSWER
---- question 22 fill here ---
+
+A model API was built using FastAPI. The model was deployed in the cloud using Google Cloud Run. The API takes a txt-file as input and returns a response dictionary. The response dictionary contains the input text, a prediction (reliable/unreliable), the HTTP status message and the HTTP status code. The prediction is made using a model with weights loaded from a Google Cloud bucket. To invoke the service an user would call `curl -X 'POST'   'https://test-app-tuy6dmah2a-ew.a.run.app/'   -H 'accept: application/json'   -H 'Content-Type: multipart/form-data'   -F 'data=@<file_path>;type=text/plain'
 
 ### Question 23
 
@@ -407,7 +467,9 @@ MISSING ANSWER
 >
 > Answer:
 
-We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. 
+We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. A framework like Evidently could give use insights with metrics and reports. 
+  
+ At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly.
 
 ### Question 24
 
@@ -420,8 +482,16 @@ We did not manage to implement monitoring of our deployed model. However, we und
 > *costing the most was ... due to ...*
 >
 > Answer:
-MISSING ANSWER
---- question 24 fill here ---
+
+Evan, s212592: $50. Most spended on running the VMs.
+  
+Julia, s221932: $50 (accidentally spend on the first day of using the cloud by virtual machines)
+  
+Louis, s194278: $30.49 
+  
+Alexander, s194252: $15.22
+  
+Lasse, s185927: $12.65
 
 ## Overall discussion of project
 
@@ -436,13 +506,15 @@ MISSING ANSWER
 > Answer length: 200-400 words
 >
 > Example:
-> *
+>
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-MISSING ANSWER
---- question 25 fill here ---
+
+![my_image](figures/MLOps_setup.png)
+This figure is split into three parts. The right parts contains the local part, the left part the GCP part and at the top we have included the DTU HPC. We started with the local setup on the right side. The main two frameworks we used were pytorch and transformers of hugging face. We used a conda environment for the package organisation. We integrated hydra configuration files and connected the code to wandb to log the progress of the experiments. We organised all files in a cookiecutter template. Whenever we commit code and push to github, it auto triggers the execution of the written unittests and checks for pep8/flake8 format. Initially we stored our data in google drive and pulled/pushed via DVC. We trained different models on the HPC. Furthermore, we created locally docker images for the training, the model and the prediction script. We then started to use the Google cloud. First, we moved our data to a bucket in GCP and enabled pull/push via DVC. Additionally, we achieved that the docker images are automatically updated after every push on github. These images are then used for training with VertexAI. We also stored the model weights in a bucket in the cloud.
+As a final step, we added an API to make it easy for an user to get a prediction for a given text input.
 
 ### Question 26
 
@@ -462,7 +534,7 @@ Another major struggle we encountered was coordination within the team. Ensuring
 
 Finally, working with GCP was quite heavy, as we struggled with the complexity of the platform and the steep learning curve. This added to our workload and made it difficult for us to complete our tasks in a timely manner.
 
-To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it.
+To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it. Figuring out how to set up jobs and interactive training in HPC DTU also added quite a bit of time to the project for the uninitialized group members.
 
 ### Question 27
 
@@ -481,14 +553,12 @@ To overcome these challenges, we implemented a more structured approach to our p
 
 Every group member participated in all aspects of the project. Below, the main focus of each member is stated.
   
-(WRITE YOUR OWN FOCUS)
+Julia, s221932, set up hydra configuration, implemented unittests for data, model and train, calculated coverage, looked into compilation, created figures for the report
   
-Evan, s212592, 
+Louis, s194278, writing python scripts (make_dataset, data_utils, model, predict_model, train_model), set up Github actions (auto lint and framework for unit tests), create cpu docker files for local training/prediction, pre-commit, wandb, trigger workflow, fastAPI and Cloud Run deployment. 
   
-Julia, s221932,
-  
-Louis, s194278,
-  
-Alexander, s194252,
+Alexander, s194252, Did model training on the HPC. Built and tested local docker images for training and inference. Helped debugging and reviewing the training script, inference script and unit tests. 
   
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
+  
+Evan, s212592, helped with creating the train_model and predict_model scripts. Set up the first unit test, the github workflow and actions on github. Mainly focused on setting the project on google cloud, give access to everyone, create buckets, VMs, the container registry, the Trigger and the Vertex AI.

@@ -6,33 +6,45 @@ from src.data.data_utils import load_txt_example
 from src.models.model import BERT
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
-            config_path="../../hydra_config")
-def main(cfg: DictConfig) -> None:
-    """ Run prediction on a single txt-example """
+@hydra.main(
+    version_base=None, config_name="config.yaml",
+    config_path="../../hydra_config"
+)
+def predict(cfg: DictConfig) -> None:
+    """
+    Run prediction on a single txt-example
 
-    print(f"Cuda available: {torch.cuda.is_available()}")
+    :param cfg: configuration file
+    :return: prediction label
+    """
 
     # Load data and tokenize it
     ids, mask, token_type_ids = load_txt_example(cfg, cfg.pred.path_data)
 
-    device = cfg.pred.device
+    # Set device
+    if cfg.train.gpu_override == 1:
+        device = torch.device("cpu")
+        print("Using CPU override!")
+    else:
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+            print("Using available GPU!")
+        else:
+            device = torch.device("cpu")
+            print("Using available CPU!")
+
     ids = ids.to(device, dtype=torch.long)
     mask = mask.to(device, dtype=torch.long)
-    model_path = cfg.pred.model_path
     token_type_ids = token_type_ids.to(device, dtype=torch.long)
 
     # Initialize model from weights
-    model = BERT(drop_p=cfg.model.drop_p,
-                 embed_dim=cfg.model.embed_dim,
-                 out_dim=cfg.model.out_dim)
+    model = BERT(drop_p=cfg.model.drop_p)
 
     # Load weights
-    model.load_state_dict(torch.load(model_path))
-    model.to(cfg.pred.device)
+    model.load_state_dict(torch.load(cfg.pred.path_weights))
+    model.to(device)
 
-    # Run forward pass 
+    # Run forward pass
     model.eval()
 
     with torch.no_grad():
@@ -45,4 +57,4 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    predict()

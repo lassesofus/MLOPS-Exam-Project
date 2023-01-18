@@ -1,3 +1,2 @@
 path_data: "./data/external/example.txt"
-device: "cpu" 
-model_path: "./models/17-30-07.pt"
+path_weights: "models/17-30-07.pt"

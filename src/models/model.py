@@ -3,7 +3,7 @@ from transformers import BertModel
 
 
 class BERT(torch.nn.Module):
-    def __init__(self, drop_p: float, embed_dim: int, out_dim: int) -> None:
+    def __init__(self, drop_p: float) -> None:
         """
         Initialize a BERT model from pre-trained weights with an additional
         linear layer for fine-tuning.
@@ -13,6 +13,10 @@ class BERT(torch.nn.Module):
         :param out_dim: The output dimension of the linear layer (2 classes)
         """
         super(BERT, self).__init__()
+
+        # Constants
+        embed_dim = 768
+        out_dim = 2
 
         # Initializing the BERT model from the "bert-base-uncased"
         # pre-trained model
