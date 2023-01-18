@@ -8,7 +8,8 @@ from google.cloud import storage
 from src.data.data_utils import load_txt_example
 from src.models.model import BERT
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./application_default_credentials.json"
+path_auth = "./application_default_credentials.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = path_auth
 
 app = FastAPI()
 
