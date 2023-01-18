@@ -68,6 +68,7 @@ def train_epoch(
             # Save loss
             batch_losses.append(loss.item())
 
+    print("Training_Loss: ", np.mean(batch_losses))
     return np.mean(batch_losses)
 
 
@@ -115,6 +116,8 @@ def val_epoch(
 
         # Epoch loss
         epoch_loss = np.mean(batch_losses)
+
+        print("Validation_Loss: ", epoch_loss)
 
     return epoch_loss
 
@@ -174,6 +177,9 @@ def train(
             save_path = f"./models/T{time}.pt"
             torch.save(model.state_dict(), save_path)
 
+
+    print('Best model trained for '+str(best_epoch)+' epochs')
+
     # Plot graph of training  loss
     plt.figure()
     plt.plot(train_losses, label="Training loss")
@@ -183,6 +189,11 @@ def train(
 
     # Print best best loss
     print(f"Best validation loss: {best_loss}")
+
+    wandb.log({
+        "Model_Name": save_path,
+        "best_epoch": best_epoch
+    })
 
     return save_path
 
