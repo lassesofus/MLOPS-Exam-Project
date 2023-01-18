@@ -192,10 +192,11 @@ def train(
     # Print best best loss
     print(f"Best validation loss: {best_loss}")
 
-    wandb.log({
-        "Model_Name": save_path,
-        "best_epoch": best_epoch
-    })
+    if debug_mode == False:
+        wandb.log({
+            "Model_Name": save_path,
+            "best_epoch": best_epoch
+        })
 
     return save_path
 
