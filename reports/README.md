@@ -422,7 +422,16 @@ We did not manage to implement monitoring of our deployed model. However, we und
 >
 > Answer:
 MISSING ANSWER
---- question 24 fill here ---
+Evan, s212592:
+  
+Julia, s221932:
+  
+Louis, s194278:
+  
+Alexander, s194252:
+  
+Lasse, s185927:
+
 
 ## Overall discussion of project
 
