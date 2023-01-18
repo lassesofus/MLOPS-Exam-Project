@@ -208,6 +208,7 @@ We did use DVC for managing data in our project. It helped us to have version co
 >
 > Answer:
 
+MISSING ANSWER
 --- question 11 fill here ---
 
 ## Running code and tracking experiments
@@ -266,7 +267,7 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
 ![my_image](figures/train_loss.png)
  
-IMAGE OF ACCURACY
+MISSING IMAGE OF ACCURACY
 
 
 ### Question 15
@@ -307,7 +308,7 @@ Additional parameters for such an experiment would be included in the config fil
 
 When we encountered bugs while running our experiments, our primary method of debugging was using the built-in debugger in VS Code. This allowed us to set breakpoints in our code and step through the execution line by line to identify the source of the issue. Additionally, we also used more simple print statements to check the values of variables at various stages of the code to further narrow down the problem.
 
-In addition to debugging, we also performed a single profiling run to investigate our code for any possible areas of improvement. Profiling allowed us to identify any bottlenecks or inefficiencies in our code, such as computationally expensive operations or excessive use of memory. Based on the results of our profiling, we made changes to optimize our code and improve the performance.
+In addition to debugging, we also performed a single profiling run to investigate our code for any possible areas of improvement. Profiling allowed us to identify any bottlenecks or inefficiencies in our code, such as computationally expensive operations or excessive use of memory. 
 
 Overall, we believe that our code is functional and efficient, but there is always room for improvement.
 
@@ -347,6 +348,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 >
 > Answer:
 
+MISSING ANSWER
 --- question 18 fill here ---
 
 ### Question 19
@@ -389,7 +391,7 @@ Vertex AI is a service that allows us to perform machine learning operations on 
 > *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 22 fill here ---
 
 ### Question 23
@@ -418,7 +420,7 @@ We did not manage to implement monitoring of our deployed model. However, we und
 > *costing the most was ... due to ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 24 fill here ---
 
 ## Overall discussion of project
@@ -439,7 +441,7 @@ We did not manage to implement monitoring of our deployed model. However, we und
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 25 fill here ---
 
 ### Question 26
@@ -454,7 +456,13 @@ We did not manage to implement monitoring of our deployed model. However, we und
 >
 > Answer:
 
---- question 26 fill here ---
+We faced several technical challenges throughout the project. One of the biggest struggles we encountered was with dependency issues when installing new packages. This often resulted in delays as we had to research and troubleshoot the issues. Another challenge we faced was with the time it took to build Docker images. This was particularly frustrating as it added to the overall time required to complete our experiments.
+
+Another major struggle we encountered was coordination within the team. Ensuring that everyone knew what tasks they were responsible for and keeping track of progress was a time-consuming process. Additionally, maintaining a functioning Github repository was a constant challenge as we had to ensure that everyone was committing and merging code correctly to avoid conflicts.
+
+Finally, working with GCP was quite heavy, as we struggled with the complexity of the platform and the steep learning curve. This added to our workload and made it difficult for us to complete our tasks in a timely manner.
+
+To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it.
 
 ### Question 27
 
@@ -471,4 +479,16 @@ We did not manage to implement monitoring of our deployed model. However, we und
 >
 > Answer:
 
---- question 27 fill here ---
+Every group member participated in all aspects of the project. Below, the main focus of each member is stated.
+  
+(WRITE YOUR OWN FOCUS)
+  
+Evan, s212592, 
+  
+Julia, s221932,
+  
+Louis, s194278,
+  
+Alexander, s194252,
+  
+Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 

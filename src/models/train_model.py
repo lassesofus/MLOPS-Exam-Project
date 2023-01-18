@@ -46,20 +46,25 @@ def train_epoch(
     # Iterate over training data
     with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
+            # Clean 
+            optimizer.zero_grad()
+            
             # Move data to device
             device = cfg.train.device
+
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
             temp = data["token_type_ids"]
             token_type_ids = temp.to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
+            optimizer.zero_grad()
             # Forward pass and loss calculation
             outputs = model(ids, mask, token_type_ids)
             loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
-            optimizer.zero_grad()
+
             loss.backward()
             optimizer.step()
 
@@ -223,7 +228,7 @@ def main(cfg: DictConfig) -> None:
     load_dotenv(dotenv_path)
 
     # Initialize wandb
-    wandb.init(config=cfg, project="test-project", entity="louisdt")
+    wandb.init(config=cfg, project="test-project", entity="mlogs23")
 
     # Load training data
     train_set = load_dataset(cfg, cfg.train.path_train_set)
