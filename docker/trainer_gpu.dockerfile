@@ -17,7 +17,7 @@ COPY hydra_config/ hydra_config/
 # Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
 
-WORKDIR /
+#WORKDIR /
 RUN pip install -e .
 RUN pip install -r requirements.txt --no-cache-dir
 
