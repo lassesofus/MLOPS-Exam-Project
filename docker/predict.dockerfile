@@ -13,13 +13,12 @@ COPY data/ data/
 COPY models/ models/
 COPY hydra_config/ hydra_config/
 
-
 # Not sure if needed
 COPY cloudbuild.yaml cloudbuild.yaml
 
 
-#exitWORKDIR /
-#RUN pip install -e .
+#WORKDIR /
+RUN pip install -e .
 RUN pip install -r requirements.txt --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]

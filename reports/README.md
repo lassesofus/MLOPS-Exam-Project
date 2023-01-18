@@ -49,7 +49,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 1 fill here ---
+35
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -60,7 +60,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 2 fill here ---
+s185927, s194278, s194252, s221932, s212592
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -73,7 +73,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 3 fill here ---
+We used the Huggingface Transformer framework to load a pretrained BERT model architecture to solve the news article reliability prediction problem at hand. This allowed for a quick start with inferring the realiability of news articles with only minimal training. Besides from the model architecture, we also used the ready-made tokenization functionality to processes the used text datasets, which made loading and necessary pre-processing very easy to perform. Overall the framework has proven to be very helpful in pursuing the goal of the project, however the final model performance indicate that further model optimization/training should be conducted to really make things functional. 
 
 ## Coding environment
 
@@ -92,7 +92,15 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 4 fill here ---
+We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze`. To get a complete copy of our development environment, one would have to run the following commands:
+
+1. Install `pip` if it's not already installed
+2. Clone the repository containing the code
+3. Navigate to the root directory of the repository
+4. Run `pip install -r requirements.txt` to install all the dependencies listed in the `requirements.txt` file
+5. Run the application using the appropriate command
+
+By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use `pip freeze > requirements.txt` to regenerate the file if you need to add or update the dependencies in your project.
 
 ### Question 5
 
@@ -107,7 +115,7 @@ be installed with `pip install click markdown`.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
 
 ### Question 6
 
@@ -118,7 +126,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 6 fill here ---
+Yes, we did implement rules for code quality and format using PEP8 and Flake8. These tools helped us to ensure that our code was consistent and easy to read, which is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code, and it also makes it easier for us to maintain and update our code in the future. Additionally, using tools like PEP8 and Flake8 can help to catch potential errors or bugs before they become a problem.
 
 ## Version control
 
@@ -131,7 +139,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 7 fill here ---
+We ended up having 11 unit tests.
 
 ### Question 8
 
@@ -146,7 +154,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 8 fill here ---
+We obtained a total code coverage of 91%, which includes the majority of our source code. 
+
+While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly.
+
+Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, race conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
 
 ### Question 9
 
@@ -161,7 +173,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control.
+
+We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch.
+
+Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
 
 ### Question 10
 
@@ -176,7 +192,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 10 fill here ---
+We did use DVC for managing data in our project. It helped us to have version control of our data, which was extremely beneficial for our project. DVC allowed us to track the different versions of our data and the changes that were made to it. This helped us to understand how our model was performing over time and made it easy to revert to an earlier version of the data if needed. Additionally, it helped us to manage the large data files and remote storage that we were using. This made it easy to share the data with other members of our team and keep it organized while also complying with the data storage limitations of Github. Having version control of our data also made it easy for us to reproduce our results. We were able to share the exact version of the data that we used to train our model, potentionally making it easy for others to replicate our results.
 
 ### Question 11
 
@@ -192,6 +208,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
+MISSING ANSWER
 --- question 11 fill here ---
 
 ## Running code and tracking experiments
@@ -211,7 +228,12 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 12 fill here ---
+We used the Hydra library to configure our experiments. This allowed us to easily manage and switch between different sets of hyperparameters without having to hardcode them in the training script. We created a config file, which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
+  ```
+  @hydra.main(version_base=None, 
+            config_name="config.yaml", 
+            config_path="../../hydra_config")
+  ```
 
 ### Question 13
 
@@ -226,7 +248,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 13 fill here ---
+Reproducibility is crucial in scientific research, and we made sure to take steps to ensure that our experiments were reproducible. One of the ways we did this was by using version control software such as Git to track changes to our codebase and config files. This allowed us to easily roll back to previous versions of our code if needed, and also enabled us to collaborate on the project with other team members. We also made sure to document our experimental setup, including the specific versions of any libraries or frameworks used. Additionally, we made use of data versioning techniques, such as saving the processed data, so that we can easily access the same data set if needed. We also made use of logging and monitoring tools to keep track of the experiment parameters, metrics (e.g. training loss and validation accuracy), and other information, which would be useful for reproducing the results. Eventually, to reproduce an experiment you would have access to the utilized data, model configurations, hyperparameters and ideally also system-level information. 
 
 ### Question 14
 
@@ -242,8 +264,11 @@ be installed with `pip install click markdown`.
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
+![my_image](figures/train_loss.png)
+ 
+MISSING IMAGE OF ACCURACY
 
---- question 14 fill here ---
 
 ### Question 15
 
@@ -258,7 +283,15 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 15 fill here ---
+We used Docker in our experiments primarily to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed.
+
+We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image.
+
+For example, to run the training image, we would input the below command in the terminal:
+`docker run --name training_exp trainer:latest`
+Additional parameters for such an experiment would be included in the config files. 
+
+[Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
 
 ### Question 16
 
@@ -273,7 +306,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 16 fill here ---
+When we encountered bugs while running our experiments, our primary method of debugging was using the built-in debugger in VS Code. This allowed us to set breakpoints in our code and step through the execution line by line to identify the source of the issue. Additionally, we also used more simple print statements to check the values of variables at various stages of the code to further narrow down the problem.
+
+In addition to debugging, we also performed a single profiling run to investigate our code for any possible areas of improvement. Profiling allowed us to identify any bottlenecks or inefficiencies in our code, such as computationally expensive operations or excessive use of memory. 
+
+Overall, we believe that our code is functional and efficient, but there is always room for improvement.
 
 ## Working in the cloud
 
@@ -290,7 +327,13 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 17 fill here ---
+We made use of several Google Cloud Platform (GCP) services in our project, including Cloud Storage, Cloud Build, Vertex AI, and Compute Engine.
+
+Cloud Storage is a service that allows us to store and access data in the cloud. We used Cloud Storage to store all our files, datasets and model weights, which were used as input data for our models.
+
+Cloud Build is a service that allows us to build and test our code in the cloud. We used Cloud Build to automatically build and deploy our code, which helped us to automate the development pipeline and improve the collaboration within our team.
+
+Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
 
 ### Question 18
 
@@ -305,6 +348,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
+MISSING ANSWER
 --- question 18 fill here ---
 
 ### Question 19
@@ -314,7 +358,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 19 fill here ---
+![my_image](figures/Cloud_storage.png)
 
 ### Question 20
 
@@ -323,7 +367,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 20 fill here ---
+![my_image](figures/Container_registry.png)
 
 ### Question 21
 
@@ -332,7 +376,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 21 fill here ---
+![my_image](figures/Cloud_build.png)
 
 ### Question 22
 
@@ -347,7 +391,7 @@ be installed with `pip install click markdown`.
 > *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 22 fill here ---
 
 ### Question 23
@@ -363,7 +407,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 23 fill here ---
+We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. 
 
 ### Question 24
 
@@ -376,7 +420,7 @@ be installed with `pip install click markdown`.
 > *costing the most was ... due to ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 24 fill here ---
 
 ## Overall discussion of project
@@ -397,7 +441,7 @@ be installed with `pip install click markdown`.
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+MISSING ANSWER
 --- question 25 fill here ---
 
 ### Question 26
@@ -412,7 +456,13 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 26 fill here ---
+We faced several technical challenges throughout the project. One of the biggest struggles we encountered was with dependency issues when installing new packages. This often resulted in delays as we had to research and troubleshoot the issues. Another challenge we faced was with the time it took to build Docker images. This was particularly frustrating as it added to the overall time required to complete our experiments.
+
+Another major struggle we encountered was coordination within the team. Ensuring that everyone knew what tasks they were responsible for and keeping track of progress was a time-consuming process. Additionally, maintaining a functioning Github repository was a constant challenge as we had to ensure that everyone was committing and merging code correctly to avoid conflicts.
+
+Finally, working with GCP was quite heavy, as we struggled with the complexity of the platform and the steep learning curve. This added to our workload and made it difficult for us to complete our tasks in a timely manner.
+
+To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it.
 
 ### Question 27
 
@@ -429,4 +479,16 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 27 fill here ---
+Every group member participated in all aspects of the project. Below, the main focus of each member is stated.
+  
+(WRITE YOUR OWN FOCUS)
+  
+Evan, s212592, 
+  
+Julia, s221932,
+  
+Louis, s194278,
+  
+Alexander, s194252,
+  
+Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 

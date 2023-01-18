@@ -88,4 +88,8 @@ data/
 models/
 outputs/
 wandb/
+<<<<<<< HEAD
 /data
+=======
+api/app/temp_files
+>>>>>>> main

@@ -3,4 +3,4 @@ embed_dim: 768
 out_dim: 2
 drop_p: 0.5
 bert_version: "bert-base-uncased"
-max_len: 20
+max_len: 64
