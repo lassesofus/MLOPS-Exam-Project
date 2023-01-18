@@ -7,7 +7,8 @@ from src.models.model import BERT
 
 
 @hydra.main(
-    version_base=None, config_name="config.yaml", config_path="../../hydra_config"
+    version_base=None, config_name="config.yaml",
+    config_path="../../hydra_config"
 )
 def predict(cfg: DictConfig) -> None:
     """

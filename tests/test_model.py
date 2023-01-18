@@ -10,7 +10,8 @@ from src.data.data_utils import load_dataset
 from src.models.model import BERT
 
 
-@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"),
+                    reason="Data files not found")
 def test_model_output_dimension():
     with initialize(version_base=None, config_path="../hydra_config"):
         cfg = compose(config_name="config.yaml")

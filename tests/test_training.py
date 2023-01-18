@@ -37,7 +37,7 @@ def test_train_epoch() -> None:
     criterion = BCEWithLogitsLoss()
     result = train_epoch(model, criterion, optimizer,
                          train_loader, epochs, device)
- 
+
     assert (
         np.size(result) == 1
     ), "The dimension of the returned object of 'train_epoch()'\
@@ -81,8 +81,8 @@ def test_eval() -> None:
         cfg = compose(config_name="config.yaml")
     path_test = "data/processed/test.csv"
     data_part = load_dataset(cfg, cfg.train.path_train_set)
-    train_set, val_set = random_split(dataset=data_part, lengths=[0.9, 0.1]) 
-
+    train_set, val_set = random_split(dataset=data_part, lengths=[0.9, 0.1])
+    
     test_set = load_dataset(cfg, path_test)
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)

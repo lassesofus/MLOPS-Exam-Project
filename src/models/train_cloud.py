@@ -4,7 +4,6 @@ import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from dotenv import find_dotenv, load_dotenv
 from google.cloud import storage
 from omegaconf import DictConfig
 from sklearn import metrics
@@ -48,7 +47,7 @@ def train_epoch(
         for _, data in enumerate(tepoch):
             # Clean 
             optimizer.zero_grad()
-            
+
             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
@@ -90,7 +89,6 @@ def val_epoch(
     :param epoch: Current epoch
     :return: Mean loss for epoch
     """
-
 
     model.eval()
     with torch.no_grad():
@@ -174,7 +172,6 @@ def train(
             bucket.blob(save_path)
             best_epoch = epoch + 1
 
-
     print('Best model trained for '+str(best_epoch)+' epochs')
 
     # Plot graph of training  loss
@@ -249,7 +246,7 @@ def eval(
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate mean loss and metrics 
+    # Calculate mean loss and metrics
     epoch_loss = np.mean(batch_losses)
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
     f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
@@ -265,8 +262,8 @@ def eval(
     return accuracy
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
+@hydra.main(version_base=None,
+            config_name="config.yaml",
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
     """ Run training and test, save best model and log metrics
@@ -329,5 +326,4 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     main()
-
 

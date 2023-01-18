@@ -17,7 +17,6 @@ import random
 import os
 from torch.utils.data import random_split
 
-import wandb
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
 
@@ -280,8 +279,8 @@ def eval(
     return accuracy
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
+@hydra.main(version_base=None,
+config_name="config.yaml",
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
     """ Run training and test, save best model and log metrics
