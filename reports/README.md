@@ -350,8 +350,7 @@ We also tried using the Compute Engine directly for model training.
 >
 > Answer:
 
-MISSING ANSWER
---- question 18 fill here ---
+We made use of GCP's Compute Engine to run some initial training of our model. To this end, we created a VM with the n1-standard-1 instance type which had a single NVIDIA V100 GPU, providing powerful computation capabilities. The VM was created with a custom Docker image specifically for training, ultimately making GCP's Compute Engine a crucial element in allowing us to efficiently train our model.
 
 ### Question 19
 
