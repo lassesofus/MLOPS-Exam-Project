@@ -272,8 +272,8 @@ def eval(
     return accuracy
 
 
-@hydra.main(version_base=None, 
-            config_name="config.yaml", 
+@hydra.main(version_base=None,
+            config_name="config.yaml",
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
     """ Run training and test, save best model and log metrics
@@ -308,9 +308,9 @@ def main(cfg: DictConfig) -> None:
     # check_env2 = ("WANDB_ENTITY" not in os.environ)
     # check_env3 = ("WANDB_PROJECT" not in os.environ)
 
-    if check_env1 or check_env2 or check_env3:
-        dotenv_path = find_dotenv()
-        load_dotenv(dotenv_path)
+    # if check_env1 or check_env2 or check_env3:
+    #     dotenv_path = find_dotenv()
+    #     load_dotenv(dotenv_path)
 
     # Initialize wandb
     wandb.init(config=cfg)

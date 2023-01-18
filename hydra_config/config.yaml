@@ -2,3 +2,6 @@ defaults:
   - train: training_basic
   - model: model_basic
   - pred: predicting_basic
+
+weights:
+    path_weights: models/weights.pt
