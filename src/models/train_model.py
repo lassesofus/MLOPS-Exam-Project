@@ -49,7 +49,7 @@ def train_epoch(
         for _, data in enumerate(tepoch):
             # Clean
             optimizer.zero_grad()
-            
+
             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
@@ -280,7 +280,7 @@ def eval(
 
 
 @hydra.main(version_base=None,
-config_name="config.yaml",
+            config_name="config.yaml",
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
     """ Run training and test, save best model and log metrics

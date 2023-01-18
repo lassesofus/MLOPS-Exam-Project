@@ -4,7 +4,6 @@ from datetime import datetime
 import numpy as np
 import pytest
 import torch
-import random
 from torch.utils.data import random_split
 from hydra import compose, initialize
 from torch.nn import BCEWithLogitsLoss
@@ -82,7 +81,7 @@ def test_eval() -> None:
     path_test = "data/processed/test.csv"
     data_part = load_dataset(cfg, cfg.train.path_train_set)
     train_set, val_set = random_split(dataset=data_part, lengths=[0.9, 0.1])
-    
+
     test_set = load_dataset(cfg, path_test)
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)

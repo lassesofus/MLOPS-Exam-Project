@@ -5,11 +5,10 @@ import torch
 from fastapi import FastAPI, File, UploadFile
 from google.cloud import storage
 
+from src.data.data_utils import load_txt_example
 from src.models.model import BERT
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./application_default_credentials.json"
-
-from src.data.data_utils import load_txt_example
 
 app = FastAPI()
 
@@ -95,7 +94,8 @@ async def read_root(data: UploadFile = File(...)):
     model = BERT(drop_p=cfg.model.drop_p)
 
     # Load weights
-    model.load_state_dict(torch.load(weights_path, map_location=torch.device("cpu")))
+    model.load_state_dict(torch.load(weights_path,
+                          map_location=torch.device("cpu")))
     model.to(cfg.pred.device)
 
     # Run forward pass

@@ -34,7 +34,7 @@ def test_numb_keys():
         cfg = compose(config_name="config.yaml")
     # Load train and test datasets
     train_set = load_dataset(cfg, path_train)
-    assert len(train_set.__dict__.keys()) == 5, "Max length is not expected value"
+    assert len(train_set.__dict__.keys()) == 5, "Max length not expected value"
 
 
 @pytest.mark.skipif(not os.path.exists(_PATH_DATA),

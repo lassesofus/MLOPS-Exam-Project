@@ -45,7 +45,7 @@ def train_epoch(
     # Iterate over training data
     with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
-            # Clean 
+            # Clean
             optimizer.zero_grad()
 
             # Move data to device
@@ -267,8 +267,8 @@ def eval(
             config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
     """ Run training and test, save best model and log metrics
-    
-    :param cfg: Hydra config
+
+   :param cfg: Hydra config
     """
 
     # Set random seed
@@ -326,4 +326,3 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     main()
-
