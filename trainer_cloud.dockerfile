@@ -1,5 +1,5 @@
 # Base image
-FROM gcr.io/deeplearning-platform-release/pytorch-cpu
+FROM gcr.io/deeplearning-platform-release/pytorch-gpu
 
 
 # Install python
