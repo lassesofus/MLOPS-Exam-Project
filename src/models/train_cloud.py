@@ -273,7 +273,7 @@ def main(cfg: DictConfig) -> None:
     
     :param cfg: Hydra config
     """
-    
+
     # Set random seed
     seed = cfg.train.seed
     torch.manual_seed(seed)
@@ -294,7 +294,7 @@ def main(cfg: DictConfig) -> None:
 
     # Load training data
     data_part = load_dataset(cfg, cfg.train.path_train_set_cloud)
-    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1])
+    train_set, val_set = random_split(dataset=data_part, lengths=[0.9, 0.1])
     test_set = load_dataset(cfg, cfg.train.path_test_set_cloud)
 
     train_loader = DataLoader(
@@ -320,7 +320,8 @@ def main(cfg: DictConfig) -> None:
                      lr=cfg.train.learning_rate)
 
     # Train model
-    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device)
+    weights = train(cfg, model, criterion, optimizer,
+                    train_loader, val_loader, device)
 
     # Test model
     _ = eval(model, weights, criterion, test_loader, device)
@@ -328,6 +329,5 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     main()
-
 
 

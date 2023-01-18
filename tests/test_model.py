@@ -2,7 +2,6 @@ import os
 
 import pytest
 import torch
-import transformers
 from hydra import compose, initialize
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -33,7 +32,8 @@ def test_model_output_dimension():
             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
-            token_type_ids = data["token_type_ids"].to(device, dtype=torch.long)
+            token_type_ids = data["token_type_ids"].to(device,
+                                                       dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
             # Forward pass and loss calculation
