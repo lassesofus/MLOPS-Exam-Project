@@ -387,6 +387,13 @@ Cloud Build is a service that allows us to build and test our code in the cloud.
 
 Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
 
+That's the gcloud  command to create custom jobs through CI.
+
+	gcloud ai custom-jobs create \
+   	--region=europe-west1 \
+   	--display-name=test-run \
+   	--config=config_gpu.yaml
+
 We also tried using the Compute Engine directly for model training. 
 
 ### Question 18
