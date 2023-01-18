@@ -368,7 +368,7 @@ We made use of GCP's Compute Engine to run some initial training of our model. T
 >
 > Answer:
 
-![my_image](figures/Cloud_build.png)
+![my_image](figures/Cloud_Build.png)
 
 ### Question 22
 
