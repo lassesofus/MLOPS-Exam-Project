@@ -1,5 +1,3 @@
-import os
-import random
 from datetime import datetime
 
 import hydra
@@ -12,9 +10,7 @@ from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
-
 from torch.utils.data import DataLoader
-from torch.utils.data import random_split
 from tqdm import tqdm
 import wandb 
 import random
@@ -50,7 +46,7 @@ def train_epoch(
     batch_losses = []
 
     # Iterate over training data
-    with tqdm(train_loader, desc=f"Training epoch {epoch}") as tepoch:
+    with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
             # Clean 
             optimizer.zero_grad()
@@ -149,8 +145,8 @@ def train(
     :param debug_mode: Specify whether it should be logged or not
     :returns: File path to the saved model weights
     """
-    train_losses = []
-    val_losses = []
+
+    epoch_losses = []
     best_loss = float("inf")
     time = datetime.now().strftime("%H-%M-%S")
 
@@ -164,32 +160,27 @@ def train(
         )
 
         # Save epoch loss and wandb log
-        train_losses.append(train_loss)
-        val_losses.append(val_loss)
+        epoch_losses.append(epoch_loss)
 
-        if debug_mode == False:
-            wandb.log({
-
-            "train_loss": train_loss,
-            "val_loss": val_loss,
+        wandb.log({
+            "train_loss": epoch_loss,
             "epoch": epoch
         })
 
         # Save if model is better
-        if val_loss < best_loss:
-            best_loss = val_loss
+        if epoch_loss < best_loss:
+            best_loss = epoch_loss
             save_path = f"./models/T{time}_E{epoch+1}.pt"
             torch.save(model.state_dict(), save_path)
 
     # Plot graph of training  loss
     plt.figure()
-    plt.plot(train_losses, label="Training loss")
-    plt.plot(val_losses, label="Validation loss")
+    plt.plot(epoch_losses, label="Training loss")
     plt.legend()
     plt.savefig("./reports/figures/loss.png")
 
     # Print best best loss
-    print(f"Best validation loss: {best_loss}")
+    print(f"Best loss: {best_loss}")
 
     return save_path
 
@@ -206,7 +197,6 @@ def eval(
     Run model on the test set
     :param model: Initialized model
     :param weights: File path to the saved model weights
-    :param criterion: Loss function
     :param test_loader: Test data loader
     :param device: Device to train on
     :param debug_mode: Specify whether it should be logged or not
@@ -237,7 +227,9 @@ def eval(
 
                 # Appending the targets and outputs to lists
                 # (apply sigmoid to logits)
-                fin_targets.extend(targets.cpu().detach().numpy().tolist())
+                fin_targets.extend(
+                    targets.cpu().detach().numpy().tolist()
+                )
                 fin_outputs.extend(
                     torch.sigmoid(outputs).cpu().detach().numpy().tolist()
                 )
@@ -248,21 +240,21 @@ def eval(
     # Map output probs to labels (get predictions)
     fin_outputs = np.array(fin_outputs) >= 0.5
 
-    # Calculate mean loss and metrics
+    # Calculate mean loss and metrics 
     epoch_loss = np.mean(batch_losses)
     accuracy = metrics.accuracy_score(fin_targets, fin_outputs)
-    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs, average="micro")
-    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs, average="macro")
-    if debug_mode == False:
-        # Print and wandb log metrics
-        wandb.log(
-            {
-                "test_loss": epoch_loss,
-                "accuracy": accuracy,
-                "f1_score_micro": f1_score_micro,
-                "f1_score_macro": f1_score_macro,
-            }
-        )
+    f1_score_micro = metrics.f1_score(fin_targets, fin_outputs,
+                                      average="micro")
+    f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
+                                      average="macro")
+
+    # Print and wandb log metrics
+    wandb.log({
+        "test_loss": epoch_loss,
+        "accuracy": accuracy,
+        "f1_score_micro": f1_score_micro,
+        "f1_score_macro": f1_score_macro
+    })
 
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
@@ -272,15 +264,15 @@ def eval(
     return accuracy
 
 
-@hydra.main(
-    version_base=None, config_name="config.yaml", config_path="../../hydra_config"
-)
+@hydra.main(version_base=None, 
+            config_name="config.yaml", 
+            config_path="../../hydra_config")
 def main(cfg: DictConfig) -> None:
-    """Run training and test, save best model and log metrics
-
+    """ Run training and test, save best model and log metrics
+    
     :param cfg: Hydra config
     """
-
+    
     # Set random seed
     seed = cfg.train.seed
     torch.manual_seed(seed)
@@ -315,18 +307,13 @@ def main(cfg: DictConfig) -> None:
     # Initialize wandb
     wandb.init(config=cfg)
 
-    # Load data
-    data_part = load_dataset(cfg, cfg.train.path_train_set)
-    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1])
+    # Load training data
+    train_set = load_dataset(cfg, cfg.train.path_train_set)
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.train.batch_size,
         shuffle=True
-    )
-    val_loader = DataLoader(
-        val_set, batch_size=cfg.train.batch_size,
-        shuffle=False
     )
     test_loader = DataLoader(
         test_set, batch_size=cfg.train.batch_size,
@@ -339,7 +326,8 @@ def main(cfg: DictConfig) -> None:
     ).to(device)
 
     criterion = BCEWithLogitsLoss()
-    optimizer = Adam(params=model.parameters(), lr=cfg.train.learning_rate)
+    optimizer = Adam(params=model.parameters(),
+                     lr=cfg.train.learning_rate)
 
     # Train model
     weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device)
