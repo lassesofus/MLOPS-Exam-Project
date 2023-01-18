@@ -8,4 +8,4 @@ path_train_set_cloud: "gs://bucket-train-bert/data/processed/train.csv"
 path_test_set_cloud: "gs://bucket-train-bert/data/processed/test.csv"
 seed: 42
 
-gpu_override: 1  # DO NOT CHANGE THIS!!!
+gpu_override: 0  # DO NOT CHANGE THIS!!!
