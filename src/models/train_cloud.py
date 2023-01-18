@@ -13,9 +13,7 @@ from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-import wandb 
 import random
-import os
 from torch.utils.data import random_split
 
 from src.data.data_utils import load_dataset
@@ -131,7 +129,6 @@ def train(
     train_loader: DataLoader,
     val_loader: DataLoader,
     device: torch.device,
-    debug_mode: bool = False,
 ) -> str:
     """
     Trains the model for a given amount of epochs
@@ -166,17 +163,11 @@ def train(
         train_losses.append(train_loss)
         val_losses.append(val_loss)
 
-        # if debug_mode == False:
-        #     wandb.log({
-        #         "train_loss": train_loss,
-        #         "val_loss": val_loss,
-        #         "epoch": epoch
-        #     })
-
         # Save if model is better
         if val_loss < best_loss:
             best_loss = val_loss
             save_path = f"./models/T{time}.pt"
+
             # save final to gcp bucket model
             storage_client = storage.Client("bucket-train-bert")
             bucket = storage_client.bucket("bucket-train-bert")
@@ -210,7 +201,6 @@ def eval(
     criterion: BCEWithLogitsLoss,
     test_loader: DataLoader,
     device: torch.device,
-    debug_mode: bool = False,
 ) -> None:
     """
     Run model on the test set
@@ -267,15 +257,6 @@ def eval(
     f1_score_macro = metrics.f1_score(fin_targets, fin_outputs,
                                       average="macro")
 
-    # # Print and wandb log metrics
-    # if debug_mode == False:
-    #     wandb.log({
-    #         "test_loss": epoch_loss,
-    #         "accuracy": accuracy,
-    #         "f1_score_micro": f1_score_micro,
-    #         "f1_score_macro": f1_score_macro
-    #     })
-
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
     print(f"F1 Score (Micro) = {f1_score_micro}")
@@ -310,22 +291,6 @@ def main(cfg: DictConfig) -> None:
         else:
             device = torch.device("cpu")
             print('Using available CPU!')
-
-    # Fetch wand authorization (working with cloned/forked repo
-    # requires wandb key to be defined in .env file and running
-    # training docker image requires wandb key to be definned as
-    # environment variable with flag -e WANDB_API_KEY=... when
-    # calling docker run)
-    # check_env1 = ("WANDB_API_KEY" not in os.environ)
-    # check_env2 = ("WANDB_ENTITY" not in os.environ)
-    # check_env3 = ("WANDB_PROJECT" not in os.environ)
-
-    # if check_env1 or check_env2 or check_env3:
-    #     dotenv_path = find_dotenv()
-    #     load_dotenv(dotenv_path)
-
-    # # Initialize wandb
-    # wandb.init(config=cfg)
 
     # Load training data
     data_part = load_dataset(cfg, cfg.train.path_train_set_cloud)
