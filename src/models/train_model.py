@@ -15,12 +15,11 @@ from tqdm import tqdm
 import wandb 
 import random
 import os
-from typing import Dict
+from torch.utils.data import random_split
 
 import wandb
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
-
 
 def train_epoch(
     model: nn.Module,
@@ -58,13 +57,11 @@ def train_epoch(
             token_type_ids = temp.to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
-            optimizer.zero_grad()
             # Forward pass and loss calculation
             outputs = model(ids, mask, token_type_ids)
             loss = criterion(outputs, targets)
 
             # Backpropagate and update weights
-
             loss.backward()
             optimizer.step()
 
@@ -146,7 +143,8 @@ def train(
     :returns: File path to the saved model weights
     """
 
-    epoch_losses = []
+    train_losses = []
+    val_losses = []
     best_loss = float("inf")
     time = datetime.now().strftime("%H-%M-%S")
 
@@ -160,27 +158,31 @@ def train(
         )
 
         # Save epoch loss and wandb log
-        epoch_losses.append(epoch_loss)
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
 
-        wandb.log({
-            "train_loss": epoch_loss,
-            "epoch": epoch
-        })
+        if debug_mode == False:
+            wandb.log({
+                "train_loss": train_loss,
+                "val_loss": val_loss,
+                "epoch": epoch
+            })
 
         # Save if model is better
-        if epoch_loss < best_loss:
-            best_loss = epoch_loss
-            save_path = f"./models/T{time}_E{epoch+1}.pt"
+        if val_loss < best_loss:
+            best_loss = val_loss
+            save_path = f"./models/T{time}.pt"
             torch.save(model.state_dict(), save_path)
 
     # Plot graph of training  loss
     plt.figure()
-    plt.plot(epoch_losses, label="Training loss")
+    plt.plot(train_losses, label="Training loss")
+    plt.plot(val_losses, label="Validation loss")
     plt.legend()
     plt.savefig("./reports/figures/loss.png")
 
     # Print best best loss
-    print(f"Best loss: {best_loss}")
+    print(f"Best validation loss: {best_loss}")
 
     return save_path
 
@@ -249,12 +251,13 @@ def eval(
                                       average="macro")
 
     # Print and wandb log metrics
-    wandb.log({
-        "test_loss": epoch_loss,
-        "accuracy": accuracy,
-        "f1_score_micro": f1_score_micro,
-        "f1_score_macro": f1_score_macro
-    })
+    if debug_mode == False:
+        wandb.log({
+            "test_loss": epoch_loss,
+            "accuracy": accuracy,
+            "f1_score_micro": f1_score_micro,
+            "f1_score_macro": f1_score_macro
+        })
 
     print(f"Loss = {epoch_loss}")
     print(f"Accuracy Score = {accuracy}")
@@ -308,12 +311,17 @@ def main(cfg: DictConfig) -> None:
     wandb.init(config=cfg)
 
     # Load training data
-    train_set = load_dataset(cfg, cfg.train.path_train_set)
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1])
     test_set = load_dataset(cfg, cfg.train.path_test_set)
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.train.batch_size,
         shuffle=True
+    )
+    val_loader = DataLoader(
+        val_set, batch_size=cfg.train.batch_size,
+        shuffle=False
     )
     test_loader = DataLoader(
         test_set, batch_size=cfg.train.batch_size,
