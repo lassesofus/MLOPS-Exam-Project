@@ -1,3 +1,5 @@
+import os
+import random
 from datetime import datetime
 
 import hydra
@@ -10,13 +12,10 @@ from sklearn import metrics
 from torch import nn
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-import wandb
-import random
-import os
-from torch.utils.data import random_split
 
+import wandb
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
 

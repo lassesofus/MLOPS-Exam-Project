@@ -94,8 +94,7 @@ async def read_root(data: UploadFile = File(...)):
     model = BERT(drop_p=cfg.model.drop_p)
 
     # Load weights
-    model.load_state_dict(torch.load(weights_path,
-                          map_location=torch.device("cpu")))
+    model.load_state_dict(torch.load(weights_path, map_location=torch.device("cpu")))
     model.to(cfg.pred.device)
 
     # Run forward pass

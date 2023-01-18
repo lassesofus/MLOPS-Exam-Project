@@ -10,8 +10,7 @@ from src.data.data_utils import load_dataset
 from src.models.model import BERT
 
 
-@pytest.mark.skipif(not os.path.exists("./data"),
-                    reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
 def test_model_output_dimension():
     with initialize(version_base=None, config_path="../hydra_config"):
         cfg = compose(config_name="config.yaml")
@@ -33,8 +32,7 @@ def test_model_output_dimension():
             # Move data to device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
-            token_type_ids = data["token_type_ids"].to(device,
-                                                       dtype=torch.long)
+            token_type_ids = data["token_type_ids"].to(device, dtype=torch.long)
             targets = data["targets"].to(device, dtype=torch.float)
 
             # Forward pass and loss calculation
