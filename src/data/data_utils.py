@@ -2,9 +2,9 @@ from typing import List
 
 import pandas as pd
 import torch
+from omegaconf import DictConfig
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
-from omegaconf import DictConfig
 
 
 class fake_news_dataset(Dataset):
