@@ -321,11 +321,8 @@ Overall, we believe that our code is functional and efficient, but there is alwa
 >
 > Answer length: 50-200 words.
 >
-> Example:
-> *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
->
 > Answer:
-
+  
 We made use of several Google Cloud Platform (GCP) services in our project, including Cloud Storage, Cloud Build, Vertex AI, and Compute Engine.
 
 Cloud Storage is a service that allows us to store and access data in the cloud. We used Cloud Storage to store all our files, datasets and model weights, which were used as input data for our models.
@@ -401,11 +398,10 @@ MISSING ANSWER
 >
 > Answer length: 100-200 words.
 >
-> Example:
-> *We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could*
-> *measure ... and ... that would inform us about this ... behaviour of our application.*
 >
 > Answer:
+ 
+We did not manage to implement monitoring since we didn't have time to do so. Monitoring our application could help us to know if we have any data drifting problems over the time. In a scenario like that, our models accuracy could decay and a model retraining would be necesary. A framework like Evidently could give use insights with metrics and reports. At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly. 
 
 We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. 
 
