@@ -417,7 +417,8 @@ We did not manage to implement monitoring of our deployed model. However, we und
 >
 > Answer:
 MISSING ANSWER
-Evan, s212592:
+
+Evan, s212592: 0$. Most spended on executing the VMs.
   
 Julia, s221932:
   
