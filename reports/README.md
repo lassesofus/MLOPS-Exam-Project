@@ -443,7 +443,7 @@ MISSING ANSWER
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+![my_image](figures/MLOps_setup.png)
 This figure is split into three parts. The right parts contains the local part, the left part the GCP part and at the top we have included the DTU HPC. We started with the local setup on the right side. The main two frameworks we used were pytorch and transformers of hugging face. We used a conda environment for the package organisation. We integrated hydra configuration files and connected the code to wandb to log the progress of the experiments. We organised all files in a cookiecutter template. Whenever we commit code and push to github, it auto triggers the execution of the written unittests and checks for pep8/flake8 format. Initially we stored our data in google drive and pulled/pushed via DVC. We trained different models on the HPC. Furthermore, we created locally docker images for the training, the model and the prediction script. 
 We then started to use the Google cloud. First, we moved our data to a bucket in GCP and enabled pull/push via DVC. Additionally, we achieved that the docker images are automatically updated after every push on github. These images are then used for training with VertexAI. We also stored the model weights in a bucket in the cloud.
 As a final step, we added an API to make it easy for an user to get a prediction for a given text input.
