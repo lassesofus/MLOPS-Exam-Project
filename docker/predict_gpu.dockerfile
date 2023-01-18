@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.9-slim
+FROM  nvcr.io/nvidia/pytorch:22.07-py3
 
 # Install python
 RUN apt update && \
@@ -7,7 +7,7 @@ RUN apt update && \
 	apt clean && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
-COPY setup.py setup.pyaQ
+COPY setup.py setup.py
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
