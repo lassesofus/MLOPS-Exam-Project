@@ -290,10 +290,15 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for 50 epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to plateau during the later epochs. 
-![my_image](figures/train_loss.png)
+In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for the first 15 epochs. It shows the mean of 10 different runs. They were trained for a different number of epochs. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seem to increase again drastically and finally plateau during the later epochs on a high level. This means that our model doesn't seem to learn from our data. As this part was not the focus of the course, we decided to still continue with this weak model. 
+The second image shows the mean of the validation loss. We can see here again that the loss is increasing over the epochs. This is the contrary of how it should look like and confirms again the assumption that our model doesn’t the features of our dataset. 
+The third image displays the accuracy of the different trained models. We decided to use the accuracy as the test metric for the performance of our model. Hence, it was important to log that too. 
+For three models the accuracy was around 45%, for all others it was a bit more than 60%. This is not a great result, but at least for most of the models the performance is better than randomly guessing.
  
-MISSING IMAGE OF ACCURACY
+![my_image](figures/accuracy_wandb.png)
+![my_image](figures/loss_function_wandb.png)
+![my_image](figures/validation_loss_wandb.png)
+
 
 
 ### Question 15
