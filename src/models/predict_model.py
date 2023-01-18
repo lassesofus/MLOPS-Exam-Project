@@ -7,9 +7,7 @@ from src.models.model import BERT
 
 
 @hydra.main(
-    version_base=None,
-    config_name="config.yaml",
-    config_path="../../hydra_config"
+    version_base=None, config_name="config.yaml", config_path="../../hydra_config"
 )
 def predict(cfg: DictConfig) -> None:
     """
@@ -20,8 +18,7 @@ def predict(cfg: DictConfig) -> None:
     """
 
     # Load data and tokenize it
-    ids, mask, token_type_ids = load_txt_example(cfg, 
-                                cfg.pred.path_data)
+    ids, mask, token_type_ids = load_txt_example(cfg, cfg.pred.path_data)
 
     # Set device
     if cfg.train.gpu_override == 1:
