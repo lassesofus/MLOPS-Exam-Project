@@ -228,7 +228,6 @@ We used the Hydra library to configure our experiments. This allowed us to easil
 The hydra package saves a log of the experiment configurations - but the hydra config file was also tracked using wandb. The click package is also used for the `make_dataset.py` file as in the original cookie-cutter template to ensure the makefile command for making the processed dataset is working. 
 
 
-
 ### Question 13
 
 > **Reproducibility of experiments are important. Related to the last question, how did you secure that no information**
@@ -242,7 +241,7 @@ The hydra package saves a log of the experiment configurations - but the hydra c
 >
 > Answer:
 
-Reproducibility is crucial in scientific research, and we made sure to take steps to ensure that our experiments were reproducible. One of the ways we did this was by using version control software such as Git to track changes to our codebase and config files. This allowed us to easily roll back to previous versions of our code if needed, and also enabled us to collaborate on the project with other team members. We also made sure to document our experimental setup, including the specific versions of any libraries or frameworks used. Additionally, we made use of data versioning techniques, such as saving the processed data, so that we can easily access the same data set if needed. We also made use of logging and monitoring tools to keep track of the experiment parameters, metrics (e.g. training loss and validation accuracy), and other information, which would be useful for reproducing the results. Eventually, to reproduce an experiment you would have access to the utilized data, model configurations, hyperparameters and ideally also system-level information. 
+Reproducibility is crucial in scientific research, and we made sure to take steps to ensure that our experiments were reproducible. One of the ways we did this was by using version control software such as Git to track changes to our codebase and config files. This allowed us to easily roll back to previous versions of our code if needed, and also enabled us to collaborate on the project with other team members. We also made sure to document our experimental setup, including the specific versions of any libraries or frameworks used. Additionally, we made use of data versioning techniques, such as saving the processed data, so that we can easily access the same data set if needed. We also made use of logging and monitoring tools to keep track of the experiment parameters, metrics (e.g. training loss, validation accuracy and config files), and other information, which would be useful for reproducing the results. Eventually, to reproduce an experiment you would have access to the utilized data, model configurations, hyperparameters and ideally also system-level information. 
 
 ### Question 14
 
@@ -277,13 +276,12 @@ In the first image below, we see a plot of the binary cross-entropy loss of trai
 >
 > Answer:
 
-We used Docker in our experiments primarily to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed.
+We used Docker in our experiments to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed. 
 
-We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image.
+We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image. Docker images was also used extensively in our cloud training (using training image for Vertex AI) and our cloud deployment (using FastAPI image with Cloud Run).
 
 For example, to run the training image, we would input the below command in the terminal:
-`docker run --name training_exp trainer:latest`
-Additional parameters for such an experiment would be included in the config files. 
+`docker run --name exp3 --env WANDB_API_KEY=<insert> --env WANDB_ENTITY=<insert> --env WANDB_PROJECT=<insert> trainer_cpu:latest`
 
 [Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
 
@@ -341,7 +339,7 @@ We also tried using the Compute Engine directly for model training.
 >
 > Answer:
 
-We made use of GCP's Compute Engine to run some initial training of our model. To this end, we created a VM with the n1-standard-1 instance type which had a single NVIDIA V100 GPU, providing powerful computation capabilities. The VM was created with a custom Docker image specifically for training, ultimately making GCP's Compute Engine a crucial element in allowing us to efficiently train our model.
+We made use of GCP's Compute Engine to experiment with some initial training of our model. However, DTU HPC was the main platform for prototyping on another machine with enough VRAM.
 
 ### Question 19
 
@@ -383,8 +381,8 @@ We made use of GCP's Compute Engine to run some initial training of our model. T
 > *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
-MISSING ANSWER
---- question 22 fill here ---
+
+A model API was built using FastAPI. The model was deployed in the cloud using Google Cloud Run. The API takes a txt-file as input and returns a response dictionary. The response dictionary contains the input text, a prediction (reliable/unreliable), the HTTP status message and the HTTP status code. The prediction is made using a model with weights loaded from a Google Cloud bucket. To invoke the service an user would call `curl -X 'POST'   'https://test-app-tuy6dmah2a-ew.a.run.app/'   -H 'accept: application/json'   -H 'Content-Type: multipart/form-data'   -F 'data=@<file_path>;type=text/plain'
 
 ### Question 23
 
@@ -417,7 +415,7 @@ Evan, s212592: 50$. Most spended on running the VMs.
   
 Julia, s221932: 50$ (accidentally spend on the first day of using the cloud by virtual machines)
   
-Louis, s194278:
+Louis, s194278: $30.49 
   
 Alexander, s194252:
   
@@ -443,8 +441,7 @@ Lasse, s185927: $12.65
 >
 > Answer:
 ![my_image](figures/MLOps_setup.png)
-This figure is split into three parts. The right parts contains the local part, the left part the GCP part and at the top we have included the DTU HPC. We started with the local setup on the right side. The main two frameworks we used were pytorch and transformers of hugging face. We used a conda environment for the package organisation. We integrated hydra configuration files and connected the code to wandb to log the progress of the experiments. We organised all files in a cookiecutter template. Whenever we commit code and push to github, it auto triggers the execution of the written unittests and checks for pep8/flake8 format. Initially we stored our data in google drive and pulled/pushed via DVC. We trained different models on the HPC. Furthermore, we created locally docker images for the training, the model and the prediction script. 
-We then started to use the Google cloud. First, we moved our data to a bucket in GCP and enabled pull/push via DVC. Additionally, we achieved that the docker images are automatically updated after every push on github. These images are then used for training with VertexAI. We also stored the model weights in a bucket in the cloud.
+This figure is split into three parts. The right parts contains the local part, the left part the GCP part and at the top we have included the DTU HPC. We started with the local setup on the right side. The main two frameworks we used were pytorch and transformers of hugging face. We used a conda environment for the package organisation. We integrated hydra configuration files and connected the code to wandb to log the progress of the experiments. We organised all files in a cookiecutter template. Whenever we commit code and push to github, it auto triggers the execution of the written unittests and checks for pep8/flake8 format. Initially we stored our data in google drive and pulled/pushed via DVC. We trained different models on the HPC. Furthermore, we created locally docker images for the training, the model and the prediction script. We then started to use the Google cloud. First, we moved our data to a bucket in GCP and enabled pull/push via DVC. Additionally, we achieved that the docker images are automatically updated after every push on github. These images are then used for training with VertexAI. We also stored the model weights in a bucket in the cloud.
 As a final step, we added an API to make it easy for an user to get a prediction for a given text input.
 
 
@@ -466,7 +463,7 @@ Another major struggle we encountered was coordination within the team. Ensuring
 
 Finally, working with GCP was quite heavy, as we struggled with the complexity of the platform and the steep learning curve. This added to our workload and made it difficult for us to complete our tasks in a timely manner.
 
-To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it.
+To overcome these challenges, we implemented a more structured approach to our project management and set up regular meetings to discuss progress and address any issues that arose. We also made a conscious effort to keep our Github repository organized and to document our work as we went along. Additionally, we spent more time researching and experimenting with different techniques to speed up the building of Docker images and resolving dependency issues. Finally, we spent more time learning GCP and figuring out how to use it effectively, which made it easier for us to work with it. Figuring out how to set up jobs and interactive training in HPC DTU also added quite a bit of time to the project for the uninitialized group members.  
 
 ### Question 27
 
@@ -489,7 +486,7 @@ Every group member participated in all aspects of the project. Below, the main f
 
 Julia, s221932, set up hydra configuration, implemented unittests for data, model and train, calculated coverage, looked into compilation, created figures for the report
   
-Louis, s194278,
+Louis, s194278, writing python scripts (make_dataset, data_utils, model, predict_model, train_model), set up Github actions (auto lint and framework for unit tests), create cpu docker files for local training/prediction, pre-commit, wandb, trigger workflow, fastAPI and Cloud Run deployment. 
   
 Alexander, s194252,
   
