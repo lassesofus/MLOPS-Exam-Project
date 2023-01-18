@@ -425,7 +425,7 @@ Louis, s194278:
   
 Alexander, s194252:
   
-Lasse, s185927:
+Lasse, s185927: $12.65
 
 
 ## Overall discussion of project
