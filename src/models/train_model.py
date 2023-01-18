@@ -212,6 +212,8 @@ def main(cfg: DictConfig) -> None:
     :param cfg: Hydra config
     """
     
+    print(f"Cuda available: {torch.cuda.is_available()}")
+
     # Set random seed
     seed = cfg.train.seed
     torch.manual_seed(seed)
@@ -223,7 +225,7 @@ def main(cfg: DictConfig) -> None:
     load_dotenv(dotenv_path)
 
     # Initialize wandb
-    wandb.init(config=cfg, project="test-project", entity="louisdt")
+    wandb.init(config=cfg, project="test-project", entity="lassesofus")
 
     # Load training data
     train_set = load_dataset(cfg, cfg.train.path_train_set)
