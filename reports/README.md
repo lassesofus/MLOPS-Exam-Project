@@ -415,7 +415,7 @@ MISSING ANSWER
 
 Evan, s212592: 0$. Most spended on executing the VMs.
   
-Julia, s221932:
+Julia, s221932: 50$ (accidentally spend on the first day of using the cloud by virtual machines)
   
 Louis, s194278:
   
@@ -487,7 +487,7 @@ Every group member participated in all aspects of the project. Below, the main f
   
 (WRITE YOUR OWN FOCUS)
 
-Julia, s221932,
+Julia, s221932, set up hydra configuration, implemented unittests for data, model and train, calculated coverage, looked into compilation, created figures for the report
   
 Louis, s194278,
   
