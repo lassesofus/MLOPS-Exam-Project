@@ -18,7 +18,7 @@ COPY cloudbuild.yaml cloudbuild.yaml
 
 
 #WORKDIR /
-#RUN pip install -e .
+RUN pip install -e .
 RUN pip install -r requirements.txt --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]

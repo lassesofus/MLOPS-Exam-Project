@@ -88,3 +88,4 @@ data/
 models/
 outputs/
 wandb/
+api/app/temp_files

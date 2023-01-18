@@ -52,6 +52,9 @@ def train_epoch(
     # Iterate over training data
     with tqdm(train_loader, desc=f"Training epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
+            # Clean 
+            optimizer.zero_grad()
+            
             # Move data to device
             device = cfg.train.device
 
