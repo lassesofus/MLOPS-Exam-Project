@@ -9,13 +9,9 @@ RUN apt update && \
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
 COPY src/ src/
-COPY data/ data/
 COPY models/ models/
 COPY reports/ reports/
 COPY hydra_config/ hydra_config/
-
-# Not sure if needed
-COPY cloudbuild.yaml cloudbuild.yaml
 
 WORKDIR /
 RUN pip install -e .

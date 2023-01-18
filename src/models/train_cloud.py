@@ -46,7 +46,7 @@ def train_epoch(
     with tqdm(train_loader, desc=f"Epoch {epoch}") as tepoch:
         for _, data in enumerate(tepoch):
             # Move data to device
-            device = cfg.train.device_cloud
+            device = cfg.train.device
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
             temp = data["token_type_ids"]
@@ -155,7 +155,7 @@ def eval(
         with tqdm(test_loader, desc="Test epoch") as tepoch:
             for _, data in enumerate(tepoch):
                 # Extracting data from the data batch
-                device = cfg.train.device_cloud
+                device = cfg.train.device
                 ids = data["ids"].to(device, dtype=torch.long)
                 mask = data["mask"].to(device, dtype=torch.long)
                 temp = data["token_type_ids"]
@@ -228,8 +228,8 @@ def main(cfg: DictConfig) -> None:
     #wandb.init(config=cfg, project="test-project", entity="louisdt")
 
     # Load training data
-    train_set = load_dataset(cfg, cfg.train.path_train_set_cloud)
-    test_set = load_dataset(cfg, cfg.train.path_test_set_cloud)
+    train_set = load_dataset(cfg, "gs://bucket-train-bert/data/processed/train.csv")
+    test_set = load_dataset(cfg, "gs://bucket-train-bert/data/processed/test.csv")
 
     train_loader = DataLoader(
         train_set, batch_size=cfg.train.batch_size,
@@ -243,7 +243,7 @@ def main(cfg: DictConfig) -> None:
     # Initialize model, objective and optimizer
     model = BERT(drop_p=cfg.model.drop_p,
                  embed_dim=cfg.model.embed_dim,
-                 out_dim=cfg.model.out_dim).to(cfg.train.device_cloud)
+                 out_dim=cfg.model.out_dim).to(cfg.train.device)
 
     criterion = BCEWithLogitsLoss()
     optimizer = Adam(params=model.parameters(),
