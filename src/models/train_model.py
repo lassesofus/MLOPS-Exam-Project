@@ -211,8 +211,6 @@ def main(cfg: DictConfig) -> None:
     
     :param cfg: Hydra config
     """
-    
-    print(f"Cuda available: {torch.cuda.is_available()}")
 
     # Set random seed
     seed = cfg.train.seed

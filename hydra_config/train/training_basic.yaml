@@ -7,5 +7,5 @@ path_test_set: "data/processed/test.csv"
 path_train_set_cloud: "gs://bucket-train-bert/data/processed/train.csv"
 path_test_set_cloud: "gs://bucket-train-bert/data/processed/test.csv"
 device: "cpu"
-device_cloud: "cuda"
+#device_cloud: "cuda"
 seed: 42
