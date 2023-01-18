@@ -4,32 +4,37 @@ from datetime import datetime
 import numpy as np
 import pytest
 import torch
+import random
+from torch.utils.data import random_split
+from hydra import compose, initialize
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 
 from src.data.data_utils import load_dataset
 from src.models.model import BERT
-from src.models.train_model import train, train_epoch, ttest
+from src.models.train_model import eval, train, train_epoch
 
 
-@pytest.mark.skipif(not os.path.exists("./data"),
-                    reason="Data files not found")
+@pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
 def test_train_epoch() -> None:
+    with initialize(version_base=None, config_path="conf_test"):
+        cfg = compose(config_name="config.yaml")
+    # Paths for data
     path_train = "data/processed/train.csv"
-    train_set = load_dataset(path_train)
+    # Load train datasets
+    train_set = load_dataset(cfg, path_train)
+
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
     epochs = 1
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
-    result = train_epoch(
-        model, criterion, optimizer, train_loader, epochs, device, batch_size=8
-    )
+    result = train_epoch(cfg, model, criterion, optimizer, train_loader, epochs)
     assert (
         np.size(result) == 1
     ), "The dimension of the returned object of 'train_epoch()'\
@@ -38,55 +43,64 @@ def test_train_epoch() -> None:
 
 @pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
 def test_train() -> None:
-    # Paths for data
+    with initialize(version_base=None, config_path="conf_test"):
+        cfg = compose(config_name="config.yaml")
     path_train = "data/processed/train.csv"
-    # Load train datasets
-    train_set = load_dataset(path_train)
-
+    #train_set = load_dataset(cfg, path_train)
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
+    valset_subset = torch.utils.data.Subset(val_set, subset)
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
-    epochs = 1
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    val_loader = DataLoader(valset_subset, batch_size=cfg.train.batch_size,
+        shuffle=False
+    )
+
+
+    debug_mode = True
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
 
-    start_time = datetime.now().strftime("%H-%M-%S")
-    print("works so far")
-    result = train(
-        epochs, model, criterion, optimizer, train_loader, device, batch_size=8
-    )
+    time = datetime.now().strftime("%H-%M-%S")
+    result = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
+
     assert (
-        result == f"./models/{start_time}.pt"
+        result == f"./models/T{time}_E{1}.pt"
     ), "The returned path of 'train()' is not as expected!"
 
 
 @pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
-def test_test_func() -> None:
+def test_eval() -> None:
+    with initialize(version_base=None, config_path="conf_test"):
+        cfg = compose(config_name="config.yaml")
     path_train = "data/processed/train.csv"
     path_test = "data/processed/test.csv"
-    train_set = load_dataset(path_train)
-    test_set = load_dataset(path_test)
+    data_part = load_dataset(cfg, cfg.train.path_train_set)
+    train_set, val_set = random_split(dataset = data_part, lengths = [0.9,0.1]) 
+
+    test_set = load_dataset(cfg, path_test)
     subset = list(range(0, 8))
     trainset_subset = torch.utils.data.Subset(train_set, subset)
     testset_subset = torch.utils.data.Subset(test_set, subset)
+    valset_subset = torch.utils.data.Subset(val_set, subset)
 
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
     test_loader = DataLoader(testset_subset, batch_size=16, shuffle=True)
-    epochs = 1
-    batch_size = 8
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    val_loader = DataLoader(valset_subset, batch_size=cfg.train.batch_size,
+        shuffle=False
+    )
+    debug_mode = True
+    device = "cpu"
     model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
 
-    weights = train(
-        epochs, model, criterion, optimizer, train_loader, device, batch_size
-    )
-    result = ttest(model, weights, test_loader, device, batch_size)
-
+    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
+    result = eval(cfg, model, weights, criterion, test_loader, debug_mode)
     assert (
         np.size(result) == 1
     ), "The dimension of the returned object of 'test()' \
