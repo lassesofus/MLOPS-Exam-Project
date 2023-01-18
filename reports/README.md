@@ -257,7 +257,7 @@ Reproducibility is crucial in scientific research, and we made sure to take step
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for the 30 epochs. This run corresponds to the hyperparameters specified in the configuration files. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seems to increase again drastically and finally plateau during the later epochs on a high level. This means that our model doesn't seem to learn from our data. As this part was not the focus of the course, we decided to still continue with this weak model. The second image shows the validation loss. We can see here again that the loss is increasing over the epochs. This is the contrary of how it should look like and confirms again the assumption that our model doesn’t the features of our dataset. We decided to use the accuracy as the test metric for the performance of our model. Hence, it was important to log that too. As the plot of one number doesn’t provide any benefit, we just want to state here that the achieved accuracy was 63.85%. This is not a great result, but at least the performance is better than randomly guessing.
+In the first image below, we see a plot of the binary cross-entropy loss of training the BERT model for the 30 epochs. This run corresponds to the hyperparameters specified in the configuration files. The initially declining curve testifies of the model's ability to learn characteristics of the training dataset, which, however, seems to increase again drastically and finally plateau during the later epochs on a high level. This means that our model doesn't seem to learn from our data. As this part was not the focus of the course, we decided to still continue with this weak model. Because of time constraints we didn't manage find the cause. The second image shows the validation loss. We can see here again that the loss is increasing over the epochs. This is the contrary of how it should look like and confirms again the assumption that our model doesn’t the features of our dataset. We decided to use the accuracy as the test metric for the performance of our model. Hence, it was important to log that too. As the plot of one number doesn’t provide any benefit, we just want to state here that the achieved accuracy was 63.85%. This is not a great result, but at least the performance is better than randomly guessing.
  
 ![my_image](figures/train_loss_wb.png)
 ![my_image](figures/val_loss_wb.png)
@@ -417,7 +417,7 @@ Julia, s221932: 50$ (accidentally spend on the first day of using the cloud by v
   
 Louis, s194278: $30.49 
   
-Alexander, s194252:
+Alexander, s194252: 15.22
   
 Lasse, s185927: $12.65
 
@@ -488,7 +488,7 @@ Julia, s221932, set up hydra configuration, implemented unittests for data, mode
   
 Louis, s194278, writing python scripts (make_dataset, data_utils, model, predict_model, train_model), set up Github actions (auto lint and framework for unit tests), create cpu docker files for local training/prediction, pre-commit, wandb, trigger workflow, fastAPI and Cloud Run deployment. 
   
-Alexander, s194252,
+Alexander, s194252, Did model training on the HPC. Built and tested local docker images for training and inference. Helped debugging the training script, inference script and unit tests. 
   
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
   
