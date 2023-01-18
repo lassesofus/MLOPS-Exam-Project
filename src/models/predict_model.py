@@ -22,19 +22,28 @@ def predict(cfg: DictConfig, path_weights:str) -> None:
     # Load data and tokenize it
     ids, mask, token_type_ids = load_txt_example(cfg, cfg.pred.path_data)
 
-    device = cfg.pred.device
+    # Set device
+    if cfg.train.gpu_override == 1:
+        device = torch.device("cpu")
+        print('Using CPU override!')
+    else:
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+            print('Using available GPU!')
+        else:
+            device = torch.device("cpu")
+            print('Using available CPU!')
+
     ids = ids.to(device, dtype=torch.long)
     mask = mask.to(device, dtype=torch.long)
     token_type_ids = token_type_ids.to(device, dtype=torch.long)
 
     # Initialize model from weights
-    model = BERT(drop_p=cfg.model.drop_p,
-                 embed_dim=cfg.model.embed_dim,
-                 out_dim=cfg.model.out_dim)
+    model = BERT(drop_p=cfg.model.drop_p)
 
     # Load weights
     model.load_state_dict(torch.load(path_weights))
-    model.to(cfg.pred.device)
+    model.to(device)
 
     # Run forward pass 
     model.eval()

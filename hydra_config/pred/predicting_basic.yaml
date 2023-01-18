@@ -1,2 +1,1 @@
-device: "cpu" 
 path_data: "./data/external/example.txt"

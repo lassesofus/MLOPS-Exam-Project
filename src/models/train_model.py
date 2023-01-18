@@ -19,7 +19,7 @@ from tqdm import tqdm
 import wandb 
 import random
 import os
-
+from typing import Dict
 
 import wandb
 from src.data.data_utils import load_dataset
@@ -27,12 +27,12 @@ from src.models.model import BERT
 
 
 def train_epoch(
-    cfg: DictConfig,
     model: nn.Module,
     criterion: BCEWithLogitsLoss,
     optimizer: Adam,
     train_loader: DataLoader,
     epoch: int,
+    device: torch.device,
 ) -> float:
     """
     Train model for a single epoch
@@ -56,8 +56,6 @@ def train_epoch(
             optimizer.zero_grad()
             
             # Move data to device
-            device = cfg.train.device
-
             ids = data["ids"].to(device, dtype=torch.long)
             mask = data["mask"].to(device, dtype=torch.long)
             temp = data["token_type_ids"]
@@ -81,12 +79,11 @@ def train_epoch(
 
 
 def val_epoch(
-    cfg: DictConfig,
     model: nn.Module,
     criterion: BCEWithLogitsLoss,
     val_loader: DataLoader,
     epoch: int,
-
+    device: torch.device,
 ) -> float:
 
     """
@@ -96,6 +93,7 @@ def val_epoch(
     :param criterion: Loss function
     :param optimizer: Optimizer
     :param train_loader: Training data loader
+    :param device: Device to train on
     :param epoch: Current epoch
     :return: Mean loss for epoch
     """
@@ -109,7 +107,6 @@ def val_epoch(
         with tqdm(val_loader, desc=f"Validation epoch {epoch}") as tepoch:
             for _, data in enumerate(tepoch):
                 # Move data to device
-                device = cfg.train.device
                 ids = data["ids"].to(device, dtype=torch.long)
                 mask = data["mask"].to(device, dtype=torch.long)
                 temp = data["token_type_ids"]
@@ -136,6 +133,7 @@ def train(
     optimizer: Adam,
     train_loader: DataLoader,
     val_loader: DataLoader,
+    device: torch.device,
     debug_mode: bool = False,
 ) -> str:
     """
@@ -147,6 +145,7 @@ def train(
     :param optimizer: Optimizer
     :param train_loader: Training data loader
     :param val_loader: Validation data loader
+    :param device: Device to train on
     :param debug_mode: Specify whether it should be logged or not
     :returns: File path to the saved model weights
     """
@@ -158,10 +157,10 @@ def train(
     for epoch in range(cfg.train.epochs):
         # Train and validate 1 epoch
         train_loss = train_epoch(
-            cfg, model, criterion, optimizer, train_loader, epoch,
+            model, criterion, optimizer, train_loader, epoch, device
         )
         val_loss = val_epoch(
-            cfg, model, criterion, val_loader, epoch,
+            model, criterion, val_loader, epoch, device
         )
 
         # Save epoch loss and wandb log
@@ -196,20 +195,20 @@ def train(
 
 
 def eval(
-    cfg: DictConfig,
     model: nn.Module,
     weights: str,
     criterion: BCEWithLogitsLoss,
     test_loader: DataLoader,
+    device: torch.device,
     debug_mode: bool = False,
 ) -> None:
     """
     Run model on the test set
-    :param cfg: hydra configuration
     :param model: Initialized model
     :param weights: File path to the saved model weights
     :param criterion: Loss function
     :param test_loader: Test data loader
+    :param device: Device to train on
     :param debug_mode: Specify whether it should be logged or not
     """
     model.eval()
@@ -226,7 +225,6 @@ def eval(
         with tqdm(test_loader, desc="Test epoch") as tepoch:
             for _, data in enumerate(tepoch):
                 # Extracting data from the data batch
-                device = cfg.train.device
                 ids = data["ids"].to(device, dtype=torch.long)
                 mask = data["mask"].to(device, dtype=torch.long)
                 temp = data["token_type_ids"]
@@ -289,17 +287,33 @@ def main(cfg: DictConfig) -> None:
     np.random.seed(seed)
     random.seed(seed)
 
+    # Set device
+    if cfg.train.gpu_override == 1:
+        device = torch.device("cpu")
+        print('Using CPU override!')
+    else:
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+            print('Using available GPU!')
+        else:
+            device = torch.device("cpu")
+            print('Using available CPU!')
+
     # Fetch wand authorization (working with cloned/forked repo
     # requires wandb key to be defined in .env file and running
     # training docker image requires wandb key to be definned as
     # environment variable with flag -e WANDB_API_KEY=... when
     # calling docker run)
-    if "WANDB_API_KEY" not in os.environ:
+    check_env1 = ("WANDB_API_KEY" not in os.environ)
+    check_env2 = ("WANDB_ENTITY" not in os.environ)
+    check_env3 = ("WANDB_PROJECT" not in os.environ)
+
+    if check_env1 or check_env2 or check_env3:
         dotenv_path = find_dotenv()
         load_dotenv(dotenv_path)
 
     # Initialize wandb
-    wandb.init(config=cfg, project="test-project", entity="mlogs23")
+    wandb.init(config=cfg)
 
     # Load data
     data_part = load_dataset(cfg, cfg.train.path_train_set)
@@ -322,18 +336,16 @@ def main(cfg: DictConfig) -> None:
     # Initialize model, objective and optimizer
     model = BERT(
         drop_p=cfg.model.drop_p,
-        embed_dim=cfg.model.embed_dim,
-        out_dim=cfg.model.out_dim,
-    ).to(cfg.train.device)
+    ).to(device)
 
     criterion = BCEWithLogitsLoss()
     optimizer = Adam(params=model.parameters(), lr=cfg.train.learning_rate)
 
     # Train model
-    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader)
+    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device)
 
     # Test model
-    _ = eval(cfg, model, weights, criterion, test_loader)
+    _ = eval(cfg, model, weights, criterion, test_loader, device)
 
 
 if __name__ == "__main__":
