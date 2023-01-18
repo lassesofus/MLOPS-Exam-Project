@@ -400,10 +400,10 @@ MISSING ANSWER
 >
 >
 > Answer:
- 
-We did not manage to implement monitoring since we didn't have time to do so. Monitoring our application could help us to know if we have any data drifting problems over the time. In a scenario like that, our models accuracy could decay and a model retraining would be necesary. A framework like Evidently could give use insights with metrics and reports. At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly. 
 
-We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. 
+We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. A framework like Evidently could give use insights with metrics and reports. 
+  
+ At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly. 
 
 ### Question 24
 
@@ -490,9 +490,7 @@ To overcome these challenges, we implemented a more structured approach to our p
 Every group member participated in all aspects of the project. Below, the main focus of each member is stated.
   
 (WRITE YOUR OWN FOCUS)
-  
-Evan, s212592, 
-  
+
 Julia, s221932,
   
 Louis, s194278,
@@ -500,3 +498,5 @@ Louis, s194278,
 Alexander, s194252,
   
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
+  
+Evan, s212592, helped with creating the train_model and predict_model scripts. Set up the first unit test, the github workflow and actions on github. Mainly focused on setting the project on google cloud, give access to everyone, create buckets, VMs, the container registry, the Trigger and the Vertex AI.  
