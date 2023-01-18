@@ -171,7 +171,7 @@ def train(
             # save final to gcp bucket model
             storage_client = storage.Client("bucket-train-bert")
             bucket = storage_client.bucket("bucket-train-bert")
-            blob = bucket.blob("save_path")
+            bucket.blob(save_path)
             best_epoch = epoch + 1
 
 
