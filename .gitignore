@@ -89,3 +89,4 @@ models/
 outputs/
 wandb/
 api/app/temp_files
+api/app/application_default_credentials.json

@@ -31,10 +31,11 @@ def test_train_epoch() -> None:
     train_loader = DataLoader(trainset_subset, batch_size=16, shuffle=True)
     epochs = 1
     device = "cpu"
-    model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
+    model = BERT(drop_p=0.5).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
-    result = train_epoch(cfg, model, criterion, optimizer, train_loader, epochs)
+    result = train_epoch(model, criterion, optimizer, train_loader, epochs, device)
+    
     assert (
         np.size(result) == 1
     ), "The dimension of the returned object of 'train_epoch()'\
@@ -61,15 +62,15 @@ def test_train() -> None:
 
     debug_mode = True
     device = "cpu"
-    model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
+    model = BERT(drop_p=0.5).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
 
     time = datetime.now().strftime("%H-%M-%S")
-    result = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
+    result = train(cfg, model, criterion, optimizer, train_loader, val_loader, device, debug_mode)
 
     assert (
-        result == f"./models/T{time}_E{1}.pt"
+        result == f"./models/T{time}.pt"
     ), "The returned path of 'train()' is not as expected!"
 
 
@@ -95,13 +96,15 @@ def test_eval() -> None:
     )
     debug_mode = True
     device = "cpu"
-    model = BERT(drop_p=0.5, embed_dim=768, out_dim=2).to(device)
+    model = BERT(drop_p=0.5).to(device)
     optimizer = Adam(params=model.parameters(), lr=1e-05)
     criterion = BCEWithLogitsLoss()
 
-    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, debug_mode)
-    result = eval(cfg, model, weights, criterion, test_loader, debug_mode)
+    weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device, debug_mode)
+    result = eval(model, weights, criterion, test_loader, device, debug_mode)
     assert (
         np.size(result) == 1
     ), "The dimension of the returned object of 'test()' \
         is not as expected!"
+
+#test_eval()

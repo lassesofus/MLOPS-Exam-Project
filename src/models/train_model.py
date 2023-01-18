@@ -150,6 +150,7 @@ def train(
     val_losses = []
     best_loss = float("inf")
     time = datetime.now().strftime("%H-%M-%S")
+    best_epoch = -1
 
     for epoch in range(cfg.train.epochs):
         # Train and validate 1 epoch
@@ -176,6 +177,7 @@ def train(
             best_loss = val_loss
             save_path = f"./models/T{time}.pt"
             torch.save(model.state_dict(), save_path)
+            best_epoch = epoch + 1
 
 
     print('Best model trained for '+str(best_epoch)+' epochs')
@@ -190,10 +192,11 @@ def train(
     # Print best best loss
     print(f"Best validation loss: {best_loss}")
 
-    wandb.log({
-        "Model_Name": save_path,
-        "best_epoch": best_epoch
-    })
+    if debug_mode == False:
+        wandb.log({
+            "Model_Name": save_path,
+            "best_epoch": best_epoch
+        })
 
     return save_path
 
@@ -352,7 +355,7 @@ def main(cfg: DictConfig) -> None:
     weights = train(cfg, model, criterion, optimizer, train_loader, val_loader, device)
 
     # Test model
-    _ = eval(cfg, model, weights, criterion, test_loader, device)
+    _ = eval(model, weights, criterion, test_loader, device)
 
 
 if __name__ == "__main__":
