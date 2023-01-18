@@ -335,6 +335,8 @@ Cloud Build is a service that allows us to build and test our code in the cloud.
 
 Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
 
+We also tried using the Compute Engine directly for model training. 
+
 ### Question 18
 
 > **The backbone of GCP is the Compute engine. Explained how you made use of this service and what type of VMs**
