@@ -92,15 +92,14 @@ We used the Huggingface Transformer framework to load a pretrained BERT model ar
 >
 > Answer:
 
-We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze`. To get a complete copy of our development environment, one would have to run the following commands:
+We used a `requirements.txt` file for managing our dependencies. The list of dependencies was auto-generated using `pip freeze` (or alternatively the 'pipreqs' package). To get a complete copy of our development environment, one would have to do the following:
 
-1. Install `pip` if it's not already installed
-2. Clone the repository containing the code
+1. Create and activate new virtual environment (using `conda create -n <env_name>` followed by `conda activate <env_name>`)
+2. Git clone repository: `git clone git@github.com:lassesofus/MLOPS-Exam-Project.git`
 3. Navigate to the root directory of the repository
-4. Run `pip install -r requirements.txt` to install all the dependencies listed in the `requirements.txt` file
-5. Run the application using the appropriate command
+4. Run `pip install -r requirements.txt` to install dependencies and the repository as a python module 
 
-By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. Additionally, you could also use `pip freeze > requirements.txt` to regenerate the file if you need to add or update the dependencies in your project.
+By using a `requirements.txt` file, we can easily manage the dependencies for our project and make sure that the environment is consistent across different (virtual) machines and development stages. It is also useful for sharing the dependencies with other members of the team and for deploying the application to production. 
 
 ### Question 5
 
@@ -115,6 +114,38 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
+The vast vast majority of the original cookiecutter folder structure is in use. The `data/interim` and `references` are removed for obvious reasons. The `src/features` folder is also removed as we did not do any feature engineering in this project. The `.dvc` folder is automatically added by the dvc package (along with root files `.dvcignore`, `data.dvc` and `models.dvc`) for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked. Similarly the The `wandb` folder is automatically added to contain the weights and biases logs. The `tests` folder is added to contain the unit tests run by Github actions. The `models/predict_model` folder is added to contain the model weights used for inference. 
+
+
+ The `.pre-commit-config.yaml` file is added to configure the pre-commit hooks. The `couldbuild.yaml` file is added to configure the cloud build. The `config_cpu.yaml` file is added to configure the training on a CPU. The `data.dvc` file is added to version control the data. The `models.dvc` file is added to version control the models. The `setup.cfg` file is added to configure the testing. The `train.sg` file is added to configure the training. The `trainer_cloud.dockerfile` file is added to configure the training on the cloud. The `trainer_gpu.dockerfile` file is added to configure the training on a GPU.
+
+Added: 
+models/predict_model
+.github
+.pypy_cache
+api
+docker
+hydra_config
+outputs
+tests
+wandb
+.pre-commit-config.yaml
+couldbuild.yaml
+config_cpu.yaml
+
+
+setup.cfg
+train.sg
+trainer_cloud.dockerfile
+trainer_gpu.dockerfile
+
+Removed: 
+data/interim
+references
+
+
+
+
 We used the vast majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. Also, we included a `Makefile` containing handy commands for performing some of the key functionality of the project, like running the training script or installing dependencies. However, certain standard folders, like the `notebooks` folder have been left out as our work didn't result in any notebooks. Following the course best practices, we used dvc for data version control and consequently included a `.dvc` folder in the root directory of the project. Additionally, this directory includes a `wandb` folder for storing files relating to the experiment logging on the Weights & Biases service. 
 
 ### Question 6
@@ -126,7 +157,7 @@ We used the vast majority of the original cookiecutter folder structure includin
 >
 > Answer:
 
-Yes, we did implement rules for code quality and format using PEP8 and Flake8. These tools helped us to ensure that our code was consistent and easy to read, which is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code, and it also makes it easier for us to maintain and update our code in the future. Additionally, using tools like PEP8 and Flake8 can help to catch potential errors or bugs before they become a problem.
+Yes, we used pre-commit hooks for checking file size, sorting import statements and checking if the code is pep8 compliant throughout points of the project. We also used Github actions (workflow files) to do the exact same at each push/pull request as well as run a bunch of unit tests. In the end of the project we also introduced branch protection rules to ensure that all tests had to pass before merging to the main branch. These tools first of all helped us to ensure that our code was consistent and easy to read. This is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code - thus making it easier for us to maintain and update our code in the future. The unit tests helped to ensure that the main branch was kept bug free (prototyping was kept in separate git branches).
 
 ## Version control
 
@@ -154,11 +185,7 @@ We ended up having 11 unit tests.
 >
 > Answer:
 
-We obtained a total code coverage of 91%, which includes the majority of our source code. 
-
-While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly.
-
-Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, race conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
+We obtained a total code coverage of 91%, which includes the majority of our source code. While having a high code coverage is generally a good indication that our code has been thoroughly tested, it does not guarantee that our code is error-free. For example, a high code coverage percentage can be misleading if the tests only cover a small set of inputs. Additionally, even if a line of code has been executed, it does not mean that it has been executed correctly. Furthermore, even if our code coverage was 100%, we would still not completely trust that our code is error-free. There are many other factors that can contribute to bugs and errors, such as edge cases, rare conditions, security vulnerabilities, and more. Therefore, it is important to use a combination of code coverage, manual testing, and other quality assurance techniques to ensure that our code is as robust and reliable as possible.
 
 ### Question 9
 
@@ -173,11 +200,7 @@ Furthermore, even if our code coverage was 100%, we would still not completely t
 >
 > Answer:
 
-Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control.
-
-We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch.
-
-Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
+Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control. We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch. Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
 
 ### Question 10
 
@@ -192,7 +215,7 @@ Using branches and pull requests also helped us to keep track of the different v
 >
 > Answer:
 
-We did use DVC for managing data in our project. It helped us to have version control of our data, which was extremely beneficial for our project. DVC allowed us to track the different versions of our data and the changes that were made to it. This helped us to understand how our model was performing over time and made it easy to revert to an earlier version of the data if needed. Additionally, it helped us to manage the large data files and remote storage that we were using. This made it easy to share the data with other members of our team and keep it organized while also complying with the data storage limitations of Github. Having version control of our data also made it easy for us to reproduce our results. We were able to share the exact version of the data that we used to train our model, potentionally making it easy for others to replicate our results.
+We did use DVC for managing data and model weights in our project. DVC allowed us to track the different versions of our data and the changes that were made to it. However, in general our dataset stayed much the same. The main benefit came from the simple fact that it allowed members of the team to easily download the dataset and (share) model weights while keeping it of Github (where even a single saved model file is beyond the Github file size limit). It 
 
 ### Question 11
 
@@ -208,8 +231,8 @@ We did use DVC for managing data in our project. It helped us to have version co
 >
 > Answer:
 
-MISSING ANSWER
---- question 11 fill here ---
+The CI integration is done partially by Github action workflow files in `.github`. One file runs isort (import order), one runs flake8 (pep8 compliancy) and one runs unit tests. All of the workflow VMs use caching so that requirements does not need to be downloaded every time the workflow is run. The workflow files are triggered on every push and pull request concering the main branch. All the mentioned tests are run on MacOS, Ubuntu and Windows. As mentioned in a previous answer, we used pre-commit as well (with file-size-check, isort and flake8). A Google Cloud trigger is also used to build a new docker training image that can be used for Vertex AI training each time we push/pull request the main branch. The unit test workflow can be seen here as an example of an workflow: <weblink>https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/.github/workflows/tests_with_cache.yml</weblink>
+
 
 ## Running code and tracking experiments
 
@@ -228,12 +251,15 @@ MISSING ANSWER
 >
 > Answer:
 
-We used the Hydra library to configure our experiments. This allowed us to easily manage and switch between different sets of hyperparameters without having to hardcode them in the training script. We created a config file, which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
+We used the Hydra library to configure our experiments. This allowed us to easily manage and structure our hyperparameters outside python scripts. We created a hierarchy of config files (training, prediction and model parameters), which specified the different values for each hyperparameter, such as the learning rate and batch size. To run an experiment we would simply use the command: `python src/models/train_model.py.` This would then use the hyperparameter values specified in the config.yaml file given in the `train_mode.py` script via Hydra as
   ```
   @hydra.main(version_base=None, 
             config_name="config.yaml", 
             config_path="../../hydra_config")
   ```
+The hydra package saves a log of the experiment configurations - but the hydra config file was also tracked using wandb. The click package is also used for the `make_dataset.py` file as in the original cookie-cutter template to ensure the makefile command for making the processed dataset is working. 
+
+
 
 ### Question 13
 
