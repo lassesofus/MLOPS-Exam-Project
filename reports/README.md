@@ -345,7 +345,7 @@ To some extent we used the concept of Docker Volumes to mount our dataset and st
 For example, to run the training image, we would input the below command in the terminal:
 `docker run --name exp3 --env WANDB_API_KEY=<insert> --env WANDB_ENTITY=<insert> --env WANDB_PROJECT=<insert> trainer_cpu:latest`
 
-For GPU image include command --env PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python.
+For running GPU image include the command `--env PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python.`
 
 
 [Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
