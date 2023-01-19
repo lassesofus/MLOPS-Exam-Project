@@ -340,14 +340,12 @@ In the first image below, we see a plot of the binary cross-entropy loss of trai
 
 We used Docker in our experiments to create containerized applications for training our model and performing inference. We created Docker images for our model and its dependencies, which allowed us to easily reproduce the environment in which the model was trained. Docker was also used to create containers for running our model during inference. This allowed us to easily deploy our model to different environments without having to worry about compatibility issues. Additionally, using Docker made it easy to scale our inference infrastructure by running multiple instances of our model in parallel, if needed. 
 
-We also, to some extent, used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image. Docker images was also used extensively in our cloud training (using training image for Vertex AI) and our cloud deployment (using FastAPI image with Cloud Run).
+To some extent we used the concept of Docker Volumes to mount our dataset and store the output of our model. This allowed us to keep our data separate from the container and make changes to it without having to rebuild the image. Docker images was also used extensively in our cloud training (using training image for Vertex AI) and our cloud deployment (using FastAPI image with Cloud Run).
 
 For example, to run the training image, we would input the below command in the terminal:
 `docker run --name exp3 --env WANDB_API_KEY=<insert> --env WANDB_ENTITY=<insert> --env WANDB_PROJECT=<insert> trainer_cpu:latest`
 
-The command for running the training docker image on the GPU is: 
-
-'docker run --gpus all --env WANDB_API_KEY=<insert> --env WANDB_ENTITY=<insert> --env WANDB_PROJECT=<insert> --env PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python trainer_gpu_new:latest'
+For GPU image include command --env PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python.
 
 
 [Link to inference/prediction Docker file](https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/predict.dockerfile)
