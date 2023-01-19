@@ -19,6 +19,11 @@ We expect to use a transformer model made for Natural Language Processing - spec
 ### Usage
 To use this project, you will need to install the required packages listed in requirements.txt. You can then run the scripts in the src directory to process the data, build features, train models, and make predictions. The Makefile includes commands for running these scripts, such as make data, make train, and make predict.
 
+### Docker
+When running the training docker images it is important to supply your wandb API key, entity and project name either in a .env file or with envirinment variables when calling docker run. Furthermore when running the trainer image for GPU it is important to set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python. For instance the command to run the training docker image on the GPU is: 
+
+docker run --gpus all --env WANDB_API_KEY="Your WANDB API Key" --env WANDB_ENTITY="Your Entity" --env WANDB_PROJECT="Your Project Name" --env PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python "image name"
+
 ### License
 This project is licensed under the terms of the MIT License.
 
