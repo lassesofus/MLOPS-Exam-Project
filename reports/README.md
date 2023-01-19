@@ -567,4 +567,4 @@ Alexander, s194252, Did model training on the HPC. Built and tested local docker
   
 Lasse, s185927, set up Github repository (with cookiecutter structure) and data storage (including DVC). Did initial training model training runs on the HPC. Build Docker images. Reviewed inference script. Responsible for the majority of the report. 
   
-Evan, s212592, helped with creating the train_model and predict_model scripts. Set up the first unit test, the github workflow and actions on github. Mainly focused on setting the project on google cloud, give access to everyone, create buckets, VMs, the container registry, the Trigger and the Vertex AI.
+Evan, s212592, helped with creating the train_model, train_cloud and predict_model scripts. Set up the first unit test, the github workflow and actions on github. Build and test docker images. Mainly focused on setting the project on google cloud, give access to everyone, create buckets, VMs, the container registry, the Trigger and the Vertex AI.
