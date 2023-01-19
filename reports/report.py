@@ -116,6 +116,7 @@ def check():
         partial(length_constraints, min=50, max=200),
     ]
     if len(answers) != 27:
+        print(f"Number of answers: {len(answers)}")
         raise ValueError(
             "Number of answers are different from the expected 27. Have you filled out every field?"
         )
