@@ -170,7 +170,7 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
-We used the majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. The `data/interim` and `references` are removed for obvious reasons. The `src/features` folder is also removed as we did not do any feature engineering in this project. The `.dvc` folder is automatically added by the dvc package (along with root files `.dvcignore`, `data.dvc` and `models.dvc`) for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked. Similarly the The `wandb` folder is automatically added to contain the weights and biases logs. The `tests` folder is added to contain the unit tests run by Github actions. The `models/predict_model` folder is added to contain the model weights used for inference.
+We used the majority of the original cookiecutter folder structure including the src, models, and data folders amongst others. The data/interim, references and src/features (we don't do any feature engineering). The .dvc folder is automatically added by the dvc package for version control of the data and model weights. The api folder is added to contain the code, requirements and dockerfile for the API. The docker folder is added to contain the dockerfiles for local training and prediction. The hydra_config folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a outputs folder that saves logs of the config files used when the package is invoked (these are gitignored). Similarly the wandb folder is automatically added to the local repository to contain the weights and biases logs (but this is also gitignored). The tests folder is added to contain the unit tests run by Github actions.
 
 ### Question 6
 
@@ -181,7 +181,7 @@ We used the majority of the original cookiecutter folder structure including the
 >
 > Answer:
 
-Yes, we used pre-commit hooks for checking file size, sorting import statements and checking if the code is pep8 compliant throughout points of the project. We also used Github actions (workflow files) to do the exact same at each push/pull request as well as run a bunch of unit tests. In the end of the project we also introduced branch protection rules to ensure that all tests had to pass before merging to the main branch. These tools first of all helped us to ensure that our code was consistent and easy to read. This is especially important in larger projects where multiple people are working on the same codebase. By following a consistent code style, it is easier for others to understand and contribute to our code - thus making it easier for us to maintain and update our code in the future. The unit tests helped to ensure that the main branch was kept bug free (prototyping was kept in separate git branches).
+Yes, we used pre-commit hooks for checking file size, sorting import statements and checking if the code is pep8 compliant throughout points of the project. We also used Github actions (workflow files) to do the exact same at each push/pull request as well as run a bunch of unit tests. In the end of the project we also introduced branch protection rules to ensure that all tests had to pass before merging to the main branch. 
 
 ## Version control
 
@@ -230,7 +230,7 @@ We obtained a total code coverage of 91%, which includes the majority of our sou
 >
 > Answer:
 
-Yes, our workflow did include using branches and pull requests. We found that this helped us to keep our code organized and improve version control. We created separate branches for different features or bug fixes that we were working on. This allowed us to work on our code independently without affecting the main codebase. We then created pull requests to merge our changes into the main branch. This allowed us to review each other's code and catch any potential issues before they were merged into the main branch. Using branches and pull requests also helped us to keep track of the different versions of our code. We were able to see the changes that were made in each pull request and revert to an earlier version if needed. This was particularly helpful when we needed to make changes to a feature that we had already completed.
+In our workflow, we made use of the git feature of branches and pull requests to maintain the organization and integrity of our codebase. By creating separate branches for different functionalities or bug fixes, it allowed for a more streamlined and independent development process. This meant that we could work on our own code without any interference to the main branch. After completing the work on our respective branches, we would then submit pull requests to merge our changes into the main branch. This was an important step as it allowed for code review and collaboration among the team members. Additionally, it enabled us to catch and resolve any potential issues before they were integrated into the main codebase. Furthermore, the usage of branches and pull requests also improved version control as we were able to see the changes made in each pull request and also have the option to revert to a previous version if needed. This was particularly useful when we needed to make modifications to a feature that we had already finished working on.
 
 ### Question 10
 
@@ -245,7 +245,7 @@ Yes, our workflow did include using branches and pull requests. We found that th
 >
 > Answer:
 
-We did use DVC for managing data and model weights in our project. DVC allowed us to track the different versions of our data and the changes that were made to it. However, in general our dataset stayed much the same. The main benefit came from the simple fact that it allowed members of the team to easily download the dataset and (share) model weights while keeping it of Github (where even a single saved model file is beyond the Github file size limit).
+In our project, we employed the use of DVC (Data Version Control) to manage and track the versions of our data and model weights. Additionally, DVC also provided the benefit of allowing team members to easily access and download the dataset, as well as share the model weights with one another, without the need to rely on Github. This was particularly useful as Github has a file size limit, and storing large data files or model weights directly on Github can be challenging. DVC provided an effective way for us to store, manage and share our data and model weights, which greatly improved the efficiency and collaboration within our team.
 
 ### Question 11
 
@@ -261,7 +261,9 @@ We did use DVC for managing data and model weights in our project. DVC allowed u
 >
 > Answer:
 
-The CI integration is done partially by Github action workflow files in `.github`. One file runs isort (import order), one runs flake8 (pep8 compliancy) and one runs unit tests. All of the workflow VMs use caching so that requirements does not need to be downloaded every time the workflow is run. The workflow files are triggered on every push and pull request concering the main branch. All the mentioned tests are run on MacOS, Ubuntu and Windows. As mentioned in a previous answer, we used pre-commit as well (with file-size-check, isort and flake8). A Google Cloud trigger is also used to build a new docker training image that can be used for Vertex AI training each time we push/pull request the main branch. The unit test workflow can be seen here as an example of an workflow: <weblink>https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/.github/workflows/tests_with_cache.yml</weblink>
+We implemented a partial Continuous Integration (CI) system using Github action workflow files located in the `.github` directory. These files were responsible for running a variety of tests, such as isort (fixing the order of import statements), flake8 (for ensuring pep8 compliance) and unit tests, on our codebase. To optimize the efficiency of the CI process, we utilized caching on the workflow virtual machines (VMs), which allowed us to avoid the need to download requirements each time the workflow was run. The workflow files were triggered on every push and pull request to the main branch, and the tests were run on multiple operating systems, including MacOS, Ubuntu, and Windows. Additionally, we also utilized pre-commit in our CI process, which was configured to run a file-size-check, isort and flake8. Furthermore, we also used a Google Cloud trigger to build a new Docker training image that could be used for Vertex AI training each time we pushed or pulled request to the main branch. An example of the unit test workflow can be found here: <weblink>https://github.com/lassesofus/MLOPS-Exam-Project/blob/main/.github/workflows/tests_with_cache.yml</weblink>. This workflow is an example of the various tests and configurations that we employed in our CI process to ensure the reliability and quality of our codebase.
+
+
 
 ## Running code and tracking experiments
 
@@ -286,7 +288,7 @@ We used the Hydra library to configure our experiments. This allowed us to easil
             config_name="config.yaml", 
             config_path="../../hydra_config")
   ```
-The hydra package saves a log of the experiment configurations - but the hydra config file was also tracked using wandb. The click package is also used for the `make_dataset.py` file as in the original cookie-cutter template to ensure the makefile command for making the processed dataset is working.
+
 
 ### Question 13
 
@@ -402,7 +404,9 @@ We also tried using the Compute Engine directly for model training.
 >
 > Answer:
 
-We made use of GCP's Compute Engine to experiment with some initial training of our model. However, DTU HPC was the main platform for prototyping on another machine with enough VRAM.
+In our experimentation with initial training of our model, we utilized GCP's Compute Engine as our primary platform. To do this, we created compute instances, also known as virtual machines (VM's), of the n1-standard-1 type. These instances were equipped with a single NVIDIA V100 GPU, which provided us with powerful computation capabilities.
+
+We used these instances to run one of our customer training Docker images, which contained all of the necessary dependencies for our model. However, we also made use of DTU HPC as a secondary platform for prototyping on another machine with enough VRAM.
 
 ### Question 19
 
@@ -445,7 +449,9 @@ We made use of GCP's Compute Engine to experiment with some initial training of 
 >
 > Answer:
 
-A model API was built using FastAPI. The model was deployed in the cloud using Google Cloud Run. The API takes a txt-file as input and returns a response dictionary. The response dictionary contains the input text, a prediction (reliable/unreliable), the HTTP status message and the HTTP status code. The prediction is made using a model with weights loaded from a Google Cloud bucket. To invoke the service an user would call `curl -X 'POST'   'https://test-app-tuy6dmah2a-ew.a.run.app/'   -H 'accept: application/json'   -H 'Content-Type: multipart/form-data'   -F 'data=@<file_path>;type=text/plain'
+For deploymeny we wrapped our model into an application using an API built using FastAPI. The model was deployed in the cloud using Google Cloud Run. The API is designed to take a txt-file as input and returns a response dictionary, which includes the input text, a prediction of whether the text is reliable or unreliable, the HTTP status message and the HTTP status code. The prediction is made using a model with weights loaded from a Google Cloud bucket, which allows for quick and easy access to the model's pre-trained weights. To invoke the service an user would call `curl -X 'POST'   'https://test-app-tuy6dmah2a-ew.a.run.app/'   -H 'accept: application/json'   -H 'Content-Type: multipart/form-data'   -F 'data=@<file_path>;type=text/plain'
+This command sends a POST request to the specified URL, and includes the necessary headers and input file in the request. This allows the API to process the input file and return the desired response dictionary.
+
 
 ### Question 23
 
@@ -460,9 +466,9 @@ A model API was built using FastAPI. The model was deployed in the cloud using G
 >
 > Answer:
 
-We did not manage to implement monitoring of our deployed model. However, we understand the importance of monitoring in ensuring the longevity of our application. Monitoring allows us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. A framework like Evidently could give use insights with metrics and reports. 
-  
- At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly.
+We did not manage to implement monitoring of our deployed model. Monitoring would have allowed us to track the performance of our model over time, identify any issues or errors, and make adjustments as needed to improve its performance. Additionally, monitoring can provide valuable insights into how our model is being used, such as identifying patterns in user behavior or usage patterns. This can help us to understand how to optimize our model for specific use cases or user groups. Furthermore, monitoring can help us to detect data drift, which occurs when the distribution of data used to train the model differs from the distribution of data encountered during deployment. This can cause the model to make predictions that are less accurate. By monitoring the model's performance over time, we can detect when data drift is occurring and retrain the model on new data to correct it. A framework like Evidently could give use insights with metrics and reports. 
+
+At last, a framework like opentelemetry can help to monitor the number of requests and the amount of time our application runs per request. Combined with Alerting on Google Cloud, we can be aware if any metric/telemetry is not behaving properly.
 
 ### Question 24
 
