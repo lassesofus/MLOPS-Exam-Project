@@ -91,3 +91,5 @@ wandb/
 api/app/temp_files
 api/app/application_default_credentials.json
 /models
+.outputs/
+.wandb/

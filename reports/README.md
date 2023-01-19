@@ -170,7 +170,7 @@ By using a `requirements.txt` file, we can easily manage the dependencies for ou
 > *experiments.*
 > Answer:
 
-We used the majority of the original cookiecutter folder structure including the src, models, and data folders amongst others. The data/interim, references and src/features (we don't do any feature engineering). The .dvc folder is automatically added by the dvc package for version control of the data and model weights. The api folder is added to contain the code, requirements and dockerfile for the API. The docker folder is added to contain the dockerfiles for local training and prediction. The hydra_config folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a outputs folder that saves logs of the config files used when the package is invoked (these are gitignored). Similarly the wandb folder is automatically added to the local repository to contain the weights and biases logs (but this is also gitignored). The tests folder is added to contain the unit tests run by Github actions.
+We used the majority of the original cookiecutter folder structure including the `src`, `models`, and `data` folders amongst others. The `data/interim`, `references` and `src/features` (we don't do any feature engineering). The `.dvc` folder is automatically added by the dvc package for version control of the data and model weights. The `api` folder is added to contain the code, requirements and dockerfile for the API.  The `docker` folder is added to contain the dockerfiles for local training and prediction. The `hydra_config` folder is added to contain the configuration files for training and prediction. The hydra package automatically creates a `outputs` folder that saves logs of the config files used when the package is invoked (these are gitignored). Similarly the `wandb` folder is automatically added to the local repository to contain the weights and biases logs (but this is also gitignored). The `tests` folder is added to contain the unit tests run by Github actions.
 
 ### Question 6
 
@@ -388,6 +388,13 @@ Cloud Storage is a service that allows us to store and access data in the cloud.
 Cloud Build is a service that allows us to build and test our code in the cloud. We used Cloud Build to automatically build and deploy our code, which helped us to automate the development pipeline and improve the collaboration within our team.
 
 Vertex AI is a service that allows us to perform machine learning operations on the cloud. We used Vertex AI to train and deploy our machine learning models, which helped us to leverage the scalability and reliability of GCP to ensure that our models were able to run smoothly and efficiently.
+
+That's the gcloud  command to create custom jobs through CI.
+
+	gcloud ai custom-jobs create \
+   	--region=europe-west1 \
+   	--display-name=test-run \
+   	--config=config_gpu.yaml
 
 We also tried using the Compute Engine directly for model training. 
 
