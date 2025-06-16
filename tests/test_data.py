@@ -60,12 +60,10 @@ def test_dict_key2() -> None:
     train_set = load_dataset(cfg, path_train)
     assert list(train_set.__dict__.keys())[1] == "data", (
         "The second key is not 'data'"
-        """
-
-
-@pytest.mark.skipif(not os.path.exists(_PATH_DATA),
-                    reason="Data files not found") """
     )
+
+
+@pytest.mark.skipif(not os.path.exists(_PATH_DATA), reason="Data files not found")
 
 
 def test_dict_key3() -> None:
